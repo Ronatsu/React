@@ -1,0 +1,7 @@
+#nav{
+  position: fixed;
+  left: 50%;
+  transform: translatex(-50%);
+  background-color: #eeeeee;
+  z-index:99;
+}

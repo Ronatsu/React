@@ -1,0 +1,13 @@
+{
+    "areas": [
+        {
+            "nombre":  "servidor pruebas"
+        },
+        {
+            "nombre":  "servidor producción"
+        },
+        {
+            "nombre":  "Servidor desarrollo"
+        }
+    ]
+}

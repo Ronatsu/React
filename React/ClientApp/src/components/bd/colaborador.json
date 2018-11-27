@@ -1,0 +1,68 @@
+{
+    "colaboradores": [
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Ricardo",
+            "primerapellido": "Barrantes",
+            "segundoapellido": "Barrantes",
+            "area": "Bases de Datos",
+            "correo": "ricardobb@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Vanessa",
+            "primerapellido": "Quesada",
+            "segundoapellido": "Bogantes",
+            "area": "Desarrollador",
+            "correo": "vane@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Andrey",
+            "primerapellido": "Growlieth",
+            "segundoapellido": "Bolt",
+            "area": "Redes",
+            "correo": "grow@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Bob",
+            "primerapellido": "Vargas",
+            "segundoapellido": "Romero",
+            "area": "Infraestructura",
+            "correo": "bob@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Mercedes",
+            "primerapellido": "Naziro",
+            "segundoapellido": "Valverde",
+            "area": "Bases de Datos",
+            "correo": "merced@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Carmen",
+            "primerapellido": "Estrada",
+            "segundoapellido": "Berrocal",
+            "area": "Desarrollador",
+            "correo": "estradabe@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Felipe",
+            "primerapellido": "Ballestero",
+            "segundoapellido": "Quiros",
+            "area": "Bases de Datos",
+            "correo": "felo@gmail.com"
+        },
+        {
+            "colaboradorId": "colaboradorId",
+            "primernombre": "Fernando",
+            "primerapellido": "Telio",
+            "segundoapellido": "Sarmento",
+            "area": "Redes",
+            "correo": "telioSar@gmail.com"
+        }
+    ]
+}

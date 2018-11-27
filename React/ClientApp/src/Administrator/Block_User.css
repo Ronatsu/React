@@ -1,0 +1,15 @@
+#table_id{
+    display : block;
+    max-height: auto 1024px;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    background-color:#eeeeee;
+    width: 100%;
+    margin: 1% auto;
+    float: none;
+}
+
+.size{
+    
+    width: 10%;
+}

@@ -1,0 +1,67 @@
+.H5-form{
+  font-size: 13px;
+}
+
+.H4-form{
+  font-size: 10px;
+}
+
+.Container-div{
+
+text-align: center;
+font-size: small;
+color: black;
+
+
+}
+
+.abarcadoTextArea{  
+
+  align-items: center;
+  text-align: center;
+  height: 60%;
+  width: 60%;
+  margin-left: 11%;
+
+}
+
+.blue-border-focus .form-control:focus {
+  border: 1px solid #2c55db;
+  box-shadow: 0 0 0 0.2rem rgba(65, 92, 240, 0.623);
+}
+
+.abarcadoBotonNotificar{
+
+margin-left: 240px;
+margin-top: -7px;
+text-align: center;
+height: 45px;
+width: 89px;
+background-color: #1DCFEA;
+
+}
+
+.abarcadoBotonNotificar:hover{
+  background: #ACCDFF;
+}
+
+.selectToForm{
+
+background: white;  
+text-align-last: center;
+border-color: white;
+border-radius: 10px 10px 10px 10px;
+width: 200px;
+
+
+}
+
+.selectDateTime{
+
+  all: unset;
+  background: white;
+  border-radius: 10px 10px 10px 10px;
+  width: 200px;
+
+
+  }

@@ -1,0 +1,11 @@
+#btn_click{
+    display: none;
+}
+#passstrength{
+    position: absolute;
+    display: none;
+}
+#modal2{
+    color:#2e5490;
+    display: none;
+}

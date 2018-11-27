@@ -1,0 +1,28 @@
+
+body{
+  margin:0px 0px 0px 0px;
+  background-size: cover;
+  background-image: url("./components/imagenesImpesa/FONDO.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #669999;
+  /*display: flex;*/
+  min-height: 100vh;
+  flex-wrap: wrap;
+
+
+}
+
+#div_ancho_completo{
+  height: 100%;
+  width:100%;
+  text-align: center;
+  overflow: auto;
+}
+/*#footer{
+  align-self: flex-end;
+  line-height: 3;
+  text-align: center;
+  width: 100%;
+}*/
