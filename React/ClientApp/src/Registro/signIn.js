@@ -25,19 +25,19 @@ class registroColaborador extends Component {
             rol_usuario: 'Administrador'
         }
         this.handleChange = this.handleChange.bind(this);
-        $(document).ready(function () {
-            $('#valor').keyup(function () {
-                $(this).each(function () {
-                    var campos = $(this).val();
-                    if ((campos.toLowerCase == ("select * from").toLowerCase) || (campos.toLowerCase == ("delete * from")).toLowerCase) {
-                        $("#msj").html('Uno de los campos contiene una sentencia invalida');
-                        $("#modal2").show();
-                    } else {
-                        $("#modal2").css("display", "none");
-                    }
-                });
-            });
-        });
+        //$(document).ready(function () {
+        //    $('#valor').keyup(function () {
+        //        $(this).each(function () {
+        //            var campos = $(this).val();
+        //            if ((campos.toLowerCase == ("select * from").toLowerCase) || (campos.toLowerCase == ("delete * from")).toLowerCase) {
+        //                $("#msj").html('Uno de los campos contiene una sentencia invalida');
+        //                $("#modal2").show();
+        //            } else {
+        //                $("#modal2").css("display", "none");
+        //            }
+        //        });
+        //    });
+        //});
         $(document).ready(function () {
             $("#btn1").click(function () {
                 if (validatePassword() == false) {
@@ -98,19 +98,19 @@ class registroColaborador extends Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        const colaborador = {
+        console.log(this.state.apellido);
+        console.log(this.state.segundoApellido);
+        axios.post(`http://localhost:52224/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
-            apellido: this.state.apellido,
-            segundoApellido: this.state.segundoApellido,
+            primer_apellido: this.state.apellido,
+            segundo_apellido: this.state.segundoApellido,
             habilitado: this.state.habilitado,
             contraseña: this.state.contraseña,
             optionsRadios: this.state.optionsRadios,
-            rol_usuario: this.state.rol_usuario
-
-        };
-
-        axios.post(`https://localhost:44384/api/Registro`, { colaborador })
+            rol_usuario: this.state.rol_usuario,
+            asigna_incidencia: true
+        })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
