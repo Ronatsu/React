@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import 'react-day-picker/lib/style.css';
 import Navigation from '../components/Navigation';
+import axios from 'axios';
 
 
 class Form extends React.Component {
@@ -43,7 +44,12 @@ class Select extends React.Component {
       tech2: 'Impacto',
       tech3: 'Area',
       tech4: 'Tecnologia Afectada',
-      tech5: 'Grado Control'
+      tech5: 'Grado Control',
+      TECNO: [],
+        IMPACTO: [],
+        TIPO_INCIDENCIA: [],
+        AREA_AFECTADA: [],
+        GRADO_CONTROL: []
     };
   }
 
@@ -75,37 +81,69 @@ class Select extends React.Component {
     this.setState({
       tech5: e.target.value
     })
-  }
+    }
+
+    componentWillMount() {
+        axios.get(`http://localhost:52224/api/Tecnologias`)
+            .then(res => {
+                const TECNO = res.data;
+                this.setState({ TECNO });
+            })
+
+        axios.get(`http://localhost:52224/api/ImpactoIncidencia`)
+            .then(res => {
+                const IMPACTO = res.data;
+                this.setState({ IMPACTO });
+            })
+
+        axios.get(`http://localhost:52224/api/TipoIncidencia`)
+            .then(res => {
+                const TIPO_INCIDENCIA = res.data;
+                this.setState({ TIPO_INCIDENCIA });
+            })
+
+        axios.get(`http://localhost:52224/api/AreaAfectada`)
+            .then(res => {
+                const AREA_AFECTADA = res.data;
+                this.setState({ AREA_AFECTADA });
+            })
+
+        axios.get(`http://localhost:52224/api/GradoControl`)
+            .then(res => {
+                const GRADO_CONTROL = res.data;
+                this.setState({ GRADO_CONTROL });
+            })
+    }
 
 
 
   render() {
 
-    const tIncidencias = ["Desactualizacion de software", "Infiltracion de la red", "Inyeccion de codigo", "Perdida de archivos"];
+      const tIncidencias = this.state.TIPO_INCIDENCIA;
 
     const listaIncidencias = tIncidencias.map((incidencia) =>
       <option value={incidencia}>{incidencia}</option>
     );
 
-    const impIncidencias = ["Grave", "Medio", "Bajo", "Sin Impacto"];
+      const impIncidencias = this.state.IMPACTO;
 
     const listaImpacto = impIncidencias.map((impacto) =>
       <option value={impacto}>{impacto}</option>
     );
 
-    const areaIncidencias = ["Cloud", "Area Desarrollo", "Servidores Externos", "Centro De Redes"];
+      const areaIncidencias = this.state.AREA_AFECTADA;
 
     const listaAreas = areaIncidencias.map((area) =>
       <option value={area}>{area}</option>
     );
 
-    const tecAfectada = ["Router Cisco", "Gestor BD", "Servidor A-97r", "Azure"];
+      const tecAfectada = this.state.TECNO;
 
     const listaTecno = tecAfectada.map((tecnologia) =>
       <option value={tecnologia}>{tecnologia}</option>
     );
 
-    const gradoControl = ["Control interno", "Asesoria", "Outsorcing", "Ente Estatal"];
+      const gradoControl = this.state.GRADO_CONTROL;
 
     const listaControl = gradoControl.map((control) =>
       <option value={control}>{control}</option>

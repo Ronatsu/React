@@ -4,18 +4,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API_Ejemplo.Controllers
+namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TecnologiasController : ControllerBase
+    public class AreaAfectadaController : ControllerBase
     {
-
-        // Variables de conexión
         String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
                                   "Initial Catalog=ProyectoAnderson;" +
                                   "Integrated security=True;";
@@ -24,20 +21,21 @@ namespace API_Ejemplo.Controllers
         SqlDataReader dataReader;
         List<string> nuevaLista = new List<string>();
 
-        // GET: api/Tecnologias
+
+        // GET: api/AreaAfectada
         [HttpGet]
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("STORED_OBTENER_NOMBRE_TECNOLOGIA", conexion);
+            cmd = new SqlCommand("STORED_OBTENER_AREA", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                TecnologiaModelo NuevaTecnologia = new TecnologiaModelo();
-                NuevaTecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
+                String AreaAfectada = "";
+                AreaAfectada = dataReader["NOMBRE_AREA"].ToString();
 
-                nuevaLista.Add(NuevaTecnologia.NombreTecnologia);
+                nuevaLista.Add(AreaAfectada);
 
             }
             conexion.Close();
@@ -46,23 +44,23 @@ namespace API_Ejemplo.Controllers
             {
                 return NotFound();
             }
-            return item;
+            return Ok(item);
         }
 
-        // GET: api/Tecnologias/5
-        [HttpGet("{id}", Name = "GetTecno")]
+        // GET: api/AreaAfectada/5
+        [HttpGet("{id}", Name = "GetAreaAfectada")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Tecnologias
+        // POST: api/AreaAfectada
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/Tecnologias/5
+        // PUT: api/AreaAfectada/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
