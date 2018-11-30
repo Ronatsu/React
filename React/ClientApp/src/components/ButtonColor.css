@@ -1,0 +1,51 @@
+﻿.btnBlue{
+    background-color:#004BA0;
+    color:#eeeeee;
+}
+    .btnBlue:hover {
+        background-color: rgba(0, 75, 160, 0.75);
+        color: #eeeeee;
+    }
+
+.btnGreen {
+    background-color: #489726;
+    color: #eeeeee;
+}
+
+.btnGreen:hover {
+    background-color: rgba(72, 151, 38, 0.75);
+    color: #eeeeee;
+}
+
+.btnRed {
+    background-color: #DE0017;
+    color: #eeeeee;
+}
+
+.btnRed:hover {
+    background-color: rgba(222, 0, 23, 0.75);
+    color: #eeeeee;
+}
+
+.btnGrey {
+    background-color: #eeeeee;
+    color: #2e5490;
+}
+
+.btnGrey:hover {
+    background-color: #c7c7c7;
+    color: #2e5490;
+}
+
+.btnBlueOutline {
+    background-color: transparent;
+    color: #004BA0;
+    border-color: #004BA0;
+}
+.btnBlueOutline:hover {
+    background-color: #004BA0;
+    color: #eeeeee;
+    border-color: #004BA0;
+}
+
+

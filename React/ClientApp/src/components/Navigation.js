@@ -12,6 +12,7 @@ import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
+import '../components/ButtonColor.css';
 
 
 class navigatiom extends React.Component {
@@ -58,7 +59,7 @@ class navigatiom extends React.Component {
 
 
 
-            <button className="btn btn-outline-primary my-2 my-sm-0 dropdown-toggle" role="button"
+                    <button className="btn btnBlueOutline my-2 my-sm-0 dropdown-toggle" role="button"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><PersonIcon /> Maria Jose Brenes</button>
 
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">

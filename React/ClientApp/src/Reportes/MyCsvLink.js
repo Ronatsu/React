@@ -1,5 +1,6 @@
 import React from "react";
 import { CSVLink, CSVDownload } from "react-csv";
+import '../components/ButtonColor.css';
 
 
 
@@ -35,7 +36,7 @@ class MyCsvLink extends React.Component {
           
       return (
         <div>
-          <button onClick={this.fetchData}>Download CSV</button>
+          <button className="btn btnBlue" onClick={this.fetchData}>Download CSV</button>
   
           <CSVLink
             data={datas}

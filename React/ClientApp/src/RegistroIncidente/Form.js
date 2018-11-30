@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import 'react-day-picker/lib/style.css';
 import Navigation from '../components/Navigation';
+import '../components/ButtonColor.css';
 
 
 class Form extends React.Component {
@@ -23,8 +24,8 @@ class Form extends React.Component {
               <Select />
               {MyTextArea()}
               <div class="pagination justify-content-end">
-                <button class="btn btn-light  " type="submit">Cancelar</button>
-                <Link to="/AsignacionIncidencia"><button className="btn btn-primary">Asignar</button></Link>
+                <button class="btn btnRed  " type="submit">Cancelar</button>
+                <Link to="/AsignacionIncidencia"><button className="btn btnBlue">Asignar</button></Link>
               </div>
             </div>
           </fieldset>

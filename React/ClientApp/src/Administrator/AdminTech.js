@@ -6,6 +6,7 @@ import { areas } from '../components/bd/area.json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
+import '../components/ButtonColor.css';
 
 class AdminTech extends React.Component {
 
@@ -33,8 +34,8 @@ class AdminTech extends React.Component {
             return (
                 <tr>
                     <th scope="row">{area.nombre}</th>
-                    <td><button class="btn btn-primary  " type="submit"><EditIcon />  Editar</button></td>
-                    <td><button class="btn btn-danger  " type="submit"><DeleteIcon />  Eliminar</button></td>
+                    <td><button class="btn btnBlue  " type="submit"><EditIcon />  Editar</button></td>
+                    <td><button class="btn btnRed  " type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
 
             )
@@ -70,7 +71,7 @@ class AdminTech extends React.Component {
                                    <div className="col-md-2 mb-3">
                                         <label>Área</label>
 
-                                        <select class="btn" id="">
+                                        <select className="btn" id="">
                                             <option disabled="true" selected="true">Tipo de Tecnología</option>
                                             <option>Redes</option>
                                             <option>Bases de datos</option>
@@ -80,7 +81,7 @@ class AdminTech extends React.Component {
 
                                     <div className="col-md-2 mb-3">
                                         <br/>
-                                        <button class="btn  " id="" type="submit"><AddIcon />  Agregar</button>
+                                        <button className="btn btnGrey" id="" type="submit"><AddIcon />  Agregar</button>
                                     </div>
 
                                 </div>

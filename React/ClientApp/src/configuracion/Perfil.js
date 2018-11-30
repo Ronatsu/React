@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import Navigation from '../components/Navigation';
+import '../components/ButtonColor.css';
 
 class AjustesPerfil extends Component {
 
@@ -28,8 +29,8 @@ class AjustesPerfil extends Component {
                                         <label for="validationCustom02">Segundo Apellido</label>
                                         <input type="text" className="form-control" id="validationCustom02" placeholder="Segundo Apellido" />
                                         <div class="pagination justify-content-end">
-                                            <button class="btn btn-light  " type="submit">Cancelar</button>
-                                            <button class="btn btn-primary" type="submit">Guardar</button>
+                                            <button class="btn btnRed  " type="submit">Cancelar</button>
+                                            <button class="btn btnBlue" type="submit">Guardar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -51,8 +52,8 @@ class AjustesPerfil extends Component {
                                         <label for="validationCustom05">Repetir contraseña</label>
                                         <input type="text" class="form-control" id="validationCustom05" placeholder="Repetir contraseña" />
                                         <div class="pagination justify-content-end">
-                                            <button class="btn btn-light  " type="submit">Cancelar</button>
-                                            <button class="btn btn-primary" type="submit">Guardar</button>
+                                            <button class="btn btnRed  " type="submit">Cancelar</button>
+                                            <button class="btn btnBlue" type="submit">Guardar</button>
                                         </div>
                                     </div>
                                 </div>

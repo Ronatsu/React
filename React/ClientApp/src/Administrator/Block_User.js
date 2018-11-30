@@ -4,6 +4,7 @@ import './Block_User.css';
 import Navigation from '../components/Navigation';
 import { parties } from '../components/bd/party.json';
 import BlockIcon from '@material-ui/icons/Block';
+import '../components/ButtonColor.css';
 
 class navigatiom extends React.Component {
 
@@ -45,7 +46,7 @@ class navigatiom extends React.Component {
                     <td>{party.apellido}</td>
                     <td>{party.correo}</td>
                     <td>{party.area}</td>
-                    <td><button class="btn btn-danger  " type="submit"><BlockIcon/>  Bloquear</button></td>
+                    <td><button className="btn btnRed  " type="submit"><BlockIcon/>  Bloquear</button></td>
                 </tr>
 
             )
