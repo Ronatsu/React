@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { incidents } from './bd/incident.json';
 import SearchkIcon from '@material-ui/icons/Search';
 import $ from 'jquery';
+import '../components/ButtonColor.css';
 
 class IncidentTable extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class IncidentTable extends Component {
     const incidentCard = this.state.incidents.map((incident) => {
       return (
         <tr>
-          <td><button class="btn btn-primary btn-md  " type="submit" ><SearchkIcon />Dar Seguimiento</button></td>
+          <td><button class="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar Seguimiento</button></td>
           <th scope="row">{incident.impactLevel}</th>
           <td>{incident.impactFeasibility}</td>
           <td>{incident.description}</td>

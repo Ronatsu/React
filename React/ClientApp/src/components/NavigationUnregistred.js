@@ -2,7 +2,7 @@ import './estilo.css';
 import React from 'react';
 import { Link } from "react-router-dom";
 import PersonIcon from '@material-ui/icons/PersonAdd';
-
+import '../components/ButtonColor.css';
 
 
 class navigatiom extends React.Component {
@@ -15,7 +15,7 @@ class navigatiom extends React.Component {
           <ul className="navbar-nav mr-auto"/>
 
           <form className="form-inline my-2 my-lg-0 dropdown">
-           <Link to="/SignIn"><button className="btn btn-outline-primary my-2 my-sm-0 " role="button"><PersonIcon />Crear cuenta</button></Link> 
+           <Link to="/SignIn"><button className="btn btnBlueOutline my-2 my-sm-0 " role="button"><PersonIcon />Crear cuenta</button></Link> 
           </form>
 
         </div>

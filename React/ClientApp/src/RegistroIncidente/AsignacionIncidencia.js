@@ -24,8 +24,8 @@ class AsignacionIncidencia extends React.Component {
               {FilterUser()}
               <ColaboradorTabla />
               <div class="pagination justify-content-end">
-                <button class="btn btn-light  " type="submit">Cancelar</button>
-                <button class="btn btn-primary" type="submit">Notificar</button>
+                <button class="btn btnRed  " type="submit">Cancelar</button>
+                <button class="btn btnBlue" type="submit">Notificar</button>
               </div>
             </div>
           </fieldset>

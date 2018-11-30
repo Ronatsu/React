@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Modal from 'react-responsive-modal';
+import '../components/ButtonColor.css';
 
 class InformacionIncidencia extends React.Component {
     constructor(props) {
@@ -69,11 +70,11 @@ class BodyInformation extends React.Component {
 
                             <div className="form-group blue-border-focus">
                                 <label>Tipo incidencia</label>
-                                <input type="text" class="form-control" placeholder="Readonly input" readonly="readonly" />
+                                <input type="text" className="form-control" placeholder="Readonly input" readonly="readonly" />
                                 <br></br>
                                 <br></br>
                                 <label>Fecha incidencia</label>
-                                <input type="text" class="form-control" placeholder="Readonly input" readonly="readonly" />
+                                <input type="text" className="form-control" placeholder="Readonly input" readonly="readonly" />
                             </div>
 
                         </div>
@@ -87,39 +88,39 @@ class BodyInformation extends React.Component {
 
                             <div className="form-group blue-border-focus">
                                 <label>Estado Actual</label>
-                                <input type="text" class="form-control" placeholder="Readonly input" readonly="readonly" />
+                                <input type="text" className="form-control" placeholder="Readonly input" readonly="readonly" />
                                 <br></br>
                                 <br></br>
                                 <label>Área incidencia</label>
-                                <input type="text" class="form-control" placeholder="Readonly input" readonly="readonly" />
+                                <input type="text" className="form-control" placeholder="Readonly input" readonly="readonly" />
                                 <br></br>
                                 <br></br>
                                 <label>Grado incidencia</label>
-                                <input type="text" class="form-control" placeholder="Readonly input" readonly="readonly" />
+                                <input type="text" className="form-control" placeholder="Readonly input" readonly="readonly" />
                                 <br></br>
                                 <br></br>
-                                <div class="pagination justify-content-end">
-                                    <div id="myModal" class="modal fade in">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                                                    <h4 class="modal-title">Inserte los pasos realizados</h4>
+                                <div className="pagination justify-content-end">
+                                    <div id="myModal" className="modal fade in">
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <a className="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                                                    <h4 className="modal-title">Inserte los pasos realizados</h4>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                                                <div className="modal-body">
+                                                    <textarea className="form-control" rows="5" id="comment"></textarea>
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div className="modal-footer">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
-                                                        <button class="btn btn-primary"><span class="glyphicon glyphicon-check"></span> Save</button>
+                                                        <button class="btn btnRed" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                                                        <button class="btn btnBlue"><span class="glyphicon glyphicon-check"></span> Save</button>
                                                     </div>
                                                 </div>
 
                                             </div>
                                         </div>
                                     </div>
-                                    <a data-toggle="modal" href="#myModal" class="btn btn-primary">Insertar Pasos</a>
+                                    <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
                                 </div>
                             </div>
 

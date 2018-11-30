@@ -8,6 +8,7 @@ import $ from 'jquery';
 import color from '@material-ui/core/colors/orange';
 import { isNull } from 'util';
 import { Button, Modal } from 'react-bootstrap'
+import '../components/ButtonColor.css';
 
 
 class registroColaborador extends Component {
@@ -160,7 +161,7 @@ class registroColaborador extends Component {
                                                 <input type="radio" className="form-check-input" name="optionsRadios" id="optionsRadios2" value="E" onChange={this.handleChange}></input>Externo</label>
                                         </div>
                                         <br></br>
-                                        <button id="btn1" className="btn btn-primary" type="submit" value="sumit">Registrar</button>
+                                        <button id="btn1" className="btn btnBlue" type="submit" value="sumit">Registrar</button>
                                         <div id="btn_click">{validatePassword()}</div>
                                     </div>
                                 </div>
@@ -185,7 +186,7 @@ class registroColaborador extends Component {
                         <Modal.Body id="msj"></Modal.Body>
 
                         <Modal.Footer>
-                            <Button id="close" bsStyle="primary">Aceptar</Button>
+                            <Button id="close" className="btnBlue">Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>

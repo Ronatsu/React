@@ -1,3 +1,4 @@
+import '../components/ButtonColor.css';
 import React, { Component } from 'react';
 import $ from 'jquery';
 import './Block_User.css';
@@ -33,8 +34,8 @@ class AdminArea extends React.Component {
             return (
                 <tr>
                     <th scope="row">{area.nombre}</th>
-                    <td><button class="btn btn-primary  " type="submit"><EditIcon />  Editar</button></td>
-                    <td><button class="btn btn-danger  " type="submit"><DeleteIcon />  Eliminar</button></td>
+                    <td><button class="btn btnBlue  " type="submit"><EditIcon />  Editar</button></td>
+                    <td><button class="btn btnRed  " type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
 
             )
@@ -59,15 +60,15 @@ class AdminArea extends React.Component {
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label></label>
-                                        <div class=" justify-content-end">
-                                            <select class="btn" id="exampleFormControlSelect1">
+                                        <div className=" justify-content-end">
+                                            <select className="btn" id="exampleFormControlSelect1">
                                                 <option>Router Cisco</option>
                                                 <option>Servidor A-97r</option>
                                                 <option>SQL Azure</option>
                                                 <option>Windows 2016</option>
                                                 <option>Log Storage Activy</option>
                                             </select>
-                                            <button class="btn btn-ligth " type="submit"><AddIcon />  Agregar</button>
+                                            <button class="btn btnGrey " type="submit"><AddIcon />  Agregar</button>
                                         </div>
 
                                     </div>

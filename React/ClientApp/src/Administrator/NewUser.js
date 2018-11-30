@@ -5,6 +5,7 @@ import Navigation from '../components/Navigation';
 import { parties } from '../components/bd/party.json';
 import BlockIcon from '@material-ui/icons/Block';
 import AcceptUserIcon from '@material-ui/icons/PersonAdd';
+import '../components/ButtonColor.css';
 
 class newUser extends React.Component {
 
@@ -45,8 +46,8 @@ class newUser extends React.Component {
                     <th scope="row">{party.nombre}</th>
                     <td>{party.correo}</td>
                     <td>{party.area}</td>
-                    <td><button class="btn btn-success  " type="submit"><AcceptUserIcon/>  Aceptar</button></td>
-                    <td><button class="btn btn-danger  " type="submit"><BlockIcon/>  Rechazar</button></td>
+                    <td><button class="btn btnGreen  " type="submit"><AcceptUserIcon/>  Aceptar</button></td>
+                    <td><button class="btn btnRed  " type="submit"><BlockIcon/>  Rechazar</button></td>
                 </tr>
 
             )

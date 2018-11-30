@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Background from '../components/Background';
 import axios from 'axios';
 import Nav from '../components/NavigationUnregistred';
+import '../components/ButtonColor.css';
 
 class registroColaborador extends Component {
 
@@ -92,7 +93,7 @@ class registroColaborador extends Component {
                                     <Link to="/ForgotPass"><small id="forgotPassword" className="form-text">¿Olvidaste la contraseña?</small></Link>
 
                                 </div>
-                                <Link to="/incidentes"><button className="btn btn-primary">Ingresar</button></Link>
+                                <Link to="/incidentes"><button className="btn btnBlue">Ingresar</button></Link>
                             </form>
                         </div>
                         <div className="col-xs-4 col-sm-4 col-lg-4">
