@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import 'react-day-picker/lib/style.css';
 import Navigation from '../components/Navigation';
 import '../components/ButtonColor.css';
+import axios from 'axios';
 
 
 class Form extends React.Component {
@@ -42,9 +43,14 @@ class Select extends React.Component {
     this.state = {
       tech: 'Incidencia',
       tech2: 'Impacto',
-      tech3: 'Área',
-      tech4: 'Tecnología Afectada',
-      tech5: 'Grado Control'
+      tech3: 'Area',
+      tech4: 'Tecnologia Afectada',
+      tech5: 'Grado Control',
+      TECNO: [],
+        IMPACTO: [],
+        TIPO_INCIDENCIA: [],
+        AREA_AFECTADA: [],
+        GRADO_CONTROL: []
     };
   }
 
@@ -76,37 +82,69 @@ class Select extends React.Component {
     this.setState({
       tech5: e.target.value
     })
-  }
+    }
+
+    componentWillMount() {
+        axios.get(`http://localhost:52224/api/Tecnologias`)
+            .then(res => {
+                const TECNO = res.data;
+                this.setState({ TECNO });
+            })
+
+        axios.get(`http://localhost:52224/api/ImpactoIncidencia`)
+            .then(res => {
+                const IMPACTO = res.data;
+                this.setState({ IMPACTO });
+            })
+
+        axios.get(`http://localhost:52224/api/TipoIncidencia`)
+            .then(res => {
+                const TIPO_INCIDENCIA = res.data;
+                this.setState({ TIPO_INCIDENCIA });
+            })
+
+        axios.get(`http://localhost:52224/api/AreaAfectada`)
+            .then(res => {
+                const AREA_AFECTADA = res.data;
+                this.setState({ AREA_AFECTADA });
+            })
+
+        axios.get(`http://localhost:52224/api/GradoControl`)
+            .then(res => {
+                const GRADO_CONTROL = res.data;
+                this.setState({ GRADO_CONTROL });
+            })
+    }
 
 
 
   render() {
 
-    const tIncidencias = ["Desactualización de software", "Infiltración de la red", "Inyección de código", "Perdida de archivos"];
+      const tIncidencias = this.state.TIPO_INCIDENCIA;
 
     const listaIncidencias = tIncidencias.map((incidencia) =>
       <option value={incidencia}>{incidencia}</option>
     );
 
-    const impIncidencias = ["Grave", "Medio", "Bajo", "Sin Impacto"];
+      const impIncidencias = this.state.IMPACTO;
 
     const listaImpacto = impIncidencias.map((impacto) =>
       <option value={impacto}>{impacto}</option>
     );
 
-    const areaIncidencias = ["Cloud", "Área de desarrollo", "Servidores externos", "Centro de redes"];
+      const areaIncidencias = this.state.AREA_AFECTADA;
 
     const listaAreas = areaIncidencias.map((area) =>
       <option value={area}>{area}</option>
     );
 
-    const tecAfectada = ["Router Cisco", "Gestor BD", "Servidor A-97r", "Azure"];
+      const tecAfectada = this.state.TECNO;
 
     const listaTecno = tecAfectada.map((tecnologia) =>
       <option value={tecnologia}>{tecnologia}</option>
     );
 
-    const gradoControl = ["Control interno", "Asesoría", "Outsorcing", "Ente Estatal"];
+      const gradoControl = this.state.GRADO_CONTROL;
 
     const listaControl = gradoControl.map((control) =>
       <option value={control}>{control}</option>
@@ -122,7 +160,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Impacto *</label>
+              <label>Impacto incidencia *</label>
               <select className="form-control" id="lang2" onChange={this.handleChange2.bind(this)} value={this.state.tech2}>
                 {listaImpacto}
               </select>
@@ -144,7 +182,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Tipo *</label>
+              <label>Tipo incidencia *</label>
               <select className="form-control" id="lang" onChange={this.handleChange.bind(this)} value={this.state.tech}>
                 {listaIncidencias}
               </select>
@@ -152,7 +190,7 @@ class Select extends React.Component {
 
               <br></br>
 
-              <label>Fecha del descubrimiento *</label>
+              <label>Fecha de descubrimiento *</label>
               {MyDatePicker()}
 
             </div>
@@ -163,7 +201,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Área *</label>
+              <label>Área incidencia *</label>
               <select className="form-control" id="lang3" onChange={this.handleChange3.bind(this)} value={this.state.tech3}>
                 {listaAreas}
               </select>
@@ -209,7 +247,7 @@ function MyTextArea() {
             <div className="form-group blue-border-focus">
             <br></br>
             <br></br>
-              <label for="exampleFormControlTextarea5">Ingrese la descripción</label>
+              <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
               <textarea className="form-control" id="exampleFormControlTextarea5" rows="3"></textarea>
             </div>
 
