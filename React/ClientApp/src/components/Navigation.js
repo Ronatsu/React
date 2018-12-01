@@ -47,7 +47,7 @@ class navigatiom extends React.Component {
                 <div className="dropdown-divider"></div>
                 <Link to="/AdminTech">   <a className="dropdown-item" href="#"><TechIcon /> Tecnologías</a></Link>
                 <div className="dropdown-divider"></div>
-                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><AreaIcon /> Areas</a></Link>
+                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><AreaIcon /> Áreas</a></Link>
               </div>
             </li>
             <li className="nav-item">
@@ -65,7 +65,7 @@ class navigatiom extends React.Component {
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
               <Link to="/AjustePerfil"> <a className="dropdown-item" href="#"><SettingsIcon /> Perfil</a></Link>
               <div className="dropdown-divider"></div>
-              <Link to="/"> <a className="dropdown-item" href="#"><ExitIcon /> Cerrar sesion</a></Link>
+              <Link to="/"> <a className="dropdown-item" href="#"><ExitIcon /> Cerrar sesión</a></Link>
             </div>
 
           </form>

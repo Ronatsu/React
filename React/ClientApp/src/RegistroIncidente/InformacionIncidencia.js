@@ -16,7 +16,7 @@ class InformacionIncidencia extends React.Component {
                     <fieldset className="fields">
                         <header className="App-header">
                             <br /><br /><br />
-                            <h3 className="mt-4">Información Incidencia</h3>
+                            <h3 className="mt-4">Información de la incidencia</h3>
                         </header>
                         <div>
                             <br></br>
@@ -112,8 +112,8 @@ class BodyInformation extends React.Component {
                                                 </div>
                                                 <div className="modal-footer">
                                                     <div class="btn-group">
-                                                        <button class="btn btnRed" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
-                                                        <button class="btn btnBlue"><span class="glyphicon glyphicon-check"></span> Save</button>
+                                                        <button class="btn btnRed" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                                                        <button class="btn btnBlue"><span class="glyphicon glyphicon-check"></span> Guardar</button>
                                                     </div>
                                                 </div>
 

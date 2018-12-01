@@ -46,8 +46,8 @@ class newUser extends React.Component {
                     <th scope="row">{party.nombre}</th>
                     <td>{party.correo}</td>
                     <td>{party.area}</td>
-                    <td><button class="btn btnGreen  " type="submit"><AcceptUserIcon/>  Aceptar</button></td>
-                    <td><button class="btn btnRed  " type="submit"><BlockIcon/>  Rechazar</button></td>
+                    <td><button class="btn btnGreen  " type="submit"><AcceptUserIcon/>  Aceptar</button>
+                    <button class="btn btnRed  " type="submit"><BlockIcon/>  Rechazar</button></td>
                 </tr>
 
             )
@@ -62,7 +62,7 @@ class newUser extends React.Component {
                 <br />
                 <br />
                 <div className="w-auto p-3">
-                <input className="form-control" id="myInput" type="text" placeholder="Search.."></input>
+                <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
                 </div>
                 <div className="container table-responsive " id="main_div">
                     <table className="table table-hover table-condensed " id="table_id">
@@ -72,7 +72,7 @@ class newUser extends React.Component {
                                 <th className="size" scope="col">Correo</th>
                                 <th className="size" scope="col">Área</th>
                                 <th className="size" scope="col"></th>
-                                <th className="size" scope="col"></th>
+                               
                             </tr>
                         </thead>
                         <tbody id="myTable">

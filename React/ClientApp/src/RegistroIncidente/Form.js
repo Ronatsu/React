@@ -42,8 +42,8 @@ class Select extends React.Component {
     this.state = {
       tech: 'Incidencia',
       tech2: 'Impacto',
-      tech3: 'Area',
-      tech4: 'Tecnologia Afectada',
+      tech3: 'Área',
+      tech4: 'Tecnología Afectada',
       tech5: 'Grado Control'
     };
   }
@@ -82,7 +82,7 @@ class Select extends React.Component {
 
   render() {
 
-    const tIncidencias = ["Desactualizacion de software", "Infiltracion de la red", "Inyeccion de codigo", "Perdida de archivos"];
+    const tIncidencias = ["Desactualización de software", "Infiltración de la red", "Inyección de código", "Perdida de archivos"];
 
     const listaIncidencias = tIncidencias.map((incidencia) =>
       <option value={incidencia}>{incidencia}</option>
@@ -94,7 +94,7 @@ class Select extends React.Component {
       <option value={impacto}>{impacto}</option>
     );
 
-    const areaIncidencias = ["Cloud", "Area Desarrollo", "Servidores Externos", "Centro De Redes"];
+    const areaIncidencias = ["Cloud", "Área de desarrollo", "Servidores externos", "Centro de redes"];
 
     const listaAreas = areaIncidencias.map((area) =>
       <option value={area}>{area}</option>
@@ -106,7 +106,7 @@ class Select extends React.Component {
       <option value={tecnologia}>{tecnologia}</option>
     );
 
-    const gradoControl = ["Control interno", "Asesoria", "Outsorcing", "Ente Estatal"];
+    const gradoControl = ["Control interno", "Asesoría", "Outsorcing", "Ente Estatal"];
 
     const listaControl = gradoControl.map((control) =>
       <option value={control}>{control}</option>
@@ -122,7 +122,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Impacto incidencia *</label>
+              <label>Impacto *</label>
               <select className="form-control" id="lang2" onChange={this.handleChange2.bind(this)} value={this.state.tech2}>
                 {listaImpacto}
               </select>
@@ -144,7 +144,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Tipo incidencia *</label>
+              <label>Tipo *</label>
               <select className="form-control" id="lang" onChange={this.handleChange.bind(this)} value={this.state.tech}>
                 {listaIncidencias}
               </select>
@@ -152,7 +152,7 @@ class Select extends React.Component {
 
               <br></br>
 
-              <label>Fecha de descubrimiento *</label>
+              <label>Fecha del descubrimiento *</label>
               {MyDatePicker()}
 
             </div>
@@ -163,7 +163,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Área incidencia *</label>
+              <label>Área *</label>
               <select className="form-control" id="lang3" onChange={this.handleChange3.bind(this)} value={this.state.tech3}>
                 {listaAreas}
               </select>
@@ -209,7 +209,7 @@ function MyTextArea() {
             <div className="form-group blue-border-focus">
             <br></br>
             <br></br>
-              <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
+              <label for="exampleFormControlTextarea5">Ingrese la descripción</label>
               <textarea className="form-control" id="exampleFormControlTextarea5" rows="3"></textarea>
             </div>
 

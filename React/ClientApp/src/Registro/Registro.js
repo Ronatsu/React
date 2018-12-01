@@ -84,7 +84,7 @@ class registroColaborador extends Component {
                                 </div>
                                 <div className="form-group">
                                     <label for="emailLogin">Correo electrónico</label>
-                                    <input type="email" className="form-control" id="emailLogin" aria-describedby="correoLogin" placeholder="Enter email"></input>
+                                    <input type="email" className="form-control" id="emailLogin" aria-describedby="correoLogin" placeholder="Ingrese el correo"></input>
                                 </div>
                                 <div className="form-group">
                                     <label for="contraseñaLogin">Contraseña</label>

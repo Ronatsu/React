@@ -99,7 +99,7 @@ function FilterUser() {
 
         <div className="Container-div">
           <div >
-            <label for="exampleFormControl">Filtrar Incidencia</label>
+            <label for="exampleFormControl">Filtrar áreas</label>
             <br></br>
             <div className="form-row">
               <label class="checkbox-inline"> <input type="checkbox" value="" /> Bases de Datos&nbsp;&nbsp;</label>
@@ -122,7 +122,7 @@ function ShowIncident() {
         <div className="Container-div">
           <div >
             <blockquote>
-              <p>Se presento una incidencia en el area de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
+              <p>Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
             </blockquote>
           </div>
         </div>

@@ -19,7 +19,7 @@ class MenuReportes extends React.Component {
                     <fieldset className="fields">
                         <header className="App-header">
                             <br /><br /><br />
-                            <h3 className="mt-4">Menu de Reportes</h3>
+                            <h3 className="mt-4">Menú de reportes</h3>
                         </header>
                         <div>
                             {SelectGraph()}

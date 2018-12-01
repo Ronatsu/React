@@ -36,7 +36,7 @@ class MyCsvLink extends React.Component {
           
       return (
         <div>
-          <button className="btn btnBlue" onClick={this.fetchData}>Download CSV</button>
+          <button className="btn btnBlue" onClick={this.fetchData}>Descargar CSV</button>
   
           <CSVLink
             data={datas}
