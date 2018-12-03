@@ -7,6 +7,9 @@ import { areas } from '../components/bd/area.json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
+import { Button, Modal, FormControl } from 'react-bootstrap'
+import { func } from 'prop-types';
+import { Input } from '@material-ui/core';
 
 class AdminArea extends React.Component {
 
@@ -26,6 +29,29 @@ class AdminArea extends React.Component {
                 });
             });
         });
+
+        $(document).ready(function () {
+            $(".btnBlue").click(function () {
+                $(this).each(function () {
+                    $("#modal2").show();
+                    $("#close").click(function () {
+                        $("#modal2").css("display", "none");
+                    });
+                });
+            });
+        });
+
+
+        $(function () {
+            $("#myTable tr td").click(function () {
+                const cell = $(this).parents("tr").find("th").eq(0).text();//$(this).index(0).text();
+                /*const row = $(this).parents('tr').index();
+                const contenido = $(this).html();
+                $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
+                $("#titleModal").html("Editando " + cell)
+
+            })
+        })
     }
 
 
@@ -34,8 +60,8 @@ class AdminArea extends React.Component {
             return (
                 <tr>
                     <th scope="row">{area.nombre}</th>
-                    <td><button class="btn btnBlue  " type="submit"><EditIcon />  Editar</button></td>
-                    <td><button class="btn btnRed  " type="submit"><DeleteIcon />  Eliminar</button></td>
+                    <td><button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                        <button className="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
 
             )
@@ -52,7 +78,7 @@ class AdminArea extends React.Component {
                                 <div className="form-row">
                                     <div className="col-md-4 mb-3">
                                         <label>Buscar</label>
-                                        <input type="text" className="form-control" id="myInput" placeholder="Nombre del área" />
+                                        <input type="text" className="form-control" id="myInput" placeholder="Buscar el área" />
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label>Agregar</label>
@@ -61,13 +87,7 @@ class AdminArea extends React.Component {
                                     <div className="col-md-4 mb-3">
                                         <label></label>
                                         <div className=" justify-content-end">
-                                            <select className="btn" id="exampleFormControlSelect1">
-                                                <option>Router Cisco</option>
-                                                <option>Servidor A-97r</option>
-                                                <option>SQL Azure</option>
-                                                <option>Windows 2016</option>
-                                                <option>Log Storage Activy</option>
-                                            </select>
+                                            {Select_Tech("btn")}
                                             <button class="btn btnGrey " type="submit"><AddIcon />  Agregar</button>
                                         </div>
 
@@ -86,7 +106,7 @@ class AdminArea extends React.Component {
                                 <tr>
                                     <th className="size" scope="col">Nombre</th>
                                     <th className="size" scope="col"></th>
-                                    <th className="size" scope="col"></th>
+
                                 </tr>
                             </thead>
                             <tbody id="myTable">
@@ -96,8 +116,37 @@ class AdminArea extends React.Component {
                         </table>
                     </div>
                 </div>
+                <div className="container" id="modal2">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title id="titleModal"></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FormControl className="form-control" placeholder="Nombre del area"></FormControl>
+                            <br />
+                            {Select_Tech("form-control container")}
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button id="close" className="btnRed">Cancelar</Button>
+                            <Button id="close" className="btnBlue">Aceptar</Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </div>
             </div>
         )
     }
+}
+function Select_Tech(styleClassName) {
+    return (
+
+        <select className={styleClassName} id="exampleFormControlSelect1">
+            <option>Router Cisco</option>
+            <option>Servidor A-97r</option>
+            <option>SQL Azure</option>
+            <option>Windows 2016</option>
+            <option>Log Storage Activy</option>
+        </select>
+    );
 }
 export default AdminArea;

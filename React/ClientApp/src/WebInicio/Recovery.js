@@ -3,10 +3,11 @@ import './passStyle.css';
 import $ from 'jquery';
 import axios from 'axios';
 import '../components/ButtonColor.css';
+import Nav from '../components/NavigationUnregistred';
 
 
 class recover extends React.Component {
-   
+
     state = {
         email: '',
     }
@@ -30,23 +31,26 @@ class recover extends React.Component {
     }
     render() {
         return (
-            <div className="container" id="div_principal">
-                <form className="form-signin" onSubmit={this.handleSubmit}>
-                    <h2 className="form-signin-heading">Recuperar Contraseña</h2>
+            <div>
+                <Nav />
+                <div className="container" id="div_principal">
+                    <form className="form-signin" onSubmit={this.handleSubmit}>
+                        <h2 className="form-signin-heading">Recuperar Contraseña</h2>
 
-                    <div className="form-group">
+                        <div className="form-group">
 
-                        <input id="idMail" type="text" name="name" className="form-control" placeholder="Correo Electronico" onChange={this.handleChange} autoFocus />
-                        <span className="help-block"></span>
-                    </div>
+                            <input id="idMail" type="text" name="name" className="form-control" placeholder="Correo electrónico " onChange={this.handleChange} autoFocus />
+                            <span className="help-block"></span>
+                        </div>
 
-                    <div className="form-group">
-                        <input type="text" name="emailConfim" className="form-control" placeholder="Confirmar Correo Electronico" />
-                        <span className="help-block"></span>
-                        <button className="btn btnBlue btn-block " type="submit" >Enviar</button>
-                    </div>
+                        <div className="form-group">
+                            <input type="text" name="emailConfim" className="form-control" placeholder="Confirmar correo electrónico " />
+                            <span className="help-block"></span>
+                            <button className="btn btnBlue form-control">Enviar</button>
+                        </div>
 
-                </form>
+                    </form>
+                </div>
             </div>
         )
     }

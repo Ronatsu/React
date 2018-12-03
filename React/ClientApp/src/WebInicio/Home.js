@@ -30,7 +30,7 @@ class Home extends Component {
         const incidentCard = this.state.incidents.map((incident) => {
             return (
                 <tr>
-                    <td>  <Link to="/InformacionIncidencia"><button class="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar Seguimiento</button></Link></td>
+                    <td>  <Link to="/InformacionIncidencia"><button class="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar seguimiento</button></Link></td>
                     <th scope="row">{incident.impactLevel}</th>
                     <td>{incident.impactFeasibility}</td>
                     <td>{incident.description}</td>
@@ -45,7 +45,7 @@ class Home extends Component {
                 <div className="container">
                     <br /><br /><br /><br />
                     <div className="w-auto p-3">
-                        <input className="form-control " type="text" id="inputSearch" placeholder="Search"></input>
+                        <input className="form-control " type="text" id="inputSearch" placeholder="Buscar"></input>
                     </div>
                     <div className="row ">
                         <div className="col  ">

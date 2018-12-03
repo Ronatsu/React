@@ -46,7 +46,7 @@ class navigatiom extends React.Component {
                     <td>{party.apellido}</td>
                     <td>{party.correo}</td>
                     <td>{party.area}</td>
-                    <td><button className="btn btnRed  " type="submit"><BlockIcon/>  Bloquear</button></td>
+                    <td><button className={showStatusBlock(party.block)} type="submit"><BlockIcon />{showTextStatusBlock(party.block)}</button></td>
                 </tr>
 
             )
@@ -61,7 +61,7 @@ class navigatiom extends React.Component {
               
 
                 <div className="w-auto p-3 mt-4">
-                <input className="form-control" id="myInput" type="text" placeholder="Search.."></input>
+                <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
                 </div>
                 <div className=" container table-responsive " id="main_div">
                     <table className="table table-hover table-condensed " id="table_id">
@@ -92,3 +92,20 @@ class navigatiom extends React.Component {
     }
 }
 export default navigatiom;
+
+function showStatusBlock (status){
+    if (status == true) {
+        $("#textButton").html("Desbloquear");
+        return "btn btnGreen"
+    } else if (status == false) {
+        $("#textButton").html("Bloquear");
+        return "btn btnRed"
+    }
+}
+function showTextStatusBlock(status) {
+    if (status == true) {
+        return "Desbloquear"
+    } else if (status == false) {
+        return "Bloquear"
+    }
+}

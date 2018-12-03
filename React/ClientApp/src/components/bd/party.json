@@ -1,76 +1,88 @@
 {
-    "parties": [
-        {
-            "nombre": "cesar",
-            "apellido": "jimenez",
-            "correo": "cesar@correo.com",
-            "area": "redes"
-        },
-        {
-            "nombre": "ronny",
-            "apellido": "Alvarez",
-            "correo": "ronny@correo.com",
-            "area": "redes"
-        },
-        {
-            "nombre": "ronald",
-            "apellido": "Alafaro",
-            "correo": "ronald@correo.com",
-            "area": "bases de datos"
-        },
-        {
-            "nombre": "kenneth",
-            "apellido": "ugalde",
-            "correo": "kenneth@correo.com",
-            "area": "bases de datos"
-        },
-        {
-            "nombre": "cesar",
-            "apellido": "jimenez",
-            "correo": "cesar@correo.com",
-            "area": "redes"
-        },
-        {
-            "nombre": "ronny",
-            "apellido": "Alvarez",
-            "correo": "ronny@correo.com",
-            "area": "redes"
-        },
-        {
-            "nombre": "ronald",
-            "apellido": "Alafaro",
-            "correo": "ronald@correo.com",
-            "area": "bases de datos"
-        },
-        {
-            "nombre": "kenneth",
-            "apellido": "ugalde",
-            "correo": "kenneth@correo.com",
-            "area": "bases de datos"
-        },
-        {
-            "nombre": "cesar",
-            "apellido": "jimenez",
-            "correo": "cesar@correo.com",
-            "area":"redes"
-        },
-        {
-            "nombre": "ronny",
-            "apellido": "Alvarez",
-            "correo": "ronny@correo.com",
-            "area":"redes"
-        },
-        {
-            "nombre": "ronald",
-            "apellido": "Alafaro",
-            "correo": "ronald@correo.com",
-            "area":"bases de datos"
-        },
-        {
-            "nombre": "kenneth",
-            "apellido": "ugalde",
-            "correo": "kenneth@correo.com",
-            "area":"bases de datos"
-        }
-    ]
+  "parties": [
+    {
+      "nombre": "cesar",
+      "apellido": "jimenez",
+      "correo": "cesar@correo.com",
+      "area": "redes",
+      "block": true
+    },
+    {
+      "nombre": "ronny",
+      "apellido": "Alvarez",
+      "correo": "ronny@correo.com",
+      "area": "redes",
+      "block": false
+    },
+    {
+      "nombre": "ronald",
+      "apellido": "Alafaro",
+      "correo": "ronald@correo.com",
+      "area": "bases de datos",
+      "block": true
+    },
+    {
+      "nombre": "kenneth",
+      "apellido": "ugalde",
+      "correo": "kenneth@correo.com",
+      "area": "bases de datos",
+      "block": true
+    },
+    {
+      "nombre": "cesar",
+      "apellido": "jimenez",
+      "correo": "cesar@correo.com",
+      "area": "redes",
+      "block": false
+    },
+    {
+      "nombre": "ronny",
+      "apellido": "Alvarez",
+      "correo": "ronny@correo.com",
+      "area": "redes",
+      "block": false
+    },
+    {
+      "nombre": "ronald",
+      "apellido": "Alafaro",
+      "correo": "ronald@correo.com",
+      "area": "bases de datos",
+      "block": true
+    },
+    {
+      "nombre": "kenneth",
+      "apellido": "ugalde",
+      "correo": "kenneth@correo.com",
+      "area": "bases de datos",
+      "block": true
+    },
+    {
+      "nombre": "cesar",
+      "apellido": "jimenez",
+      "correo": "cesar@correo.com",
+      "area": "redes",
+      "block": false
+    },
+    {
+      "nombre": "ronny",
+      "apellido": "Alvarez",
+      "correo": "ronny@correo.com",
+      "area": "redes",
+      "block": false
+    },
+    {
+      "nombre": "ronald",
+      "apellido": "Alafaro",
+      "correo": "ronald@correo.com",
+      "area": "bases de datos",
+      "block": true
+    },
+    {
+      "nombre": "kenneth",
+      "apellido": "ugalde",
+      "correo": "kenneth@correo.com",
+      "area": "bases de datos",
+      "block": false
+    }
+  ]
 }
