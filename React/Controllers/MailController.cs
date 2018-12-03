@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 
 namespace React.Controllers
@@ -9,18 +12,46 @@ namespace React.Controllers
     {
 
 
-        // GET: api/Mail/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("[action]")]
+        public void Get()
         {
-            return "value";
-        }
+            List<string> list = new List<string>
+            {
+                "kenneth.ugalde@ucrso.info",
+                "ronald.alfarohidalgo@ucrso.info",
+                "cesar.jimenez@ucrso.info"
+            };
 
-        // POST: api/Mail
-        [HttpPost]
-        public void Post([FromBody] string mail)
-        {
-            String gg = mail;
+            MailMessage mail = new MailMessage
+            {
+                From = new MailAddress("ronald.alfarohidalgo@ucrso.info"),
+                Subject = "Cordinacion de Informatica",
+                Body = "Oferta de empleo en Intel, se necesita saber de React.js y Angular"
+            };
+            foreach (var destinatario in list)
+            {
+                mail.To.Add(new MailAddress(destinatario));
+            }
+
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 25, //465; //587
+                Credentials = new NetworkCredential("ronald.alfarohidalgo@ucrso.info", "contraseña"),
+                EnableSsl = true
+            };
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("No se ha podido enviar el email", ex.InnerException);
+            }
+            finally
+            {
+                smtp.Dispose();
+            }
         }
     }
 }
