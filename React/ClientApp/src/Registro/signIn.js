@@ -101,7 +101,7 @@ class registroColaborador extends Component {
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`http://localhost:52224/api/Registro`, {
+        axios.post(`http://localhost:58055/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
             primer_apellido: this.state.apellido,
@@ -161,7 +161,7 @@ class registroColaborador extends Component {
                                                 <input type="radio" className="form-check-input" name="optionsRadios" id="optionsRadios2" value="E" onChange={this.handleChange}></input>Externo</label>
                                         </div>
                                         <br></br>
-                                        <button id="btn1" className="btn btnBlue" type="submit" value="sumit">Registrar</button>
+                                        <button id="btn1" className="btn btnBlue" type="submit"  value="sumit">Registrar</button>
                                         <div id="btn_click">{validatePassword()}</div>
                                     </div>
                                 </div>

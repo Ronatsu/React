@@ -8,7 +8,7 @@ import '../components/ButtonColor.css';
 class recover extends React.Component {
    
     state = {
-        name: '',
+        email: '',
     }
 
     handleChange = event => {
@@ -18,15 +18,10 @@ class recover extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        const user = {
-            name: this.state.name
-        };
+        axios.post(`http://localhost:52224/api/usuario`, {
+            email: this.state.email
 
-        axios.post(`https://localhost:44372/Api/Mail`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            user
+            
         })
             .then(res => {
                 console.log(res);

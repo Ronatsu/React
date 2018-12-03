@@ -15,18 +15,18 @@ namespace API_Ejemplo.Controllers
     public class RegistroController : ControllerBase
     {
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
+        String connectionString = "Data Source=DESKTOP-D684D39\\SQL2017_DEV;" +
                                   "Initial Catalog=ProyectoAnderson;" +
                                   "Integrated security=True;";
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<RegistroUsuarios> USUARIOS = new List<RegistroUsuarios>();
+        List<Usuarios> USUARIOS = new List<Usuarios>();
 
 
         // GET: api/Registro
         [HttpGet]
-        public ActionResult<List<RegistroUsuarios>> Get()
+        public ActionResult<List<Usuarios>> Get()
         {
             EstablecerConexion();
             cmd = new SqlCommand("STORED_PROD_OBTENER_COLABORADORES", conexion);
@@ -34,7 +34,7 @@ namespace API_Ejemplo.Controllers
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                RegistroUsuarios nuevoUsuario = new RegistroUsuarios();
+                Usuarios nuevoUsuario = new Usuarios();
                 nuevoUsuario.PARTYID = dataReader["PARTYID"].ToString();
                 nuevoUsuario.EMAIL = dataReader["NOMBRE"].ToString();
                 nuevoUsuario.NOMBRE = dataReader["SEGUNDO_NOMBRE"].ToString();
@@ -60,21 +60,18 @@ namespace API_Ejemplo.Controllers
 
         // POST: api/Registro
         [HttpPost]
-        public IActionResult CrearUsuario(RegistroUsuarios value)
+        public IActionResult CrearUsuario(Usuarios value)
         {
             conexion = new SqlConnection(connectionString);
             conexion.Open();
-            cmd = new SqlCommand("Stored_Pro_InsertarParty", conexion);
+            cmd = new SqlCommand("Proc_AgregarUsuario", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Nombre", value.NOMBRE);
+            cmd.Parameters.AddWithValue("@PrimerApellido", value.PRIMER_APELLIDO);
+            cmd.Parameters.AddWithValue("@SegundoApellido", value.SEGUNDO_APELLIDO);
             cmd.Parameters.AddWithValue("@CORREO", value.EMAIL);
-            cmd.Parameters.AddWithValue("@NOMBRE", value.NOMBRE);
-            cmd.Parameters.AddWithValue("@PRIMER_APELLIDO", value.PRIMER_APELLIDO);
-            cmd.Parameters.AddWithValue("@SEGUNDO_APELLIDO", value.SEGUNDO_APELLIDO);
-            cmd.Parameters.AddWithValue("@HABILITADO", value.HABILITADO);
-            cmd.Parameters.AddWithValue("@CONTRASEÑA", value.CONTRASEÑA);
-            cmd.Parameters.AddWithValue("@TIPO_COLABORADOR", value.TIPO_COLABORADOR);
-            cmd.Parameters.AddWithValue("@ROL_USUARIO", int.Parse(RolUsuario(value.ROL_USUARIO)));
-            cmd.Parameters.AddWithValue("@ASIGNA_INCIDENCIA", true);
+            cmd.Parameters.AddWithValue("@contrasena", value.CONTRASEÑA);
 
             dataReader = cmd.ExecuteReader();
             CerrarConexion();
