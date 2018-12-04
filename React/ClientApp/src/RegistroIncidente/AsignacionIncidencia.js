@@ -9,23 +9,28 @@ class AsignacionIncidencia extends React.Component {
         super(props);
 
         $(document).ready(function () {
-            $(".ccc").on('change', function () {
-                const labelText = $.trim($(".teee").text().toLowerCase());
-                $('#pene').html('gg= ' + labelText);
-                if ($(this).is(':checked')) {
-                    // Hacer algo si el checkbox ha sido seleccionado
-                    $("#myTable tr").filter(function () {
-                        $(this).toggle($(this).text().toLowerCase().trim().indexOf(labelText) > -1)
-                    });
-                } else {
-                    // Hacer algo si el checkbox ha sido deseleccionado
-                    $("#myTable tr").filter(function () {
-                        $(this).toggle($(this).text().toLowerCase().indexOf("") > -1)
-                    });
-                }
-            });
 
+            $('#divCheck input').click(function () {
+                $(".ckeck").on('change', function () {
+
+                    const labelText = $.trim($(".inputCheck" + $(this).attr('id')).text().toLowerCase());
+                    if (labelText != "todos") {
+                        if ($(this).is(':checked')) {
+
+                            $("#myTable tr").filter(function () {
+                                $(this).toggle($(this).text().toLowerCase().trim().indexOf(labelText) > -1)
+                            });
+                        }
+                    } else {
+
+                        $("#myTable tr").filter(function () {
+                            $(this).toggle($(this).text().toLowerCase().indexOf("") > -1)
+                        });
+                    }
+                });
+            })
         });
+
     }
     render() {
         return (
@@ -106,21 +111,19 @@ function FilterUser() {
     return (
         <div className="container">
             <div className="row">
-
                 <div className="Container-div">
                     <div >
                         <label for="exampleFormControl">Filtrar áreas</label>
                         <br></br>
-                        <div className="form-row">
+                        <div className="form-row" id="divCheck">
 
-                            <label className="checkbox-inline teee" id="labelCheck"> <input className="ccc" type="checkbox" id="myInput" />Bases de Datos&nbsp;&nbsp;</label>
-                            <div id="pene"></div>
-                            <label className="checkbox-inline teee" id="labelCheck"> <input className="ccc" type="checkbox" id="myInput" />Redes&nbsp;&nbsp;</label>
-                            <label className="checkbox-inline teee" id="labelCheck"> <input className="ccc" type="checkbox" id="myInput" />Desarrollo&nbsp;&nbsp;</label>
-                            <label className="checkbox-inline teee" id="labelCheck"> <input className="ccc" type="checkbox" id="myInput" />Infraestructura&nbsp;&nbsp;</label>
+                            <label className="checkbox-inline inputCheck0"> <input className="ckeck" type="radio" name="btnRadio" />Todos&nbsp;&nbsp;</label>
+                            <label className="checkbox-inline inputCheck1"> <input className="ckeck" type="radio" name="btnRadio" id="1" />Bases de Datos&nbsp;&nbsp;</label>
+                            <label className="checkbox-inline inputCheck2"> <input className="ckeck" type="radio" name="btnRadio" id="2" />Redes&nbsp;&nbsp;</label>
+                            <label className="checkbox-inline inputCheck3"> <input className="ckeck" type="radio" name="btnRadio" id="3" />Desarrollador&nbsp;&nbsp;</label>
+                            <label className="checkbox-inline inputCheck4"> <input className="ckeck" type="radio" name="btnRadio" id="4" />Infraestructura&nbsp;&nbsp;</label>
 
                         </div>
-
                     </div>
                 </div>
             </div>
