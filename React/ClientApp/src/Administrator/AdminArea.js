@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap'
 import { func } from 'prop-types';
 import { Input } from '@material-ui/core';
+import { dark } from '@material-ui/core/styles/createPalette';
 
 class AdminArea extends React.Component {
 
@@ -76,22 +77,38 @@ class AdminArea extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-3 mb-3">
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar el área" />
                                     </div>
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-1 mb-3">
+                                       
+                                    </div>
+                                    <div className="col-md-3 mb-3">
                                         <label>Agregar</label>
                                         <input type="text" className="form-control" id="validationCustom02" placeholder="Nombre del área" />
                                     </div>
-                                    <div className="col-md-4 mb-3">
-                                        <label></label>
+                                    <div className="col-md-2 mb-3">
+                                        <label>Tecnología</label>
                                         <div className=" justify-content-end">
-                                            {Select_Tech("btn")}
-                                            <button class="btn btnGrey " type="submit"><AddIcon />  Agregar</button>
+                                            {Select_Tech("btn")}                                     
                                         </div>
-
                                     </div>
+                                    <div className="col-md-1 mb-3">
+                                        <label>Crítico</label>
+                                        <div className=" justify-content-end">
+                                            <select className="form-control" id="exampleFormControlSelect1">
+                                            <option>Sí</option>
+                                            <option>No</option>
+                                                </select>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div className="col-md-1 mb-3">
+                                      <br/>
+                                        <button class=" btn btnGrey " type="submit"><AddIcon />  Agregar</button>
+                                        </div>
 
                                 </div>
 

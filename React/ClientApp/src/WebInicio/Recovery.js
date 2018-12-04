@@ -13,21 +13,27 @@ class recover extends React.Component {
     }
 
     handleChange = event => {
-        this.setState({ name: event.target.value });
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
     }
 
     handleSubmit = event => {
         event.preventDefault();
 
-        axios.post(`http://localhost:52224/api/usuario`, {
-            email: this.state.email
+        
+            console.log(this.state.email2 + " 2");
+            console.log(this.state.email1 + " 1");
+        
 
-            
+        axios.post(`http://localhost:58055/api/RecuperarContraseña`, {
+            email1: this.state.email1,
+            email2: this.state.email2,
+          
         })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+            
     }
     render() {
         return (
@@ -39,14 +45,14 @@ class recover extends React.Component {
 
                         <div className="form-group">
 
-                            <input id="idMail" type="text" name="name" className="form-control" placeholder="Correo electrónico " onChange={this.handleChange} autoFocus />
+                            <input id="idMail" type="mail" name="email1" className="form-control" placeholder="Correo electrónico " value={this.state.email1} onChange={this.handleChange} autoFocus />
                             <span className="help-block"></span>
                         </div>
 
                         <div className="form-group">
-                            <input type="text" name="emailConfim" className="form-control" placeholder="Confirmar correo electrónico " />
+                            <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
                             <span className="help-block"></span>
-                            <button className="btn btnBlue form-control">Enviar</button>
+                            <button className="btn btnBlue form-control" type="submit" >Enviar</button>
                         </div>
 
                     </form>
