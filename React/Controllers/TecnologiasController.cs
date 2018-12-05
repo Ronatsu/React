@@ -29,7 +29,7 @@ namespace API_Ejemplo.Controllers
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("STORED_OBTENER_NOMBRE_TECNOLOGIA", conexion);
+            cmd = new SqlCommand("Proc_NombreTecnologia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())

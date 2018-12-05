@@ -8,16 +8,25 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap'
+import axios from 'axios';
+import SelectComponent from '../Administrator/SelectComponent';
+import SelectArea from '../Administrator/SelectArea';
 
 class AdminTech extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {
-            areas
-        }
-
         super(props);
+        this.state = {
+            areas,
+            tecno: [],
+            area: [],
+            selectGeneric: '',
+            selectArea: ''
+        }
+        this.handleChange = this.handleChange.bind(this);
+
+        
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -51,17 +60,46 @@ class AdminTech extends React.Component {
             })
         })
     }
+    
 
+    handleChange = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+    }
+
+
+    componentWillMount() {
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Tecnologia`)
+            .then(res => {
+                const areas = res.data;
+                this.setState({ areas });
+            })
+
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/TipoTecnologia`)
+            .then(res => {
+                const tecno = res.data;
+                this.setState({ tecno });
+            })
+
+
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Area`)
+            .then(res => {
+                const area = res.data;
+                this.setState({ area });
+            })
+    }
 
     render() {
         const areasTable = this.state.areas.map((area) => {
             return (
                 <tr>
-                    <th scope="row">{area.nombre}</th>
+                    <th scope="row">{area.nombreTecnologia}</th>
                     <td><button class="btn btnBlue" type="submit"><EditIcon />  Editar</button>
                         <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
-
             )
         })
         return (
@@ -84,12 +122,18 @@ class AdminTech extends React.Component {
                                     </div>
                                     <div className="col-md-2 mb-3">
                                         <label>Tipo de Tecnología</label>
-                                        {Select_Type_Technology()}
+                                        <SelectComponent
+                                            tecno={this.state.tecno}
+                                            handleChange={this.handleChange}
+                                        />
                                     </div>
 
                                     <div className="col-md-2 mb-3">
                                         <label>Área</label>
-                                        {Select_Area()}
+                                        <SelectArea
+                                            area={this.state.area}
+                                            handleChange={this.handleChange}
+                                        />
                                     </div>
 
                                     <div className="col-md-2 mb-3">

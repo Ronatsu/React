@@ -26,7 +26,7 @@ namespace React.Controllers
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("STORED_PROD_OBTENER_TIPO_INCIDENTE", conexion);
+            cmd = new SqlCommand("Proc_TipoIncidencia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())

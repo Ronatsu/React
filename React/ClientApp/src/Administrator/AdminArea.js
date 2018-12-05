@@ -10,16 +10,24 @@ import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap'
 import { func } from 'prop-types';
 import { Input } from '@material-ui/core';
+import axios from 'axios';
 
 class AdminArea extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {
-            areas
-        }
-
         super(props);
+        this.state = {
+            areas,
+            NombreArea: '',
+            tecnologia: 1,
+            AreaFk: 0
+        }
+        this.handleChange = this.handleChange.bind(this);
+
+        
+
+        
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -54,12 +62,43 @@ class AdminArea extends React.Component {
         })
     }
 
+    handleChange = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+
+        axios.post(`http://localhost:52224/api/AdministracionAreaTecnologia/InsertarArea`, {
+            NombreArea: this.state.NombreArea,
+            tecnologiaFk: this.state.tecnologia,
+            AreaFk: this.state.AreaFk
+        })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
+    componentWillMount() {
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Area`)
+            .then(res => {
+                const areas = res.data;
+                this.setState({ areas });
+            })
+    }
+
 
     render() {
         const areasTable = this.state.areas.map((area) => {
             return (
                 <tr>
-                    <th scope="row">{area.nombre}</th>
+                    <th scope="row">{area.nombreArea}</th>
                     <td><button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
                         <button className="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
@@ -82,13 +121,13 @@ class AdminArea extends React.Component {
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label>Agregar</label>
-                                        <input type="text" className="form-control" id="validationCustom02" placeholder="Nombre del área" />
+                                        <input type="text" className="form-control" id="validationCustom02" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del área" />
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label></label>
                                         <div className=" justify-content-end">
                                             {Select_Tech("btn")}
-                                            <button class="btn btnGrey " type="submit"><AddIcon />  Agregar</button>
+                                            <button class="btn btnGrey" type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
                                         </div>
 
                                     </div>
@@ -137,10 +176,13 @@ class AdminArea extends React.Component {
         )
     }
 }
-function Select_Tech(styleClassName) {
+
+
+function Select_Tech(styleClassName , ) {
+
     return (
 
-        <select className={styleClassName} id="exampleFormControlSelect1">
+        <select className={styleClassName} id="exampleFormControlSelect1" name="tecnologia">
             <option>Router Cisco</option>
             <option>Servidor A-97r</option>
             <option>SQL Azure</option>

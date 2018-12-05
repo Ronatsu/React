@@ -27,7 +27,7 @@ namespace React.Controllers
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("STORED_OBTENER_AREA", conexion);
+            cmd = new SqlCommand("Proc_ObtenerArea", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
