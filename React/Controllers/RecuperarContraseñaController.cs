@@ -76,7 +76,9 @@ namespace React.Controllers
                     "\n\n" +
                                   "Clave de acceso: " + simplePassword +
                     "\n\n" +
-                    "Por su seguiridad no mantenga esta información al alcance de otras personas";
+                    "Por su seguridad no mantenga esta información al alcance de otras personas." +
+                    "\n\n" +
+                    "Ingresar al sitio web: http://localhost:58055/";
                     string subject = "Recuperación de contraseña";
                     List<string> mailList = new List<string>();
                     mailList.Add(mailRecovery);
