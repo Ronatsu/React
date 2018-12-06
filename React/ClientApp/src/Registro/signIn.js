@@ -20,10 +20,9 @@ class registroColaborador extends Component {
             nombre: '',
             apellido: '',
             segundoApellido: '',
-            habilitado: true,
-            contraseña: '',
+            password1: '',
+            password2: '',
             optionsRadios: '',
-            rol_usuario: 'Administrador'
         }
         this.handleChange = this.handleChange.bind(this);
         //$(document).ready(function () {
@@ -94,6 +93,7 @@ class registroColaborador extends Component {
         this.setState({
             [nameInput]: valueInput
         });
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleSubmit = event => {
@@ -107,7 +107,8 @@ class registroColaborador extends Component {
             primer_apellido: this.state.apellido,
             segundo_apellido: this.state.segundoApellido,
             habilitado: this.state.habilitado,
-            contraseña: this.state.contraseña,
+            password1: this.state.password1,
+            password2: this.state.password2,
             optionsRadios: this.state.optionsRadios,
             rol_usuario: this.state.rol_usuario,
             asigna_incidencia: true
@@ -141,15 +142,15 @@ class registroColaborador extends Component {
                                         <input type="text" className="form-control" name="segundoApellido" id="valor" placeholder="Segundo apellido" value={this.state.segundoApellido} onChange={this.handleChange}></input>
                                         <br></br>
                                         <label for="InputEmail">Correo electrónico </label>
-                                        <input type="email" className="form-control" name="email" id="valor" aria-describedby="emailHelp" placeholder="Ejemplo@impesa.net." value={this.state.email} onChange={this.handleChange}></input>
+                                        <input type="email" className="form-control" name="email" id="valor" aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" value={this.state.email} onChange={this.handleChange}></input>
                                         <br></br>
                                         <label for="contraseñaRegistro">Contraseña</label>
-                                        <input type="password" className="form-control" name="contraseña" id="contraseñaRegistro" placeholder="Contraseña" value={this.state.contraseña} onChange={this.handleChange}></input>
+                                        <input type="password" className="form-control" name="password1" id="contraseñaRegistro" placeholder="Contraseña" value={this.state.contraseña1} onChange={this.handleChange}></input>
                                         <span className={styleAlert()} role="alert" id="passstrength"></span>
 
                                         <br></br>
                                         <label for="confirnContraseña">Contraseña</label>
-                                        <input type="password" className="form-control" name="contraseñaConfirmacion" id="confirnContraseña" placeholder="Confirmación contraseña"></input>
+                                        <input type="password" className="form-control" name="password2" id="confirnContraseña"  onChange={this.handleChange}  placeholder="Confirmación contraseña"></input>
                                         <br></br>
                                         <legend>Tipo usuario</legend>
                                         <div className="form-check">

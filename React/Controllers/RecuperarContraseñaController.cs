@@ -61,7 +61,7 @@ namespace React.Controllers
 
                     Password password = new Password();
                     string simplePassword = password.Generate();
-                    string encryPassword = password.GetMD5(simplePassword + "PCI-DSS3.2");
+                    string encryPassword = password.GetMD5(simplePassword);
 
                     conexion.Open();
                     cmd = new SqlCommand("Proc_RecuperarContrasena", conexion);

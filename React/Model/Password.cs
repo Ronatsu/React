@@ -203,24 +203,23 @@ namespace API_Ejemplo.Model
             return new string(password);
         }
 
-        private Regex regex = new Regex("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,15}[^'\\s]/ ");
-        private MD5 md5;
+        private Regex regex = new Regex("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$");
 
-        public bool validarContrasena(String contrasena)
+        public bool validarContrasena(String password1, String password2)
         {
-            if (contrasena.Length >= 8)
+            if (password1.Length >= 8 && password1.Equals(password2))
             {
-                return regex.IsMatch(contrasena);
+                return regex.IsMatch(password1);
             }
 
             return false;
         }
 
        
-            public  string GetMD5(string str)
+            public  string GetMD5(string simplePassword)
             {
             MD5CryptoServiceProvider x = new MD5CryptoServiceProvider();
-            byte[] data = Encoding.ASCII.GetBytes(str);
+            byte[] data = Encoding.ASCII.GetBytes(simplePassword + "PCI-DSS3.2");
             data = x.ComputeHash(data);
             string ret = "";
             for (int i = 0; i < data.Length; i++)

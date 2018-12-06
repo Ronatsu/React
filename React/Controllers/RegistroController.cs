@@ -21,12 +21,12 @@ namespace API_Ejemplo.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<Usuarios> USUARIOS = new List<Usuarios>();
+        List<Usuario> USUARIOS = new List<Usuario>();
 
 
         // GET: api/Registro
         [HttpGet]
-        public ActionResult<List<Usuarios>> Get()
+        public ActionResult<List<Usuario>> Get()
         {
             EstablecerConexion();
             cmd = new SqlCommand("STORED_PROD_OBTENER_COLABORADORES", conexion);
@@ -34,14 +34,14 @@ namespace API_Ejemplo.Controllers
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                Usuarios nuevoUsuario = new Usuarios();
+                Usuario nuevoUsuario = new Usuario();
                 nuevoUsuario.PARTYID = dataReader["PARTYID"].ToString();
-                nuevoUsuario.EMAIL = dataReader["NOMBRE"].ToString();
+                nuevoUsuario.email = dataReader["NOMBRE"].ToString();
                 nuevoUsuario.NOMBRE = dataReader["SEGUNDO_NOMBRE"].ToString();
                 nuevoUsuario.PRIMER_APELLIDO = dataReader["PRIMER_APELLIDO"].ToString();
                 nuevoUsuario.SEGUNDO_APELLIDO = dataReader["SEGUNDO_APELLIDO"].ToString();
                 nuevoUsuario.HABILITADO = bool.Parse(dataReader["HABILITADO"].ToString());
-                nuevoUsuario.CONTRASEÑA = dataReader["CONTRASEÑA"].ToString();
+                nuevoUsuario.password1 = dataReader["CONTRASEÑA"].ToString();
                 nuevoUsuario.TIPO_COLABORADOR = char.Parse(dataReader["TIPO_COLABORADOR"].ToString());
                 nuevoUsuario.ROL_USUARIO = dataReader["ROL"].ToString();
                 nuevoUsuario.ASIGNA_INCIDENCIA = dataReader["ROL"].ToString();//REVISAR
@@ -60,22 +60,47 @@ namespace API_Ejemplo.Controllers
 
         // POST: api/Registro
         [HttpPost]
-        public IActionResult CrearUsuario(Usuarios value)
+        public IActionResult CrearUsuario(Usuario newUser)
         {
-            conexion = new SqlConnection(connectionString);
-            conexion.Open();
-            cmd = new SqlCommand("Proc_AgregarUsuario", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
+            Password password = new Password();
+            if (password.validarContrasena(newUser.password2,newUser.password1))
+            {
+                conexion = new SqlConnection(connectionString);
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@correo", newUser.email);
+                dataReader = cmd.ExecuteReader();
+                string email = "";
+                while (dataReader.Read())
+                {
 
-            cmd.Parameters.AddWithValue("@Nombre", value.NOMBRE);
-            cmd.Parameters.AddWithValue("@PrimerApellido", value.PRIMER_APELLIDO);
-            cmd.Parameters.AddWithValue("@SegundoApellido", value.SEGUNDO_APELLIDO);
-            cmd.Parameters.AddWithValue("@CORREO", value.EMAIL);
-            cmd.Parameters.AddWithValue("@contrasena", value.CONTRASEÑA);
+                    email = dataReader["PartyFk"].ToString();
+                }
+                conexion.Close();
+               
+                if (email.Equals(""))
+                {
+                    string passwordEncry = password.GetMD5(newUser.password1);
 
-            dataReader = cmd.ExecuteReader();
-            CerrarConexion();
-            return CreatedAtRoute("Get", new { id = value.PARTYID }, value);
+                    conexion.Open();
+                    cmd = new SqlCommand("Proc_AgregarUsuario", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Nombre", newUser.NOMBRE);
+                    cmd.Parameters.AddWithValue("@PrimerApellido", newUser.PRIMER_APELLIDO);
+                    cmd.Parameters.AddWithValue("@SegundoApellido", newUser.SEGUNDO_APELLIDO);
+                    cmd.Parameters.AddWithValue("@CORREO", newUser.email);
+                    cmd.Parameters.AddWithValue("@contrasena", passwordEncry);
+
+                    dataReader = cmd.ExecuteReader();
+                    CerrarConexion();
+                }
+               
+              
+            }
+
+            return CreatedAtRoute("Get", new { id = newUser.PARTYID }, newUser);
         }
 
         public void EstablecerConexion()

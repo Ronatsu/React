@@ -40,11 +40,11 @@ namespace React.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             
             dataReader = cmd.ExecuteReader();
-            List<Usuarios> userList = new List<Usuarios>();
+            List<Usuario> userList = new List<Usuario>();
             while (dataReader.Read())
             {
 
-                Usuarios newUser = new Usuarios();
+                Usuario newUser = new Usuario();
                 newUser.PARTYID = dataReader["PartyId"].ToString();
                 newUser.NOMBRE = dataReader["Nombre"].ToString();
                 newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();

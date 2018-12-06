@@ -5,6 +5,7 @@ import Navigation from '../components/Navigation';
 import { parties } from '../components/bd/party.json';
 import BlockIcon from '@material-ui/icons/Block';
 import AcceptUserIcon from '@material-ui/icons/PersonAdd';
+import axios from 'axios';
 import '../components/ButtonColor.css';
 
 class newUser extends React.Component {
@@ -38,6 +39,17 @@ class newUser extends React.Component {
         })
     }
 
+   
+
+    willmount = event => {
+        event.preventDefault();
+
+        axios.get(`http://localhost:58055/api/user/userList`, {
+
+
+        });
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
 
     /*constructor(props) {
