@@ -49,7 +49,7 @@ class AdminArea extends React.Component {
                 /*const row = $(this).parents('tr').index();
                 const contenido = $(this).html();
                 $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
-                $("#titleModal").html("Editando " + cell)
+                $("#titleModal").html("Editando " + cell);
 
             })
         })
