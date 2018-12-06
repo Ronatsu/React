@@ -23,19 +23,9 @@ namespace API_Ejemplo.Model
         public char TIPO_COLABORADOR { get; set; }
         public string ROL_USUARIO { get; set; }
         public string ASIGNA_INCIDENCIA { get; set; }
+        public string correoElectronico { get; set; }
 
 
-        Validaciones validaciones = new Validaciones();
-
-        public bool setContrasena(string contrasena)
-        {
-            if (validaciones.validarContrasena(contrasena))
-            {
-                this.CONTRASEÑA = validaciones.encriptarContrasena(contrasena);
-                return true;
-            }
-            return false;
-        }
     }
   
 }
