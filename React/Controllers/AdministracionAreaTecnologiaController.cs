@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
@@ -124,23 +125,24 @@ namespace React.Controllers
 
         // POST: api/AdministracionAreaTecnologia
         [HttpPost]
-        public ActionResult Post(Tecnologia value)
+        [Route("InsertarTecnologia")]
+        public ActionResult Post(ModelT Tecno)
         {
             Connection = new SqlConnection(ConnectionString);
             Connection.Open();
-            cmd = new SqlCommand("Proc_AgregarUsuario", Connection);
+            cmd = new SqlCommand("Proc_insetarNuevaTecnologia", Connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@NombreTecnologia", value.NombreTecnologia);
-            cmd.Parameters.AddWithValue("@TipoTecnologia", value.TipoTecnologiaFk);
-            cmd.Parameters.AddWithValue("@CriticoS_N", value.CriticoS_N);
+            cmd.Parameters.AddWithValue("@NombreTecnologia", Tecno.NombreTecnologia);
+            cmd.Parameters.AddWithValue("@TipoTecnologia", Tecno.TipoTecnologiaFk);
+            cmd.Parameters.AddWithValue("@CriticoS_N", Tecno.CriticoS_N);
 
             dataReader = cmd.ExecuteReader();
             Connection.Close();
-            return CreatedAtRoute("GetTecnologia", new { id = value.TecnologiaId }, value);
+            return Ok();
         }
 
-        // POST: api/AdministracionAreaTecnologia
+        //POST: api/AdministracionAreaTecnologia
         [HttpPost]
         [Route("InsertarArea")]
         public ActionResult Post(Area value)

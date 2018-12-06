@@ -21,8 +21,10 @@ class AdminTech extends React.Component {
             areas,
             tecno: [],
             area: [],
+            nombreTecnologia: '',
             selectGeneric: '',
-            selectArea: ''
+            selectArea: '',
+            criticoS_N: ''
         }
         this.handleChange = this.handleChange.bind(this);
 
@@ -70,6 +72,17 @@ class AdminTech extends React.Component {
         });
     }
 
+    handleSubmit = event => {
+        event.preventDefault();
+        
+        axios.post(`http://localhost:52224/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+            nombreTecnologia: this.state.nombreTecnologia,
+            tipoTecnologiaFk: this.state.selectGeneric,
+            criticoS_N: this.state.criticoS_N
+        })
+        
+    }
+
 
     componentWillMount() {
         axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Tecnologia`)
@@ -112,13 +125,13 @@ class AdminTech extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-3 mb-3">
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar la tecnología" />
                                     </div>
                                     <div className="col-md-2 mb-3">
                                         <label>Agregar</label>
-                                        <input type="text" className="form-control" id="validationCustom02" placeholder="Nombre de la tecnología" />
+                                        <input type="text" className="form-control" id="validationCustom02" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Nombre de la tecnología" />
                                     </div>
                                     <div className="col-md-2 mb-3">
                                         <label>Tipo de Tecnología</label>
@@ -136,9 +149,20 @@ class AdminTech extends React.Component {
                                         />
                                     </div>
 
+                                    <div className="col-md-1 mb-3">
+                                        <label>Crítico</label>
+                                        <div className=" justify-content-end">
+                                            <select className="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
+                                                <option value="s">Sí</option>
+                                                <option value="n">No</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
                                     <div className="col-md-2 mb-3">
                                         <br />
-                                        <button className="btn btnGrey" id="" type="submit"><AddIcon />  Agregar</button>
+                                        <button className="btn btnGrey" id="" type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
                                     </div>
 
                                 </div>

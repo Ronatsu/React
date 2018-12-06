@@ -119,18 +119,23 @@ class AdminArea extends React.Component {
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar el área" />
                                     </div>
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-1 mb-3">
+                                       
+                                    </div>
+                                    <div className="col-md-3 mb-3">
                                         <label>Agregar</label>
                                         <input type="text" className="form-control" id="validationCustom02" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del área" />
                                     </div>
-                                    <div className="col-md-4 mb-3">
-                                        <label></label>
+                                    <div className="col-md-3 mb-3">
+                                        <label>Tecnología</label>
                                         <div className=" justify-content-end">
-                                            {Select_Tech("btn")}
-                                            <button class="btn btnGrey" type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
+                                            {Select_Tech("btn")}                                     
                                         </div>
-
                                     </div>
+                                    <div className="col-md-1 mb-3">
+                                      <br/>
+                                        <button class=" btn btnGrey " type="submit"><AddIcon />  Agregar</button>
+                                        </div>
 
                                 </div>
 

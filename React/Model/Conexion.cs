@@ -1,8 +1,6 @@
 ﻿
 
-using System.Data.SqlClient;
-
-namespace React.Controllers
+namespace API_Ejemplo.Model
 {
     public class Conexion
     {
