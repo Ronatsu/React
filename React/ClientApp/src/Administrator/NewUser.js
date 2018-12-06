@@ -25,6 +25,17 @@ class newUser extends React.Component {
                 });
             });
         });
+
+        $(function () {
+            $("#myTable tr td").click(function () {
+                const cell = $(this).parents("tr").find("td").eq(0).text();//$(this).index(0).text();
+                /*const row = $(this).parents('tr').index();
+                const contenido = $(this).html();
+                $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
+                $("#show").html("Editando " + cell);
+
+            })
+        })
     }
 
 
@@ -61,6 +72,7 @@ class newUser extends React.Component {
                 <br />
                 <br />
                 <br />
+                <div id="show"></div>
                 <div className="w-auto p-3">
                 <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
                 </div>
