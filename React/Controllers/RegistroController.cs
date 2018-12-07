@@ -15,7 +15,7 @@ namespace API_Ejemplo.Controllers
     public class RegistroController : ControllerBase
     {
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-D684D39\\SQL2017_DEV;" +
+        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
                                   "Initial Catalog=ProyectoAnderson;" +
                                   "Integrated security=True;";
         SqlConnection conexion;
@@ -70,7 +70,7 @@ namespace API_Ejemplo.Controllers
             cmd.Parameters.AddWithValue("@Nombre", value.NOMBRE);
             cmd.Parameters.AddWithValue("@PrimerApellido", value.PRIMER_APELLIDO);
             cmd.Parameters.AddWithValue("@SegundoApellido", value.SEGUNDO_APELLIDO);
-            cmd.Parameters.AddWithValue("@CORREO", value.EMAIL);
+            cmd.Parameters.AddWithValue("@correo", value.EMAIL);
             cmd.Parameters.AddWithValue("@contrasena", value.CONTRASEÑA);
 
             dataReader = cmd.ExecuteReader();

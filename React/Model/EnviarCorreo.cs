@@ -23,8 +23,8 @@ namespace React.Model
             SmtpClient smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
-                Port = 25, //465; //587
-              //  Credentials = new NetworkCredential("anderson.impesa@gmail.com", "impesa.2018"),
+                Port = 587, //25, 465; //587
+              Credentials = new NetworkCredential("anderson.impesa@gmail.com", "impesa.2018"),
                 EnableSsl = true
             };
             try

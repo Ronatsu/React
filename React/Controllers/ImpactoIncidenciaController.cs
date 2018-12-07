@@ -28,13 +28,13 @@ namespace React.Controllers
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("STORED_OBTENER_IMPACTO_INSIDENCIA", conexion);
+            cmd = new SqlCommand("Proc_ImpactoIncidencia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
                 String ImpactoIncidencia = "";
-                ImpactoIncidencia = dataReader["NOMBRE_IMPACTO"].ToString();
+                ImpactoIncidencia = dataReader["TIPO_IMPACTO"].ToString();
 
                 nuevaLista.Add(ImpactoIncidencia);
 

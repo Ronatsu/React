@@ -3,13 +3,30 @@ import './passStyle.css';
 import $ from 'jquery';
 import axios from 'axios';
 import '../components/ButtonColor.css';
-import Nav from '../components/NavigationUnregistred';
+import Nav from '../components/NavigationToHome';
+import { Link } from "react-router-dom";
+
+import { Button, Modal} from 'react-bootstrap'
 
 
 class recover extends React.Component {
+    constructor(props) {
+        super(props);
+
+        $(document).ready(function () {
+            $("#id_send").click(function () {
+                $(this).each(function () {
+                    $("#modal2").show();
+                    $("#close").click(function () {
+                        $("#modal2").css("display", "none");
+                    });
+                });
+            });
+        });
+    }
 
     state = {
-        email: '',
+        email: ''
     }
 
     handleChange = event => {
@@ -18,21 +35,21 @@ class recover extends React.Component {
         this.setState({
             [nameInput]: valueInput
         });
+        this.handleChange=this.handleChange.bind(this);
     }
 
     handleSubmit = event => {
         event.preventDefault();
 
-        
             console.log(this.state.email2 + " 2");
             console.log(this.state.email1 + " 1");
         
-
         axios.post(`http://localhost:58055/api/RecuperarContraseña`, {
             email1: this.state.email1,
             email2: this.state.email2,
-          
-        })
+
+        });
+        this.handleSubmit = this.handleSubmit.bind(this);
             
     }
     render() {
@@ -52,33 +69,29 @@ class recover extends React.Component {
                         <div className="form-group">
                             <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
                             <span className="help-block"></span>
-                            <button className="btn btnBlue form-control" type="submit" >Enviar</button>
+                          <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
                         </div>
 
                     </form>
+
+                </div>
+                <div className="container" id="modal2">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title id="titleModal"></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h2>¡Éxito!</h2>
+                            <p>Una nueva contraseña se ha enviado a su correo electrónico.</p>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Link to="/">  <Button id="close" className="btnBlue">Aceptar</Button></Link>
+                        </Modal.Footer>
+                    </Modal.Dialog>
                 </div>
             </div>
         )
     }
 }
 export default recover;
-
-/* state = {
-        email: ''
-    }
-    handleInputChange = event => {
-        this.setState({ email: event.target.value });
-    }
-    handleSubmit = event => {
-
-        event.preventDefault();
-
-        const value = {
-            email: this.state.email
-        };
-        axios.post('url', { email: this.state.email })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
-    }*/

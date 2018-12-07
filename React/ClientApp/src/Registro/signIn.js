@@ -3,7 +3,7 @@ import './SiginIn.css';
 import { Link } from "react-router-dom";
 import Background from '../components/Background';
 import axios from 'axios';
-import Nav from '../components/NavigationUnregistred';
+import Nav from '../components/NavigationToHome';
 import $ from 'jquery';
 import color from '@material-ui/core/colors/orange';
 import { isNull } from 'util';
@@ -101,7 +101,7 @@ class registroColaborador extends Component {
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`http://localhost:58055/api/Registro`, {
+        axios.post(`http://localhost:52224/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
             primer_apellido: this.state.apellido,
