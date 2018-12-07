@@ -7,37 +7,37 @@ import $ from 'jquery';
 
 
 class App extends Component {
-  static propTypes = {
-    children: PropTypes.object.isRequired
-  };
+    static propTypes = {
+        children: PropTypes.object.isRequired
+    };
 
- /* constructor(props) {
-    super();
-    this.state = {
+    /* constructor(props) {
+       super();
+       this.state = {
+       }
+   
+       super(props);
+   
+       $(document).ready(function () {
+         if($("body").height() < $(window).height()){
+          $("footer").css({"position":"absolute","bottom":"0px"});
+               }
+       });
+   }*/
+    render() {
+        const { children } = this.props;
+        return (
+            <body>
+
+                <div className="container-fluid" id="div_ancho_comchildren.id}pleto">
+                        <Contenedor body={children} />
+                </div>
+                <footer className="page-footer" id="footer">
+                    <Footer />
+                </footer>
+            </body>
+        );
     }
-
-    super(props);
-
-    $(document).ready(function () {
-      if($("body").height() < $(window).height()){
-       $("footer").css({"position":"absolute","bottom":"0px"});
-            }
-    });
-}*/
-  render() {
-    const { children } = this.props;
-    return (
-      <body>
-          
-        <div className="container-fluid" id="div_ancho_completo">
-          <Contenedor body={children}/>
-        </div>
-       <footer className="page-footer" id="footer">
-        <Footer />
-        </footer>
-      </body>
-    );
-  }
 }
 
 export default App;
