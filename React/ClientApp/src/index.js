@@ -1,15 +1,19 @@
 import React from 'react';
-import {render} from 'react-dom';
-import {BrowserRouter as Router} from 'react-router-dom';
+import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import Approutes from './Rutas/AppRutas';
 import * as serviceWorker from './serviceWorker';
+import BoundaryError from './ErrorBoundary';
+import Dd from './Administrator/AdminTech';
 
 render(
-  <Router>
-    <Approutes />
-  </Router>,
-  document.getElementById('root')
+    <BoundaryError render={(error) => <p>guoooliiiii</p>}>
+        <Router>
+            <Approutes />
+        </Router>
+    </BoundaryError>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
