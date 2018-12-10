@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 
-namespace API_Ejemplo.Controllers
+namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReporteIncidentesMesController : ControllerBase
+    public class ReporteDetreccionInternaMesController : ControllerBase
     {
 
         // Variables de conexión
@@ -24,20 +24,22 @@ namespace API_Ejemplo.Controllers
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
 
-        // GET: api/Registro
+
+
+        // GET: api/ReporteDetreccionInternaMes
         [HttpGet]
-        [Route("ObtenerIncidente")]
+        [Route("ObtenerIncidenteInternoMes")]
         public ActionResult<List<IncidenciaMes>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("Proc_IncidentesMes", conexion);
+            cmd = new SqlCommand("Proc_IncidentesDetectadosInternos", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
                 IncidenciaMes nuevaIncidencia = new IncidenciaMes();
                 nuevaIncidencia.Mes = dataReader["Mes"].ToString();
-                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["DeteccionInterna"].ToString());
 
                 incidencias.Add(nuevaIncidencia);
 
@@ -48,8 +50,8 @@ namespace API_Ejemplo.Controllers
             {
                 return NotFound();
             }
-            
-            return item;    
+
+            return item;
         }
 
         public void EstablecerConexion()
@@ -62,6 +64,5 @@ namespace API_Ejemplo.Controllers
         {
             conexion.Close();
         }
-
     }
 }

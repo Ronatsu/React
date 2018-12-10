@@ -24,6 +24,8 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
+
+
         // GET: api/Reporte
         [HttpGet]
         [Route("ObtenerIncidente")]
@@ -50,31 +52,6 @@ namespace React.Controllers
             }
 
             return item;
-        }
-
-        // GET: api/Reporte/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Reporte
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Reporte/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
 
 

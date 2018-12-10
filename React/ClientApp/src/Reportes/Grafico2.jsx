@@ -1,47 +1,55 @@
-import React from 'react';
-import Highcharts from 'highcharts';
-import addFunnelModule from 'highcharts/modules/funnel';
+import React, { Component } from 'react';
+import Highcharts from "highcharts";
+import applyDrilldown from "highcharts/modules/drilldown";
+import axios from 'axios';
 import {
-  HighchartsChart, withHighcharts, Title, FunnelSeries
-} from 'react-jsx-highcharts';
-//import ExampleCode from '../utils/ExampleCode';
-//import code from './exampleCode';
-
-// Apply Funnel Module
-addFunnelModule(Highcharts);
-
-const plotOptions = {
-  series: {
-    dataLabels: {
-      enabled: true,
-      format: '<b>{point.name}</b> ({point.y:,.0f})',
-      softConnector: true
-    },
-    center: ['40%', '50%'],
-    neckWidth: '30%',
-    neckHeight: '25%',
-    width: '80%'
-  }
-};
-
-const funnelData = [
-  ['Redes sociales', 15654],
-  ['Descargas', 4064],
-  ['Correos', 1987],
-  ['Archivos desconocidos', 976],
-  ['Links de vinculación', 846]
-];
-
-const Funnel = () => (
-  <div className="app">
-    <HighchartsChart plotOptions={plotOptions}>
-      <Title>Sitios inseguros</Title>
-
-      <FunnelSeries name="Unique users" data={funnelData} />
-    </HighchartsChart>
+    Chart,
+    ColumnSeries,
+    HighchartsChart,
+    Subtitle,
+    Title,
+    XAxis,
+    YAxis,
+    Legend,
+    Tooltip,
+    withHighcharts
+} from "react-jsx-highcharts";
 
 
-  </div>
-);
+class App1 extends Component {
 
-export default withHighcharts(Funnel, Highcharts);
+    state = {
+        incidents: [],
+    }
+
+    componentDidMount() {
+        axios.get(`http://localhost:63760/api/ReporteDetreccionInternaMes/ObtenerIncidenteInternoMes`)
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
+    }
+
+
+    render() {
+        return (
+            <div>
+                <ul>
+                    <HighchartsChart>
+                        <Chart type="column" />
+                        <Title>Ataques Detectados Internos</Title>
+                        <Subtitle>En porcentaje</Subtitle>
+                        <XAxis id="categories" type="category" />
+                        <YAxis id="number">
+                            <YAxis.Title>Cantidad</YAxis.Title>
+                            {this.state.incidents.map(incident => <ColumnSeries name={incident.mes} data={[{ name: incident.mes, y: incident.cantidadIncidentes },]}
+                            />)}
+                        </YAxis>
+                    </HighchartsChart>
+                </ul>
+            </div>
+        )
+    }
+}
+
+export default withHighcharts(App1, Highcharts);

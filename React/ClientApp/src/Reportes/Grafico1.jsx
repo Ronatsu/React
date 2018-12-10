@@ -32,24 +32,18 @@ class App1 extends Component {
 
 
     render() {
-
         return (
-
             <div>
                 <ul>
                      <HighchartsChart>
                         <Chart type="column" />
-                        <Title>Ataques frecuentes</Title>
-                        <Subtitle>Gráfico</Subtitle>
+                        <Title>Ataques Mensuales</Title>
+                        <Subtitle>En unidades</Subtitle>
                         <XAxis id="categories" type="category" />
                         <YAxis id="number">
                             <YAxis.Title>Cantidad</YAxis.Title>
                             {this.state.incidents.map(incident => <ColumnSeries name={incident.mes} data={[ { name: incident.mes , y: incident.cantidadIncidentes },]}
                             />)} 
-
-
-
-
                         </YAxis>
                     </HighchartsChart>
                 </ul>
