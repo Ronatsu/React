@@ -12,9 +12,8 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReporteController : ControllerBase
+    public class PromedioTiempoContineciaDescubrimientoMesController : ControllerBase
     {
-
 
         // Variables de conexión
         String connectionString = "Data Source=DESKTOP-OR6ATOD\\SQLSERVER2017DEV;" +
@@ -25,21 +24,20 @@ namespace React.Controllers
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
 
-
-        // GET: api/Reporte
+        // GET: api/PromedioTiempoContineciaDescubrimientoMes
         [HttpGet]
-        [Route("ObtenerIncidente")]
+        [Route("ObtenerPromTiempoContiDesc")]
         public ActionResult<List<IncidenciaMes>> Get()
         {
             EstablecerConexion();
-            cmd = new SqlCommand("Proc_IncidentesMes", conexion);
+            cmd = new SqlCommand("Proc_PromedioTiempoContinenciaDescubrimiento", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
                 IncidenciaMes nuevaIncidencia = new IncidenciaMes();
-                nuevaIncidencia.Mes = dataReader["Mes"].ToString();
-                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
+                nuevaIncidencia.Mes = dataReader["MesIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["HorasMes"].ToString());
 
                 incidencias.Add(nuevaIncidencia);
 
@@ -53,8 +51,6 @@ namespace React.Controllers
 
             return item;
         }
-
-
         public void EstablecerConexion()
         {
             conexion = new SqlConnection(connectionString);
@@ -65,5 +61,7 @@ namespace React.Controllers
         {
             conexion.Close();
         }
+
+
     }
 }
