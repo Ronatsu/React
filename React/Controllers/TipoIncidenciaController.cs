@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +14,11 @@ namespace React.Controllers
     [ApiController]
     public class TipoIncidenciaController : ControllerBase
     {
-        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-                                  "Initial Catalog=ProyectoAnderson;" +
-                                  "Integrated security=True;";
+        //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
+        //                          "Initial Catalog=ProyectoAnderson;" +
+        //                          "Integrated security=True;";
+
+        Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
@@ -73,7 +76,7 @@ namespace React.Controllers
 
         public void EstablecerConexion()
         {
-            conexion = new SqlConnection(connectionString);
+            conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
         }
     }

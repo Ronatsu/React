@@ -75,7 +75,7 @@ class AdminTech extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         
-        axios.post(`http://localhost:52224/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
             nombreTecnologia: this.state.nombreTecnologia,
             tipoTecnologiaFk: this.state.selectGeneric,
             criticoS_N: this.state.criticoS_N
@@ -85,20 +85,20 @@ class AdminTech extends React.Component {
 
 
     componentWillMount() {
-        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Tecnologia`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Tecnologia`)
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });
             })
 
-        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/TipoTecnologia`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/TipoTecnologia`)
             .then(res => {
                 const tecno = res.data;
                 this.setState({ tecno });
             })
 
 
-        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Area`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Area`)
             .then(res => {
                 const area = res.data;
                 this.setState({ area });

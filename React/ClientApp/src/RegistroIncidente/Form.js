@@ -26,7 +26,7 @@ class Form extends React.Component {
               {MyTextArea()}
               <div class="pagination justify-content-end">
                 <button class="btn btnRed  " type="submit">Cancelar</button>
-                <Link to="/AsignacionIncidencia"><button className="btn btnBlue">Asignar</button></Link>
+                <Link to="/AsignacionIncidencia"><button className="btn btnBlue">Enviar</button></Link>
               </div>
             </div>
           </fieldset>
@@ -85,31 +85,31 @@ class Select extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:52224/api/Tecnologias`)
+        axios.get(`http://localhost:58055/api/Tecnologias`)
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
 
-        axios.get(`http://localhost:52224/api/ImpactoIncidencia`)
+        axios.get(`http://localhost:58055/api/ImpactoIncidencia`)
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`http://localhost:52224/api/TipoIncidencia`)
+        axios.get(`http://localhost:58055/api/TipoIncidencia`)
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
-        axios.get(`http://localhost:52224/api/AreaAfectada`)
+        axios.get(`http://localhost:58055/api/AreaAfectada`)
             .then(res => {
                 const AREA_AFECTADA = res.data;
                 this.setState({ AREA_AFECTADA });
             })
 
-        axios.get(`http://localhost:52224/api/GradoControl`)
+        axios.get(`http://localhost:58055/api/GradoControl`)
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -169,7 +169,7 @@ class Select extends React.Component {
               <br></br>
 
               <label>Tecnología afectada *</label>
-              <select className="form-control" disabled="false" id="lang4" onChange={this.handleChange4.bind(this)} value={this.state.tech4}>
+              <select className="form-control"  id="lang4" onChange={this.handleChange4.bind(this)} value={this.state.tech4}>
                 {listaTecno}
               </select>
              

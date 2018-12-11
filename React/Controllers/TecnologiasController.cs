@@ -16,9 +16,11 @@ namespace API_Ejemplo.Controllers
     {
 
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-                                  "Initial Catalog=ProyectoAnderson;" +
-                                  "Integrated security=True;";
+        //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
+        //                          "Initial Catalog=ProyectoAnderson;" +
+        //                          "Integrated security=True;";
+
+        Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
@@ -76,7 +78,7 @@ namespace API_Ejemplo.Controllers
 
         public void EstablecerConexion()
         {
-            conexion = new SqlConnection(connectionString);
+            conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
         }
     }

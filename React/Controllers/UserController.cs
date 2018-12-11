@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using React.Model;
 
 namespace React.Controllers
 {
@@ -16,7 +16,7 @@ namespace React.Controllers
     public class UserController : ControllerBase
     {
 
-
+        Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
@@ -33,10 +33,10 @@ namespace React.Controllers
         [Route("userList")]
         public ActionResult Get(int id)
         {
-            Conexion conexionString = new Conexion();
+           
             conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
-            cmd = new SqlCommand("Proc_ObtenerParties", conexion);
+            cmd = new SqlCommand("Proc_ObtenerNewParties", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             
             dataReader = cmd.ExecuteReader();
@@ -65,8 +65,62 @@ namespace React.Controllers
 
         // POST: api/User
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("Habilitar")]
+        public ActionResult PostHabilitar( Usuario partyId)
         {
+           
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+            //cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
+            //cmd.CommandType = CommandType.StoredProcedure;
+            //cmd.Parameters.AddWithValue("@correo", email2);
+            //dataReader = cmd.ExecuteReader();
+            //int partyId = 0;
+            //while (dataReader.Read())
+            //{
+
+            //    int.TryParse(dataReader["PartyFk"].ToString(), out partyId);
+            //}
+
+
+            cmd = new SqlCommand("Proc_HabilitarParty", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+            dataReader = cmd.ExecuteReader();
+
+            conexion.Close();
+            return Ok();
+        }
+
+        // POST: api/User
+        [HttpPost]
+        [Route("Deshabilitar")]
+        public ActionResult PostDeshabilitar(Usuario partyId)
+        {
+
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+            //cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
+            //cmd.CommandType = CommandType.StoredProcedure;
+            //cmd.Parameters.AddWithValue("@correo", email);
+            //dataReader = cmd.ExecuteReader();
+            //int partyId = 0;
+            //while (dataReader.Read())
+            //{
+
+            //    int.TryParse(dataReader["PartyFk"].ToString(), out partyId);
+            //}
+
+            cmd = new SqlCommand("Proc_DeshabilitarParty", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+            dataReader = cmd.ExecuteReader();
+
+            conexion.Close();
+            return Ok();
+
+
+
         }
 
         // PUT: api/User/5

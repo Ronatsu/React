@@ -15,9 +15,7 @@ namespace API_Ejemplo.Controllers
     public class RegistroController : ControllerBase
     {
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-                                  "Initial Catalog=ProyectoAnderson;" +
-                                  "Integrated security=True;";
+        String connectionString = new Conexion().getConnection();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
