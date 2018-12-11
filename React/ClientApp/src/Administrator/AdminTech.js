@@ -8,16 +8,27 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap'
+import axios from 'axios';
+import SelectComponent from '../Administrator/SelectComponent';
+import SelectArea from '../Administrator/SelectArea';
 
 class AdminTech extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {
-            areas
-        }
-
         super(props);
+        this.state = {
+            areas,
+            tecno: [],
+            area: [],
+            nombreTecnologia: '',
+            selectGeneric: '',
+            selectArea: '',
+            criticoS_N: ''
+        }
+        this.handleChange = this.handleChange.bind(this);
+
+        
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -51,17 +62,57 @@ class AdminTech extends React.Component {
             })
         })
     }
+    
 
+    handleChange = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        
+        axios.post(`http://localhost:52224/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+            nombreTecnologia: this.state.nombreTecnologia,
+            tipoTecnologiaFk: this.state.selectGeneric,
+            criticoS_N: this.state.criticoS_N
+        })
+        
+    }
+
+
+    componentWillMount() {
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Tecnologia`)
+            .then(res => {
+                const areas = res.data;
+                this.setState({ areas });
+            })
+
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/TipoTecnologia`)
+            .then(res => {
+                const tecno = res.data;
+                this.setState({ tecno });
+            })
+
+
+        axios.get(`http://localhost:52224/api/AdministracionAreaTecnologia/Area`)
+            .then(res => {
+                const area = res.data;
+                this.setState({ area });
+            })
+    }
 
     render() {
         const areasTable = this.state.areas.map((area) => {
             return (
                 <tr>
-                    <th scope="row">{area.nombre}</th>
+                    <th scope="row">{area.nombreTecnologia}</th>
                     <td><button class="btn btnBlue" type="submit"><EditIcon />  Editar</button>
                         <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
-
             )
         })
         return (
@@ -74,27 +125,44 @@ class AdminTech extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-3 mb-3">
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar la tecnología" />
                                     </div>
                                     <div className="col-md-2 mb-3">
                                         <label>Agregar</label>
-                                        <input type="text" className="form-control" id="validationCustom02" placeholder="Nombre de la tecnología" />
+                                        <input type="text" className="form-control" id="validationCustom02" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Nombre de la tecnología" />
                                     </div>
                                     <div className="col-md-2 mb-3">
                                         <label>Tipo de Tecnología</label>
-                                        {Select_Type_Technology()}
+                                        <SelectComponent
+                                            tecno={this.state.tecno}
+                                            handleChange={this.handleChange}
+                                        />
                                     </div>
 
                                     <div className="col-md-2 mb-3">
                                         <label>Área</label>
-                                        {Select_Area()}
+                                        <SelectArea
+                                            area={this.state.area}
+                                            handleChange={this.handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-1 mb-3">
+                                        <label>Crítico</label>
+                                        <div className=" justify-content-end">
+                                            <select className="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
+                                                <option value="s">Sí</option>
+                                                <option value="n">No</option>
+                                            </select>
+                                        </div>
+
                                     </div>
 
                                     <div className="col-md-2 mb-3">
                                         <br />
-                                        <button className="btn btnGrey" id="" type="submit"><AddIcon />  Agregar</button>
+                                        <button className="btn btnGrey" id="" type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
                                     </div>
 
                                 </div>
