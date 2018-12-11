@@ -63,12 +63,12 @@ class recover extends React.Component {
 
                             <div className="form-group">
 
-                                <input id="idMail" type="mail" name="email1" className="form-control" placeholder="Correo electrónico " value={this.state.email1} onChange={this.handleChange} autoFocus />
+                                <input id="idMail" type="mail" name="email1" className="form-control" placeholder="Correo electrónico " value={this.state.email1} onChange={this.handleChange} autoFocus maxLength='30' />
                                 <span className="help-block"></span>
                             </div>
 
                             <div className="form-group">
-                                <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
+                                <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " maxLength='30'/>
                                 <span className="help-block"></span>
                                 <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
                             </div>
