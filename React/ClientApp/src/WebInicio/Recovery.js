@@ -5,7 +5,6 @@ import axios from 'axios';
 import '../components/ButtonColor.css';
 import Nav from '../components/NavigationToHome';
 import { Link } from "react-router-dom";
-import Error from '../Error/HandleError';
 import { Button, Modal } from 'react-bootstrap'
 
 
@@ -52,47 +51,46 @@ class recover extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
+
     render() {
         return (
-            <Error>
-                <div>
-                    <Nav />
-                    <div className="container" id="div_principal">
-                        <form className="form-signin" onSubmit={this.handleSubmit}>
-                            <h2 className="form-signin-heading">Recuperar Contraseña</h2>
+            <div>
+                <Nav />
+                <div className="container" id="div_principal">
+                    <form className="form-signin" onSubmit={this.handleSubmit}>
+                        <h2 className="form-signin-heading">Recuperar Contraseña</h2>
 
-                            <div className="form-group">
+                        <div className="form-group">
 
-                                <input id="idMail" type="mail" name="email1" className="form-control" placeholder="Correo electrónico " value={this.state.email1} onChange={this.handleChange} autoFocus maxLength='30' />
-                                <span className="help-block"></span>
-                            </div>
+                            <input id="idMail" type="mail" name="email1" className="form-control" placeholder="Correo electrónico " value={this.state.email1} onChange={this.handleChange} autoFocus />
+                            <span className="help-block"></span>
+                        </div>
 
-                            <div className="form-group">
-                                <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " maxLength='30'/>
-                                <span className="help-block"></span>
-                                <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
-                            </div>
+                        <div className="form-group">
+                            <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
+                            <span className="help-block"></span>
+                            <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
+                        </div>
 
-                        </form>
+                    </form>
 
-                    </div>
-                    <div className="container" id="modal2">
-                        <Modal.Dialog>
-                            <Modal.Header>
-                                <Modal.Title id="titleModal"></Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <h2>¡Éxito!</h2>
-                                <p>Una nueva contraseña se ha enviado a su correo electrónico.</p>
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Link to="/">  <Button id="close" className="btnBlue">Aceptar</Button></Link>
-                            </Modal.Footer>
-                        </Modal.Dialog>
-                    </div>
                 </div>
-            </Error>
+                <div className="container" id="modal2">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title id="titleModal"></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h2>¡Éxito!</h2>
+                            <p>Una nueva contraseña se ha enviado a su correo electrónico.</p>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Link to="/">  <Button id="close" className="btnBlue">Aceptar</Button></Link>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </div>
+            </div>
         )
     }
 }
