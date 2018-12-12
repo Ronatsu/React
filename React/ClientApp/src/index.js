@@ -5,10 +5,9 @@ import './index.css';
 import Approutes from './Rutas/AppRutas';
 import * as serviceWorker from './serviceWorker';
 import BoundaryError from './ErrorBoundary';
-import Dd from './Administrator/AdminTech';
 
 render(
-    <BoundaryError render={(error) => <p>guoooliiiii</p>}>
+    <BoundaryError>}>
         <Router>
             <Approutes />
         </Router>

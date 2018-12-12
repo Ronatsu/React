@@ -135,7 +135,7 @@ function ShowIncident() {
     return (
         <div className="container">
             <div className="row">
-                <div className="Container-div">
+                <div className="div-container">
                     <div >
                         <blockquote>
                             <p>Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
