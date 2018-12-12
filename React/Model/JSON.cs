@@ -47,7 +47,7 @@ namespace React.Model
                 IdError = id,
                 Error = error,
                 ErrorInfo = errorInfo,
-                Date = DateTime.Now
+                Date = DateTime.Now.ToString("G")
             };
 
             jsonData.Add(data);

@@ -10,6 +10,6 @@ namespace React.Model
         public int IdError { get; set; }
         public string Error { get; set; }
         public string ErrorInfo { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }
