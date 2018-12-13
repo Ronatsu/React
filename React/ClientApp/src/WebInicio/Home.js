@@ -29,7 +29,7 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44372/api/GetIncidents/MethodGetIncidents`)
+        axios.get(`http://localhost:58055/api/GetIncidents/MethodGetIncidents`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });

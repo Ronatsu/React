@@ -24,7 +24,7 @@ namespace React.Controllers
         }
 
         // GET: api/Incidencia/5
-        [HttpGet("{id}", Name = "Get")]
+        
         public string Get(int id)
         {
             return "value";

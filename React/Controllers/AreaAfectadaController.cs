@@ -38,7 +38,7 @@ namespace React.Controllers
             {
                 Area AreaAfectada = new Area();
                 AreaAfectada.NombreArea = dataReader["NOMBRE_AREA"].ToString();
-                AreaAfectada.AreaID = Int32.Parse(dataReader["ID"].ToString());
+                AreaAfectada.AreaID = dataReader["ID"].ToString();
 
                 nuevaLista.Add(AreaAfectada);
 
