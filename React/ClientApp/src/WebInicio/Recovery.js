@@ -43,7 +43,7 @@ class recover extends React.Component {
         console.log(this.state.email2 + " 2");
         console.log(this.state.email1 + " 1");
 
-        axios.post(`http://localhost:58055/api/RecuperarContraseña`, {
+        axios.post(`https://localhost:44357/api/RecuperarContraseña`, {
             email1: this.state.email1,
             email2: this.state.email2,
 

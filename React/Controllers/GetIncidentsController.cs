@@ -37,7 +37,8 @@ namespace React.Controllers
                 incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
                 incidents.Description = dataReader["Descripcion"].ToString();
                 incidents.ImpactType = dataReader["TipoImpacto"].ToString();
-                incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("dd/MM/yyyy");
+               // incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
 
                 ListIncidents.Add(incidents);
 
