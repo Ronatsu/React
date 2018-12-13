@@ -65,7 +65,6 @@ class Home extends Component {
                                     <th className="size" scope="col">Probabilidad de Impacto</th>
                                     <th className="size" scope="col">Descripción</th>
                                     <th className="size" scope="col">Fecha de Incidencia</th>
-
                                 </tr>
                             </thead>
                             <tbody id="myTable">

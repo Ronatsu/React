@@ -50,7 +50,7 @@ class navigatiom extends React.Component {
                                 <div className="dropdown-divider"></div>
                                 <Link to="/AdminArea">   <a className="dropdown-item" href="#"><AreaIcon /> Áreas</a></Link>
                                 <div className="dropdown-divider"></div>
-                                <Link to="/">   <a className="dropdown-item" href="#"><UserIncident /> Incidencias por usuario</a></Link>
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><UserIncident /> Incidencias por usuario</a></Link>
                             </div>
                         </li>
                         <li className="nav-item">
