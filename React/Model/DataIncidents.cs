@@ -9,7 +9,7 @@ namespace React.Model
     {
         public string ImpactProbability { get; set; }
         public string Description { get; set; }
-        public string DateIncident { get; set; }
+        public DateTime DateIncident { get; set; }
         public string ImpactType { get; set; }
     }
 }
