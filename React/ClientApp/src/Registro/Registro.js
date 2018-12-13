@@ -52,17 +52,16 @@ class registroColaborador extends Component {
                 console.log(res.data);
             })
     }
-
+    //{null.map(val => val)}
     render() {
         return (
 
             <div className="App">
-
+               
                 <Nav />
                 <br /><br />
                 <Background />
                 <div className="container">
-
                     <div className="row">
                         <br /><br />
 

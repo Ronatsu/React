@@ -17,6 +17,7 @@
     "react-datepicker": "^1.7.0",
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.5.2",
+    "react-error-boundary": "^1.2.3",
     "react-jsx-highcharts": "^3.3.1-alpha.1",
     "react-responsive-modal": "^3.5.0",
     "react-router": "^4.3.1",

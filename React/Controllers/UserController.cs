@@ -44,13 +44,15 @@ namespace React.Controllers
             while (dataReader.Read())
             {
 
-                Usuarios newUser = new Usuarios();
-                newUser.PARTYID = dataReader["PartyId"].ToString();
-                newUser.NOMBRE = dataReader["Nombre"].ToString();
-                newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
-                newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
-                newUser.ROL_USUARIO = dataReader["RolUsuario"].ToString();
-                newUser.correoElectronico = dataReader["Correo"].ToString();
+                Usuarios newUser = new Usuarios
+                {
+                    PARTYID = dataReader["PartyId"].ToString(),
+                    NOMBRE = dataReader["Nombre"].ToString(),
+                    PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString(),
+                    SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString(),
+                    ROL_USUARIO = dataReader["RolUsuario"].ToString(),
+                    correoElectronico = dataReader["Correo"].ToString()
+                };
 
                 userList.Add(newUser);
             }
@@ -61,24 +63,6 @@ namespace React.Controllers
                 return NotFound();
             }
             return Ok(item);
-        }
-
-        // POST: api/User
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
