@@ -51,13 +51,13 @@ function SelectGraph() {
 
                         <ul className="nav nav-pills bg-light" role="tablist">
                             <li className="nav-item">
-                                <button className="btn btnBlueOutline" data-toggle="pill" href="#home">Casos de incidencia</button>
+                                <button className="btn btnBlueOutline" data-toggle="pill" href="#home">Promedio Tiempo de Continencia desde Descubrimiento</button>
                             </li>
                             <li className="nav-item">
-                                <button className="btn btnBlueOutline" data-toggle="pill" href="#menu1">Ataques frecuentes</button>
+                                <button className="btn btnBlueOutline" data-toggle="pill" href="#menu1">Ataques Mensuales</button>
                             </li>
                             <li className="nav-item">
-                                <button className="btn btnBlueOutline" data-toggle="pill" href="#menu2">Vulnerabilidad</button>
+                                <button className="btn btnBlueOutline" data-toggle="pill" href="#menu2">Ataques Detectados Internos</button>
                             </li>
                         </ul>
 

@@ -1,71 +1,55 @@
-import React from "react";
+import React, { Component } from 'react';
 import Highcharts from "highcharts";
 import applyDrilldown from "highcharts/modules/drilldown";
+import axios from 'axios';
 import {
-  Chart,
-  ColumnSeries,
-  HighchartsChart,
-  Subtitle,
-  Title,
-  XAxis,
-  YAxis,
-  Legend,
-  Tooltip,
-  withHighcharts
+    Chart,
+    ColumnSeries,
+    HighchartsChart,
+    Subtitle,
+    Title,
+    XAxis,
+    YAxis,
+    Legend,
+    Tooltip,
+    withHighcharts
 } from "react-jsx-highcharts";
 
-applyDrilldown(Highcharts);
 
-const App1 = () => (
-  <HighchartsChart
-    drilldown={{
-      series: [
-        [
-          {
-            name: "Column 1",
-            id: "col1",
-            data: [["Pull to par", -6], ["Running yield", -12]]
-          },
-          {
-            name: "Column 2",
-            id: "col2",
-            data: [["Rolldown", -7]]
-          },
-          {
-            name: "Column 3",
-            id: "col3",
-            data: [
-              ["Parallel shift", 50],
-              ["Twist", 11],
-              ["Higher order curve effects", -13]
-            ]
-          }
-        ]
-      ]
-    }}
-  >
-    <Chart type="column" />
-    <Title>Ataques frecuentes</Title>
-    <Subtitle>Gráfico</Subtitle>
+class App1 extends Component {
 
-    <XAxis id="categories" type="category" />
+    state = {
+        incidents: [],
+    }
 
-    <YAxis id="number">
-      <YAxis.Title>Cantidad</YAxis.Title>
+    componentDidMount() {
+        axios.get(`http://localhost:63760/api/Reporte/ObtenerIncidente`)
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
+    }
 
-      <ColumnSeries
-        id="return-contribution"
-        name="Column Name"
-        colorByPoint
-        data={[
-          { name: "Inyección de codigo", y: 10, drilldown: "col1" },
-          { name: "Software desactualizado", y: 20, drilldown: "col2" },
-          { name: "Control remoto", y: 55, drilldown: "col3" }
-        ]}
-      />
-    </YAxis>
-  </HighchartsChart>
-);
 
+    render() {
+        return (
+            <div>
+                <ul>
+                     <HighchartsChart>
+                        <Chart type="column" />
+                        <Title>Ataques Mensuales</Title>
+                        <Subtitle>En unidades</Subtitle>
+                        <XAxis id="categories" type="category" />
+                        <YAxis id="number">
+                            <YAxis.Title>Cantidad</YAxis.Title>
+                            {this.state.incidents.map(incident => <ColumnSeries name={incident.mes} data={[ { name: incident.mes , y: incident.cantidadIncidentes },]}
+                            />)} 
+                        </YAxis>
+                    </HighchartsChart>
+                </ul>
+            </div>
+        )
+    }
+}
 
 export default withHighcharts(App1, Highcharts);

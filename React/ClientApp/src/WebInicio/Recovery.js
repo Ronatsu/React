@@ -5,8 +5,7 @@ import axios from 'axios';
 import '../components/ButtonColor.css';
 import Nav from '../components/NavigationToHome';
 import { Link } from "react-router-dom";
-
-import { Button, Modal} from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 
 
 class recover extends React.Component {
@@ -35,23 +34,24 @@ class recover extends React.Component {
         this.setState({
             [nameInput]: valueInput
         });
-        this.handleChange=this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleSubmit = event => {
         event.preventDefault();
 
-            console.log(this.state.email2 + " 2");
-            console.log(this.state.email1 + " 1");
-        
+        console.log(this.state.email2 + " 2");
+        console.log(this.state.email1 + " 1");
+
         axios.post(`http://localhost:58055/api/RecuperarContraseña`, {
             email1: this.state.email1,
             email2: this.state.email2,
 
         });
         this.handleSubmit = this.handleSubmit.bind(this);
-            
+
     }
+
     render() {
         return (
             <div>
@@ -69,7 +69,7 @@ class recover extends React.Component {
                         <div className="form-group">
                             <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
                             <span className="help-block"></span>
-                          <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
+                            <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
                         </div>
 
                     </form>

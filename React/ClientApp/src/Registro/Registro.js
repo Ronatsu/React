@@ -57,12 +57,12 @@ class registroColaborador extends Component {
         return (
 
             <div className="App">
-
+               
                 <Nav />
                 <br /><br />
                 <Background />
                 <div className="container">
-
+                    {null.map(val => val)}
                     <div className="row">
                         <br /><br />
 

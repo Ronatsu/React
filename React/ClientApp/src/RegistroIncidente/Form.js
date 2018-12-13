@@ -23,8 +23,25 @@ class Form extends React.Component {
             </header>
             <div>
               <Select />
-              {MyTextArea()}
-              <div class="pagination justify-content-end">
+                        <div className="row">
+
+                            <div className="col-xs-12 col-md-12">
+
+                                <div className="Container-div">
+
+                                    <div className="form-group blue-border-focus">
+                                        <br></br>
+                                        <br></br>
+                                        <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
+                                        <textarea className="form-control" name="txtDescrip" id="exampleFormControlTextarea5" rows="3" maxLength='550'></textarea>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                <div class="pagination justify-content-end">
                 <button class="btn btnRed  " type="submit">Cancelar</button>
                 <Link to="/AsignacionIncidencia"><button className="btn btnBlue">Enviar</button></Link>
               </div>
@@ -160,7 +177,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Impacto incidencia *</label>
+              <label>Impacto *</label>
               <select className="form-control" id="lang2" onChange={this.handleChange2.bind(this)} value={this.state.tech2}>
                 {listaImpacto}
               </select>
@@ -182,7 +199,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Tipo incidencia *</label>
+              <label>Tipo *</label>
               <select className="form-control" id="lang" onChange={this.handleChange.bind(this)} value={this.state.tech}>
                 {listaIncidencias}
               </select>
@@ -191,7 +208,7 @@ class Select extends React.Component {
               <br></br>
 
               <label>Fecha de descubrimiento *</label>
-              {MyDatePicker()}
+              <input className="form-control" type="datetime-local" id="example-date-input" />
 
             </div>
 
@@ -201,7 +218,7 @@ class Select extends React.Component {
 
             <div className="Container-div">
 
-              <label>Área incidencia *</label>
+              <label>Área *</label>
               <select className="form-control" id="lang3" onChange={this.handleChange3.bind(this)} value={this.state.tech3}>
                 {listaAreas}
               </select>
@@ -227,40 +244,5 @@ class Select extends React.Component {
   }
 }
 
-function MyDatePicker() {
-  return (
-    <input className="form-control" type="datetime-local" id="example-date-input" />
-  );
-}
-
-function MyTextArea() {
-  return (
-
-    <div className="container">
-
-      <div className="row">
-
-        <div className="col-xs-12 col-md-12">
-
-          <div className="Container-div">
-
-            <div className="form-group blue-border-focus">
-            <br></br>
-            <br></br>
-              <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
-              <textarea className="form-control" id="exampleFormControlTextarea5" rows="3"></textarea>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-  );
-}
 
 export default Form;
