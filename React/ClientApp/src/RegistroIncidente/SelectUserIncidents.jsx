@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import $ from 'jquery';
-import './Block_User.css';
+import '../Administrator/Block_User.css';
 import Navigation from '../components/Navigation';
 import { parties } from '../components/bd/party.json';
-import BlockIcon from '@material-ui/icons/Block';
-import AcceptUserIcon from '@material-ui/icons/PersonAdd';
+import Search from '@material-ui/icons/Search';
 import '../components/ButtonColor.css';
 
-class newUser extends React.Component {
+class SelectUserIncident extends React.Component {
 
     constructor(props) {
         super();
@@ -37,19 +36,6 @@ class newUser extends React.Component {
             })
         })
     }
-
-
-
-    /*constructor(props) {
-      super(props);
-      this.state = { forecasts: [], loading: true };
-  
-      fetch('api/SampleData/WeatherForecasts')
-        .then(response => response.json())
-        .then(data => {
-          this.setState({ forecasts: data, loading: false });
-        });
-    }*/
     render() {
         const partiesTable = this.state.parties.map((party) => {
             return (
@@ -57,8 +43,7 @@ class newUser extends React.Component {
                     <th scope="row">{party.nombre}</th>
                     <td>{party.correo}</td>
                     <td>{party.area}</td>
-                    <td><button class="btn btnGreen  " type="submit"><AcceptUserIcon/>  Aceptar</button>
-                    <button class="btn btnRed  " type="submit"><BlockIcon/>  Rechazar</button></td>
+                    <td><button class="btn btnBlue  " type="submit"><Search/> Ver Incidencias</button></td>
                 </tr>
 
             )
@@ -96,4 +81,4 @@ class newUser extends React.Component {
         );
     }
 }
-export default newUser;
+export default SelectUserIncident;
