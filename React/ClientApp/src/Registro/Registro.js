@@ -52,7 +52,7 @@ class registroColaborador extends Component {
                 console.log(res.data);
             })
     }
-
+    //{null.map(val => val)}
     render() {
         return (
 

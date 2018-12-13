@@ -6,7 +6,7 @@ import $ from 'jquery';
 import './Home.css';
 import { Link } from "react-router-dom";
 import '../components/ButtonColor.css';
-
+import axios from 'axios'
 
 class Home extends Component {
     constructor(props) {
@@ -26,15 +26,23 @@ class Home extends Component {
             });
         });
     }
+
+    componentWillMount() {
+        axios.get(`https://localhost:44372/api/GetIncidents/MethodGetIncidents`)
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
+    }
     render() {
         const incidentCard = this.state.incidents.map((incident) => {
             return (
                 <tr>
                     <td>  <Link to="/InformacionIncidencia"><button class="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar seguimiento</button></Link></td>
-                    <th scope="row">{incident.impactLevel}</th>
-                    <td>{incident.impactFeasibility}</td>
-                    <td>{incident.description}</td>
-                    <td>{incident.date}</td>
+                    <th scope="row">{incident.ImpactProbability}</th>
+                    <td>{incident.ImpactType}</td>
+                    <td>{incident.Description}</td>
+                    <td>{incident.DateIncident}</td>
                 </tr>
 
             )
@@ -56,14 +64,10 @@ class Home extends Component {
                                         <tr>
                                             <th>
                                             </th>
-                                            <th>Impacto
-            </th>
-                                            <th >Probabilidad de Impacto
-            </th>
-                                            <th >Descripción
-            </th>
-                                            <th >Fecha de Incidencia
-            </th>
+                                            <th>Impacto</th>
+                                            <th >Probabilidad de Impacto </th>
+                                            <th >Descripción </th>
+                                            <th >Fecha de Incidencia </th>
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
