@@ -5,7 +5,7 @@ namespace API_Ejemplo.Model
     public class Conexion
     {
 
-        private const string connectionString = "Data Source=DESKTOP-OR6ATOD\\SQLSERVER2017DEV;" +
+        private const string connectionString = "Data Source=DESKTOP-TRM5G9B\\RON2017_DEAMON;" +
                                          "Initial Catalog=ProyectoAnderson;" +
                                         "Integrated security=True;";
 

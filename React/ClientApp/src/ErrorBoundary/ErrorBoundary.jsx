@@ -55,7 +55,7 @@ export default class ErrorBoundary extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <footer className="page-footer">
+                    <footer className="page-footer" id="footererror">
                         <Footer />
                     </footer>
                 </div>

@@ -13,7 +13,7 @@
     width: 400px;
     height: 400px;
 }
-footer {
+#footererror {
     position: absolute;
     bottom: 0;
     width: 100%;
