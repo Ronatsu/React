@@ -39,10 +39,10 @@ class Home extends Component {
             return (
                 <tr>
                     <td>  <Link to="/InformacionIncidencia"><button class="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar seguimiento</button></Link></td>
-                    <th scope="row">{incident.ImpactProbability}</th>
-                    <td>{incident.ImpactType}</td>
-                    <td>{incident.Description}</td>
-                    <td>{incident.DateIncident}</td>
+                    <th scope="row">{incident.impactProbability}</th>
+                    <td>{incident.impactType}</td>
+                    <td>{incident.description}</td>
+                    <td>{incident.dateIncident}</td>
                 </tr>
 
             )
