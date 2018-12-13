@@ -17,13 +17,13 @@ class Form extends React.Component {
             gradoControl: '',
             descripcion: '',
             fecha: '',
-            metodoDeteccion:'',
+            metodoDeteccion: '',
             TECNO: [],
             IMPACTO: [],
             TIPO_INCIDENCIA: [],
             AREA_AFECTADA: [],
             GRADO_CONTROL: [],
-            metodoDeteccionList:[]
+            metodoDeteccionList: []
         };
     }
 
@@ -38,8 +38,9 @@ class Form extends React.Component {
             .then(res => {
                 const metodoDeteccionList = res.data;
                 this.setState({ metodoDeteccionList });
+                console.log(this.state.metodoDeteccionList)
             })
-        console.log(this.state.metodoDeteccionList+"ffffff")
+    
 
         axios.get(`http://localhost:58055/api/ImpactoIncidencia`)
             .then(res => {
@@ -85,6 +86,7 @@ class Form extends React.Component {
             , areaAfectada: this.state.areaAfectada
             , descripcion: this.state.descripcion
             , fechaDescubrimiento: this.state.fecha
+            , metodoDeteccion: this.state.metodoDeteccion
         })
         console.log(this.state.tipoImpacto + " impacto");
         console.log(this.state.tipoIncidencia + " tipoIncidencia");
@@ -92,7 +94,7 @@ class Form extends React.Component {
         console.log(this.state.tencologia + " tencologia");
         console.log(this.state.areaAfectada + " area");
         console.log(this.state.descripcion + " descripcion");
-        console.log(this.state.fecha + " fechaDescubrimiento");
+        console.log(this.state.metodoDeteccion + " metodo");
     }
 
 
@@ -102,7 +104,7 @@ class Form extends React.Component {
         const metodoDetec = this.state.metodoDeteccionList;
 
         const metodoDeteccList = metodoDetec.map((metodo) =>
-            <option value={metodo.id}>{metodo.MetodoDeteccionNombre}</option>
+            <option value={metodo.id}>{metodo.metodoDeteccionNombre}</option>
         );
 
         const tIncidencias = this.state.TIPO_INCIDENCIA;
@@ -158,7 +160,7 @@ class Form extends React.Component {
                                 <br></br>
 
                                 <label>Método de detección *</label>
-                                <select className="form-control" id="lang4" name="metodoDeteccion" onClick={this.handleChange} value={metodoDeteccList.MetodoDeteccionNombre}>
+                                <select className="form-control" id="lang4" name="metodoDeteccion" onClick={this.handleChange} value={metodoDeteccList.metodoDeteccionNombre}>
                                     {metodoDeteccList}
                                 </select>
                             </div>
@@ -170,7 +172,7 @@ class Form extends React.Component {
                                 </select>
                                 <br></br>
                                 <label>Fecha de descubrimiento *</label>
-                                <input className="form-control" name="fecha" onChange={this.handleChange}  type="datetime-local" id="example-date-input" />
+                                <input className="form-control" name="fecha" onChange={this.handleChange} type="datetime-local" id="example-date-input" />
                             </div>
 
 
