@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace React.Controllers
 {
@@ -21,7 +22,7 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<string> nuevaLista = new List<string>();
+       
 
 
         // GET: api/AreaAfectada
@@ -32,10 +33,12 @@ namespace React.Controllers
             cmd = new SqlCommand("Proc_ObtenerArea", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
+            List<Area> nuevaLista = new List<Area>();
             while (dataReader.Read())
             {
-                String AreaAfectada = "";
-                AreaAfectada = dataReader["NOMBRE_AREA"].ToString();
+                Area AreaAfectada = new Area();
+                AreaAfectada.NombreArea = dataReader["NOMBRE_AREA"].ToString();
+                AreaAfectada.AreaID = Int32.Parse(dataReader["ID"].ToString());
 
                 nuevaLista.Add(AreaAfectada);
 

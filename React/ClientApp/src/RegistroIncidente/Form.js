@@ -5,100 +5,26 @@ import Navigation from '../components/Navigation';
 import '../components/ButtonColor.css';
 import axios from 'axios';
 
-
 class Form extends React.Component {
-  constructor(props) {
-    super();
-  }
-  render() {
-    return (
-      <div className="container-fluid">
-        <Navigation />
-        <form className="container" >
-
-          <fieldset className="fields">
-            <header className="App-header">
-              <br /><br /><br />
-              <h3 className="mt-4">Insertar Incidencia</h3>
-            </header>
-            <div>
-              <Select />
-                        <div className="row">
-
-                            <div className="col-xs-12 col-md-12">
-
-                                <div className="Container-div">
-
-                                    <div className="form-group blue-border-focus">
-                                        <br></br>
-                                        <br></br>
-                                        <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
-                                        <textarea className="form-control" name="txtDescrip" id="exampleFormControlTextarea5" rows="3" maxLength='550'></textarea>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                <div class="pagination justify-content-end">
-                <button class="btn btnRed  " type="submit">Cancelar</button>
-                <Link to="/AsignacionIncidencia"><button className="btn btnBlue">Enviar</button></Link>
-              </div>
-            </div>
-          </fieldset>
-        </form>
-
-      </div>
-    )
-  }
-}
-
-class Select extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      tech: 'Incidencia',
-      tech2: 'Impacto',
-      tech3: 'Area',
-      tech4: 'Tecnologia Afectada',
-      tech5: 'Grado Control',
-      TECNO: [],
-        IMPACTO: [],
-        TIPO_INCIDENCIA: [],
-        AREA_AFECTADA: [],
-        GRADO_CONTROL: []
-    };
-  }
-
-  handleChange(e) {
-    this.setState({
-      tech: e.target.value
-    })
-  }
-
-  handleChange2(e) {
-    this.setState({
-      tech2: e.target.value
-    })
-  }
-
-  handleChange3(e) {
-    this.setState({
-      tech3: e.target.value
-    })
-  }
-
-  handleChange4(e) {
-    this.setState({
-      tech4: e.target.value
-    })
-  }
-
-  handleChange5(e) {
-    this.setState({
-      tech5: e.target.value
-    })
+    constructor(props) {
+        super();
+        super(props);
+        this.state = {
+            tipoIncidencia: '',
+            tipoImpacto: '',
+            areaAfectada: '',
+            tencologia: '',
+            gradoControl: '',
+            descripcion: '',
+            fecha: '',
+            metodoDeteccion:'',
+            TECNO: [],
+            IMPACTO: [],
+            TIPO_INCIDENCIA: [],
+            AREA_AFECTADA: [],
+            GRADO_CONTROL: [],
+            metodoDeteccionList:[]
+        };
     }
 
     componentWillMount() {
@@ -107,6 +33,13 @@ class Select extends React.Component {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
+
+        axios.get(`http://localhost:58055/api/MetodoDeteccion/VerMetodos`)
+            .then(res => {
+                const metodoDeteccionList = res.data;
+                this.setState({ metodoDeteccionList });
+            })
+        console.log(this.state.metodoDeteccionList+"ffffff")
 
         axios.get(`http://localhost:58055/api/ImpactoIncidencia`)
             .then(res => {
@@ -119,6 +52,7 @@ class Select extends React.Component {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
+
 
         axios.get(`http://localhost:58055/api/AreaAfectada`)
             .then(res => {
@@ -133,116 +67,150 @@ class Select extends React.Component {
             })
     }
 
+    handleChange = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        axios.post(`http://localhost:58055/api/Incidencia`, {
+            tipoIncidencia: this.state.tipoIncidencia
+            , tipoImpacto: this.state.tipoImpacto
+            , gradoControl: this.state.gradoControl
+            , tencologia: this.state.tencologia
+            , areaAfectada: this.state.areaAfectada
+            , descripcion: this.state.descripcion
+            , fechaDescubrimiento: this.state.fecha
+        })
+        console.log(this.state.tipoImpacto + " impacto");
+        console.log(this.state.tipoIncidencia + " tipoIncidencia");
+        console.log(this.state.gradoControl + " gradoControl");
+        console.log(this.state.tencologia + " tencologia");
+        console.log(this.state.areaAfectada + " area");
+        console.log(this.state.descripcion + " descripcion");
+        console.log(this.state.fecha + " fechaDescubrimiento");
+    }
 
 
-  render() {
 
-      const tIncidencias = this.state.TIPO_INCIDENCIA;
+    render() {
 
-    const listaIncidencias = tIncidencias.map((incidencia) =>
-      <option value={incidencia}>{incidencia}</option>
-    );
+        const metodoDetec = this.state.metodoDeteccionList;
 
-      const impIncidencias = this.state.IMPACTO;
+        const metodoDeteccList = metodoDetec.map((metodo) =>
+            <option value={metodo.id}>{metodo.MetodoDeteccionNombre}</option>
+        );
 
-    const listaImpacto = impIncidencias.map((impacto) =>
-      <option value={impacto}>{impacto}</option>
-    );
+        const tIncidencias = this.state.TIPO_INCIDENCIA;
 
-      const areaIncidencias = this.state.AREA_AFECTADA;
+        const listaIncidencias = tIncidencias.map((incidencia) =>
+            <option value={incidencia.id}>{incidencia.descripcion}</option>
+        );
 
-    const listaAreas = areaIncidencias.map((area) =>
-      <option value={area}>{area}</option>
-    );
+        const impIncidencias = this.state.IMPACTO;
 
-      const tecAfectada = this.state.TECNO;
+        const listaImpacto = impIncidencias.map((impacto) =>
+            <option value={impacto.id}>{impacto.descripcion}</option>
+        );
 
-    const listaTecno = tecAfectada.map((tecnologia) =>
-      <option value={tecnologia}>{tecnologia}</option>
-    );
+        const areaIncidencias = this.state.AREA_AFECTADA;
+        const listaAreas = areaIncidencias.map((area) =>
+            <option value={area.areaID}>{area.nombreArea}</option>
+        );
 
-      const gradoControl = this.state.GRADO_CONTROL;
+        const tecAfectada = this.state.TECNO;
+        const listaTecno = tecAfectada.map((tecnologia) =>
+            <option value={tecnologia.tecnologiaId}>{tecnologia.nombreTecnologia}</option>
+        );
 
-    const listaControl = gradoControl.map((control) =>
-      <option value={control}>{control}</option>
-    );
+        const gradoControl = this.state.GRADO_CONTROL;
+        const listaControl = gradoControl.map((control) =>
+            <option value={control.id}>{control.descrpcion}</option>
+        );
+        return (
+            <div className="container">
+                <Navigation />
+                <form className="container" >
+                    <header className="App-header">
+                        <br /><br /><br />
+                        <h3 className="mt-4">Insertar Incidencia</h3>
+                    </header>
+                    <div>
+                        <div className="row">
+                            <br /><br /><br />       <br /><br /><br />
+                            <div className="col-xs-4 col-md-4" >
+                                <label>Impacto *</label>
+                                <select className="form-control" name="tipoImpacto" id="lang2" onClick={this.handleChange} value={listaImpacto.descripcion}>
+                                    {listaImpacto}
+                                </select>
 
-    return (
+                                <br></br>
 
-      <div className="container mt-">
+                                <label>Tecnología afectada *</label>
+                                <select className="form-control" id="lang4" name="tencologia" onClick={this.handleChange} value={listaTecno.nombreTecnologia}>
+                                    {listaTecno}
+                                </select>
 
-        <div className="row">
-          <br /><br /><br />       <br /><br /><br />
-          <div className="col-xs-4 col-md-4">
+                                <br></br>
 
-            <div className="Container-div">
+                                <label>Método de detección *</label>
+                                <select className="form-control" id="lang4" name="metodoDeteccion" onClick={this.handleChange} value={metodoDeteccList.MetodoDeteccionNombre}>
+                                    {metodoDeteccList}
+                                </select>
+                            </div>
 
-              <label>Impacto *</label>
-              <select className="form-control" id="lang2" onChange={this.handleChange2.bind(this)} value={this.state.tech2}>
-                {listaImpacto}
-              </select>
-              
+                            <div className="col-xs-4 col-md-4">
+                                <label>Tipo *</label>
+                                <select className="form-control" id="lang" name="tipoIncidencia" onClick={this.handleChange} value={listaIncidencias.descripcion}>
+                                    {listaIncidencias}
+                                </select>
+                                <br></br>
+                                <label>Fecha de descubrimiento *</label>
+                                <input className="form-control" name="fecha" onChange={this.handleChange}  type="datetime-local" id="example-date-input" />
+                            </div>
 
-              <br></br>
 
-              <label>Tecnología afectada *</label>
-              <select className="form-control"  id="lang4" onChange={this.handleChange4.bind(this)} value={this.state.tech4}>
-                {listaTecno}
-              </select>
-             
+                            <div className="col-xs-4 col-md-4">
+                                <label>Área *</label>
+                                <select className="form-control" id="lang3" name="areaAfectada" onClick={this.handleChange} value={listaAreas.nombreArea}>
+                                    {listaAreas}
+                                </select>
+                                <br></br>
+                                <label>Grado de control *</label>
+                                <select className="form-control" id="lang5" name="gradoControl" onClick={this.handleChange} value={gradoControl.descrpcion}>
+                                    {listaControl}
+                                </select>
+                            </div>
 
+                        </div>
+
+                        <div className="row">
+                            <div className="col-xs-12 col-md-12">
+                                <div>
+                                    <div className="form-group blue-border-focus">
+                                        <br></br>
+                                        <br></br>
+                                        <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
+                                        <textarea className="form-control" name="descripcion" onChange={this.handleChange} value={this.state.descripcion} id="exampleFormControlTextarea5" rows="3" maxLength='550'></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pagination justify-content-end">
+                            <button class="btn btnRed" type="submit">Cancelar</button>
+                            <button className="btn btnBlue" type="submit" onClick={this.handleSubmit}>Enviar</button>
+                            <Link to="/AsignacionIncidencia"><button className="btn " type="submit" >Enviar</button></Link>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-          </div>
-
-          <div className="col-xs-4 col-md-4">
-
-            <div className="Container-div">
-
-              <label>Tipo *</label>
-              <select className="form-control" id="lang" onChange={this.handleChange.bind(this)} value={this.state.tech}>
-                {listaIncidencias}
-              </select>
-              
-
-              <br></br>
-
-              <label>Fecha de descubrimiento *</label>
-              <input className="form-control" type="datetime-local" id="example-date-input" />
-
-            </div>
-
-          </div>
-
-          <div className="col-xs-4 col-md-4">
-
-            <div className="Container-div">
-
-              <label>Área *</label>
-              <select className="form-control" id="lang3" onChange={this.handleChange3.bind(this)} value={this.state.tech3}>
-                {listaAreas}
-              </select>
-            
-
-              <br></br>
-
-              <label>Grado de control *</label>
-              <select className="form-control" id="lang5" onChange={this.handleChange5.bind(this)} value={this.state.tech5}>
-                {listaControl}
-              </select>
-             
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    )
-  }
+        )
+    }
 }
-
 
 export default Form;

@@ -24,7 +24,7 @@ namespace API_Ejemplo.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<string> nuevaLista = new List<string>();
+        
 
         // GET: api/Tecnologias
         [HttpGet]
@@ -34,12 +34,15 @@ namespace API_Ejemplo.Controllers
             cmd = new SqlCommand("Proc_NombreTecnologia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
+
+            List<TecnologiaModelo> nuevaLista = new List<TecnologiaModelo>();
             while (dataReader.Read())
             {
                 TecnologiaModelo NuevaTecnologia = new TecnologiaModelo();
                 NuevaTecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
+                NuevaTecnologia.TecnologiaId = Int32.Parse(dataReader["id"].ToString());
 
-                nuevaLista.Add(NuevaTecnologia.NombreTecnologia);
+                nuevaLista.Add(NuevaTecnologia);
 
             }
             conexion.Close();
@@ -48,7 +51,7 @@ namespace API_Ejemplo.Controllers
             {
                 return NotFound();
             }
-            return item;
+            return Ok(item);
         }
 
         // GET: api/Tecnologias/5

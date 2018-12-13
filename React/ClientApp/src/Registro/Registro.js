@@ -62,7 +62,6 @@ class registroColaborador extends Component {
                 <br /><br />
                 <Background />
                 <div className="container">
-                    {null.map(val => val)}
                     <div className="row">
                         <br /><br />
 

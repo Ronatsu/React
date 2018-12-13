@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using API_Ejemplo.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace React.Controllers
 {
@@ -22,7 +20,7 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<string> nuevaLista = new List<string>();
+        
 
         // GET: api/TipoIncidencia
         [HttpGet]
@@ -32,12 +30,15 @@ namespace React.Controllers
             cmd = new SqlCommand("Proc_TipoIncidencia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
+
+            List<TipoIncidencia> nuevaLista = new List<TipoIncidencia>();
             while (dataReader.Read())
             {
-                String TipoIncidencia = "";
-                TipoIncidencia = dataReader["DESCRIPCION_INCIDENCIA"].ToString();
+                TipoIncidencia tipoIncidencia=new TipoIncidencia();
+                tipoIncidencia.Descripcion = dataReader["DESCRIPCION_INCIDENCIA"].ToString();
+                tipoIncidencia.Id = Int32.Parse(dataReader["ID"].ToString());
 
-                nuevaLista.Add(TipoIncidencia);
+                nuevaLista.Add(tipoIncidencia);
 
             }
             conexion.Close();

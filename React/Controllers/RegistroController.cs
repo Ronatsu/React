@@ -26,6 +26,7 @@ namespace API_Ejemplo.Controllers
         [HttpGet]
         public ActionResult<List<Usuario>> Get()
         {
+
             EstablecerConexion();
             cmd = new SqlCommand("STORED_PROD_OBTENER_COLABORADORES", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -61,7 +62,7 @@ namespace API_Ejemplo.Controllers
         public IActionResult CrearUsuario(Usuario newUser)
         {
             Password password = new Password();
-            if (password.validarContrasena(newUser.password2,newUser.password1))
+            if (password.ValidarContrasena(newUser.password2,newUser.password1))
             {
                 conexion = new SqlConnection(connectionString);
                 conexion.Open();

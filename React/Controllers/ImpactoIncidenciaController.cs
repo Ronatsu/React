@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace React.Controllers
 {
@@ -21,7 +22,7 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<string> nuevaLista = new List<string>();
+       
 
 
 
@@ -33,12 +34,14 @@ namespace React.Controllers
             cmd = new SqlCommand("Proc_ImpactoIncidencia", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
+            List<TipoImpacto> nuevaLista = new List<TipoImpacto>();
             while (dataReader.Read())
             {
-                String ImpactoIncidencia = "";
-                ImpactoIncidencia = dataReader["TIPO_IMPACTO"].ToString();
+                TipoImpacto impacto = new TipoImpacto();
+                impacto.Descripcion = dataReader["TIPO_IMPACTO"].ToString();
+                impacto.Id = Int32.Parse(dataReader["ID"].ToString());
 
-                nuevaLista.Add(ImpactoIncidencia);
+                nuevaLista.Add(impacto);
 
             }
             conexion.Close();
@@ -47,7 +50,7 @@ namespace React.Controllers
             {
                 return NotFound();
             }
-            return item;
+            return Ok(item);
         }
 
         // GET: api/ImpactoIncidencia/5

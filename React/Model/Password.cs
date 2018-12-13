@@ -205,7 +205,7 @@ namespace API_Ejemplo.Model
 
         private Regex regex = new Regex("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$");
 
-        public bool validarContrasena(String password1, String password2)
+        public bool ValidarContrasena(String password1, String password2)
         {
             if (password1.Length >= 8 && password1.Equals(password2))
             {

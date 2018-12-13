@@ -108,9 +108,9 @@ class AdminTech extends React.Component {
     render() {
         const areasTable = this.state.areas.map((area) => {
             return (
-                <tr>
+                <tr >
                     <th scope="row">{area.nombreTecnologia}</th>
-                    <td><button class="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                    <td><button class="btn btnBlue" type="submit"  ><EditIcon />  Editar</button>
                         <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
                 </tr>
             )

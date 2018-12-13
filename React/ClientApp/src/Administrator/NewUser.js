@@ -69,7 +69,7 @@ class newUser extends React.Component {
       
     }
 
-    borrar(cod) {
+    deshabilitar(cod) {
         axios.post(`http://localhost:58055/api/User/Deshabilitar`, {
             partyId: cod,
         })
@@ -122,7 +122,7 @@ class newUser extends React.Component {
                     <td name="emial">{party.correoElectronico}</td>
                     <td>{party.roL_USUARIO}</td>
                     <td><button class="btn btnGreen" type="submit" onClick={() => this.aceptar(party.partyid)}><AcceptUserIcon/>  Aceptar</button>
-                        <button class="btn btnRed" type="submit" onClick={() => this.borrar(party.partyid)} ><BlockIcon/>  Rechazar</button></td>
+                        <button class="btn btnRed" type="submit" onClick={() => this.deshabilitar(party.partyid)} ><BlockIcon/>  Rechazar</button></td>
                 </tr>
 
             )

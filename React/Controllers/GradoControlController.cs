@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace React.Controllers
 {
@@ -22,7 +23,7 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<string> nuevaLista = new List<string>();
+      
 
         // GET: api/GradoControl
         [HttpGet]
@@ -32,12 +33,16 @@ namespace React.Controllers
             cmd = new SqlCommand("Proc_ObtenerGradoControl", conexion);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
+
+            List<GradoControl> nuevaLista = new List<GradoControl>();
+
             while (dataReader.Read())
             {
-                String AreaAfectada = "";
-                AreaAfectada = dataReader["GRADO_CONTROL"].ToString();
+                GradoControl gradoControl = new GradoControl();
+                gradoControl.Descrpcion = dataReader["GRADO_CONTROL"].ToString();
+                gradoControl.Id = Int32.Parse( dataReader["ID"].ToString());
 
-                nuevaLista.Add(AreaAfectada);
+                nuevaLista.Add(gradoControl);
 
             }
             conexion.Close();
