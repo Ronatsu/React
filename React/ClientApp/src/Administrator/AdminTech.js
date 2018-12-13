@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import { areas } from '../components/bd/area.json';
+//import { areas } from '../components/bd/area.json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
@@ -18,7 +18,7 @@ class AdminTech extends React.Component {
         super();
         super(props);
         this.state = {
-            areas,
+            areas: [],
             tecno: [],
             area: [],
             nombreTecnologia: '',
@@ -80,7 +80,23 @@ class AdminTech extends React.Component {
             tipoTecnologiaFk: this.state.selectGeneric,
             criticoS_N: this.state.criticoS_N
         })
+
+        alert("Valor: " + this.state.criticoS_N);
         
+    }
+
+    borrar(tecnologiaBorrar) {
+
+        alert("Se selecciono el ID : " + tecnologiaBorrar);
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
+            TecnologiaId: tecnologiaBorrar
+        }).then(res => {
+            if (res.status == 200) {
+                alert("Se elimino exitosamente");
+            }
+        })
+
+
     }
 
 
@@ -88,7 +104,7 @@ class AdminTech extends React.Component {
         axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Tecnologia`)
             .then(res => {
                 const areas = res.data;
-                this.setState({ areas });
+                this.setState({ areas: areas });
             })
 
         axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/TipoTecnologia`)
@@ -129,7 +145,7 @@ class AdminTech extends React.Component {
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar la tecnología" />
                                     </div>
-                                    <div className="col-md-2 mb-3">
+                                    <div className="col-md-3 mb-3">
                                         <label>Agregar</label>
                                         <input type="text" className="form-control" id="validationCustom02" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Nombre de la tecnología" />
                                     </div>
@@ -142,17 +158,9 @@ class AdminTech extends React.Component {
                                     </div>
 
                                     <div className="col-md-2 mb-3">
-                                        <label>Área</label>
-                                        <SelectArea
-                                            area={this.state.area}
-                                            handleChange={this.handleChange}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-1 mb-3">
                                         <label>Crítico</label>
                                         <div className=" justify-content-end">
-                                            <select className="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
+                                            <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N" onClick={this.handleChange}>
                                                 <option value="s">Sí</option>
                                                 <option value="n">No</option>
                                             </select>
@@ -178,12 +186,28 @@ class AdminTech extends React.Component {
                     <table className="table table-hover table-condensed " id="table_id">
                         <thead>
                             <tr>
+                                <th className="size" scope="col">Tecnología ID</th>
                                 <th className="size" scope="col">Nombre</th>
                                 <th className="size" scope="col"></th>
                             </tr>
                         </thead>
                         <tbody id="myTable">
-                            {areasTable}
+                            {this.state.areas.map(elemento => {
+                                return (
+                                    <tr key={elemento.tecnologiaId}>
+                                        <td>
+                                            {elemento.tecnologiaId}
+                                        </td>
+                                        <td>
+                                            {elemento.nombreTecnologia}
+                                        </td>
+                                        <td>
+                                            <button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                                            <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.tecnologiaId)}><DeleteIcon />  Eliminar</button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
 
                         </tbody>
                     </table>

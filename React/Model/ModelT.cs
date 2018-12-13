@@ -10,7 +10,7 @@ namespace React.Model
 
         public int TecnologiaId { get; set; }
         public string NombreTecnologia { get; set; }
-        public int TipoTecnologiaFk { get; set; }
-        public int CriticoS_N { get; set; }
+        public string TipoTecnologiaFk { get; set; }
+        public string CriticoS_N { get; set; }
     }
 }

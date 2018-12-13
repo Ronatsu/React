@@ -155,7 +155,6 @@ class newUser extends React.Component {
                         </thead>
                         <tbody id="myTable">
                             {partiesTable}
-                           
                         </tbody>
                     </table>
                 </div>

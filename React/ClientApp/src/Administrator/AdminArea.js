@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import { areas } from '../components/bd/area.json';
+//import { areas } from '../components/bd/area.json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
@@ -11,6 +11,8 @@ import { Button, Modal, FormControl } from 'react-bootstrap'
 import { func } from 'prop-types';
 import { Input } from '@material-ui/core';
 import axios from 'axios';
+import SelectComponentArea from '../Administrator/SelectComponentArea';
+import SelectArea from '../Administrator/SelectArea'
 
 class AdminArea extends React.Component {
 
@@ -18,12 +20,15 @@ class AdminArea extends React.Component {
         super();
         super(props);
         this.state = {
-            areas,
+            areas: [],
+            tecno: [],
             NombreArea: '',
-            tecnologia: 1,
-            AreaFk: 0
+            selectGeneric: '',
+            selectArea: '',
+            AreaIDBorrar: ''
         }
         this.handleChange = this.handleChange.bind(this);
+        this.borrar = this.borrar.bind(this);
 
         
 
@@ -76,13 +81,13 @@ class AdminArea extends React.Component {
 
         axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarArea`, {
             NombreArea: this.state.NombreArea,
-            tecnologiaFk: this.state.tecnologia,
-            AreaFk: this.state.AreaFk
-        })
-            .then(res => {
+            tecnologiaFk: this.state.selectGeneric,
+            AreaFk: this.state.selectArea
+
+        }).then(res => {
                 console.log(res);
                 console.log(res.data);
-            })
+        })
     }
 
     componentWillMount() {
@@ -91,6 +96,27 @@ class AdminArea extends React.Component {
                 const areas = res.data;
                 this.setState({ areas });
             })
+
+        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia')
+            .then(res => {
+                const tecno = res.data;
+                this.setState({ tecno });
+            })
+    }
+
+
+    borrar(Area) {
+
+        alert("Se selecciono el ID : " + Area);
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarArea`, {
+            AreaID: Area
+        }).then(res => {
+            if (res.status == 200) {
+                alert("Se elimino exitosamente");
+            }
+        })
+
+        
     }
 
 
@@ -115,26 +141,35 @@ class AdminArea extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-4 mb-3">
+                                    <div className="col-md-3 mb-3">
                                         <label>Buscar</label>
                                         <input type="text" className="form-control" id="myInput" placeholder="Buscar el área" />
-                                    </div>
-                                    <div className="col-md-1 mb-3">
-                                       
                                     </div>
                                     <div className="col-md-3 mb-3">
                                         <label>Agregar</label>
                                         <input type="text" className="form-control" id="validationCustom02" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del área" />
                                     </div>
-                                    <div className="col-md-3 mb-3">
+                                    <div className="col-md-2 mb-3">
                                         <label>Tecnología</label>
                                         <div className=" justify-content-end">
-                                            {Select_Tech("btn")}                                     
+                                            <SelectComponentArea
+                                                tecno={this.state.tecno}
+                                                handleChange={this.handleChange}
+                                            />                                     
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2 mb-3">
+                                        <label>Área principal</label>
+                                        <div className=" justify-content-end">
+                                            <SelectArea
+                                                area={this.state.areas}
+                                                handleChange={this.handleChange}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-1 mb-3">
                                       <br/>
-                                        <button class=" btn btnGrey " type="submit"><AddIcon />  Agregar</button>
+                                        <button class=" btn btnGrey " type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
                                         </div>
 
                                 </div>
@@ -148,13 +183,28 @@ class AdminArea extends React.Component {
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
                                 <tr>
+                                    <th className="size" scope="col">Área ID</th>
                                     <th className="size" scope="col">Nombre</th>
                                     <th className="size" scope="col"></th>
-
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                {areasTable}
+                                {this.state.areas.map(elemento => {
+                                    return (
+                                        <tr key={elemento.areaID}>
+                                            <td>
+                                                {elemento.areaID}
+                                            </td>
+                                            <td>
+                                                {elemento.nombreArea}
+                                            </td>
+                                            <td>
+                                                <button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                                                <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.areaID)}><DeleteIcon />  Eliminar</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}    
 
                             </tbody>
                         </table>
