@@ -19,7 +19,7 @@ class newUser extends React.Component {
             , partyId: ""
         }
 
-        this.borrar = this.borrar.bind(this);
+        //this.borrar = this.borrar.bind(this);
 
         super(props);
 
@@ -59,7 +59,7 @@ class newUser extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/User/userList`)
+        axios.get(`https://localhost:44357/api/User/userList`)
           
             .then(res => {
                 var parties = res.data;
@@ -70,13 +70,13 @@ class newUser extends React.Component {
     }
 
     deshabilitar(cod) {
-        axios.post(`http://localhost:58055/api/User/Deshabilitar`, {
+        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
             partyId: cod,
         })
     }  
 
     aceptar(cod) {
-        axios.post(`http://localhost:58055/api/User/Habilitar`, {
+        axios.post(`https://localhost:44357/api/User/Habilitar`, {
             partyId: cod,
         })
     }
@@ -85,7 +85,7 @@ class newUser extends React.Component {
 
     handleSubmitH = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/User`, {
+        axios.post(`https://localhost:44357/api/User`, {
             emial: this.state.email
            
         })
@@ -95,7 +95,7 @@ class newUser extends React.Component {
     handleSubmitD = event => {
         event.preventDefault();
 
-        axios.post(`http://localhost:58055/api/User/Deshabilitar`, {
+        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
             emial: this.state.email
         })
 

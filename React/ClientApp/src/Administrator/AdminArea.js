@@ -79,7 +79,7 @@ class AdminArea extends React.Component {
         event.preventDefault();
 
 
-        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarArea`, {
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea`, {
             NombreArea: this.state.NombreArea,
             tecnologiaFk: this.state.selectGeneric,
             AreaFk: this.state.selectArea
@@ -91,7 +91,7 @@ class AdminArea extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Area`)
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`)
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });
