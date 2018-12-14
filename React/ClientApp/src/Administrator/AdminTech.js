@@ -10,7 +10,6 @@ import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap'
 import axios from 'axios';
 import SelectComponent from '../Administrator/SelectComponent';
-import SelectArea from '../Administrator/SelectArea';
 
 class AdminTech extends React.Component {
 
@@ -18,13 +17,16 @@ class AdminTech extends React.Component {
         super();
         super(props);
         this.state = {
-            areas: [],
-            tecno: [],
-            area: [],
+            tecnologias: [],
+            tipoTecno: [],
             nombreTecnologia: '',
             selectGeneric: '',
             selectArea: '',
-            criticoS_N: ''
+            criticoS_N: '',
+            tecnologiaID: '',
+            SelectTipoTecnologiaModificar: "",
+            criticoS_N_Modificar: "",
+            nombreTecnologiaModificar: ""
         }
         this.handleChange = this.handleChange.bind(this);
 
@@ -85,6 +87,16 @@ class AdminTech extends React.Component {
         
     }
 
+    TecnologiaModificar(tecnoID) {
+
+        alert("Se selecciono el ID : " + tecnoID);
+        this.setState({
+            tecnologiaID: tecnoID
+        });
+
+
+    }
+
     borrar(tecnologiaBorrar) {
 
         alert("Se selecciono el ID : " + tecnologiaBorrar);
@@ -103,34 +115,66 @@ class AdminTech extends React.Component {
     componentWillMount() {
         axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia`)
             .then(res => {
-                const areas = res.data;
-                this.setState({ areas: areas });
+                const tecnologias = res.data;
+                this.setState({ tecnologias: tecnologias });
             })
 
         axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`)
             .then(res => {
-                const tecno = res.data;
-                this.setState({ tecno });
-            })
-
-
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`)
-            .then(res => {
-                const area = res.data;
-                this.setState({ area });
+                const tipoTecno = res.data;
+                this.setState({ tipoTecno });
             })
     }
 
+
+    ModificarTecnologia() {
+
+        alert("Se selecciono el ID : " + this.state.tecnologiaID);
+        if (this.state.NombreAreaModificar == "") {
+            alert("Inserte el nombre del área que desea modificar.");
+        } else {
+            if (this.state.SelectAreaTecnologiaModificar == "") {
+                alert("Seleccione la tecnologia del área que desea modificar.");
+            }
+            else {
+                if (this.state.SelectAreaPrincipalModificar == "") {
+                    alert("Seleccione la tecnologia del área que desea modificar.");
+                } else {
+                    alert("Llego aqui");
+                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarTecnologia`, {
+                        TecnologiaId: this.state.tecnologiaID,
+                        NombreTecnologia: this.state.nombreTecnologiaModificar,
+                        TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
+                        CriticoS_N: this.state.criticoS_N_Modificar
+                    }).then(res => {
+                        if (res.status == 200) {
+                            alert("Se modifico exitosamente");
+                        }
+                    })
+                }
+            }
+        }
+
+
+    }
+
+
+
     render() {
-        const areasTable = this.state.areas.map((area) => {
-            return (
-                <tr >
-                    <th scope="row">{area.nombreTecnologia}</th>
-                    <td><button class="btn btnBlue" type="submit"  ><EditIcon />  Editar</button>
-                        <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
-                </tr>
-            )
-        })
+        //const areasTable = this.state.tecnologias.map((tecnologia) => {
+        //    return (
+        //        <tr >
+        //            <th scope="row">{tecnologia.nombreTecnologia}</th>
+        //            <td><button class="btn btnBlue" type="submit"  ><EditIcon />  Editar</button>
+        //                <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
+        //        </tr>
+        //    )
+        //})
+
+
+        const listaTipoTecnologia = this.state.tipoTecno.map((tipoTecnologia) =>
+            <option value={tipoTecnologia.tipO_TECNOLOGIA}>{tipoTecnologia.tipO_TECNOLOGIA}</option>
+        );
         return (
             <div>
                 <Navigation />
@@ -152,7 +196,7 @@ class AdminTech extends React.Component {
                                     <div className="col-md-2 mb-3">
                                         <label>Tipo de Tecnología</label>
                                         <SelectComponent
-                                            tecno={this.state.tecno}
+                                            tecno={this.state.tipoTecno}
                                             handleChange={this.handleChange}
                                         />
                                     </div>
@@ -192,7 +236,7 @@ class AdminTech extends React.Component {
                             </tr>
                         </thead>
                         <tbody id="myTable">
-                            {this.state.areas.map(elemento => {
+                            {this.state.tecnologias.map(elemento => {
                                 return (
                                     <tr key={elemento.tecnologiaId}>
                                         <td>
@@ -202,7 +246,7 @@ class AdminTech extends React.Component {
                                             {elemento.nombreTecnologia}
                                         </td>
                                         <td>
-                                            <button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                                            <button className="btn btnBlue" type="submit" data-toggle="modal" href="#modal2" onClick={() => this.TecnologiaModificar(elemento.tecnologiaId)}><EditIcon />  Editar</button>
                                             <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.tecnologiaId)}><DeleteIcon />  Eliminar</button>
                                         </td>
                                     </tr>
@@ -218,20 +262,27 @@ class AdminTech extends React.Component {
                             <Modal.Title id="titleModal" />
                         </Modal.Header>
                         <Modal.Body>
-                            <label>Nombre del area</label>
-                            <FormControl className="form-control" placeholder="Nombre del área"></FormControl>
+                            <label>Nombre de la tecnología</label>
+                            <FormControl className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></FormControl>
                             <br />
                             <label>Tipo de Tecnología</label>
-                            {Select_Type_Technology()}
+                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
+                                {listaTipoTecnologia}
+                            </select>
                             <br />
-                            <label>Área</label>
-                            {Select_Area()}
+                            <label>tecnología critica</label>
+                            <div className=" justify-content-end">
+                                <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
+                                    <option value="s">Sí</option>
+                                    <option value="n">No</option>
+                                </select>
+                            </div>
 
                         </Modal.Body>
 
                         <Modal.Footer>
-                            <Button id="close" className="btnRed">Cancelar</Button>
-                            <Button id="close" className="btnBlue">Aceptar</Button>
+                            <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
+                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarTecnologia()}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>

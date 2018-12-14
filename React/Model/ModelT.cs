@@ -8,7 +8,7 @@ namespace React.Model
     public class ModelT
     {
 
-        public int TecnologiaId { get; set; }
+        public string TecnologiaId { get; set; }
         public string NombreTecnologia { get; set; }
         public string TipoTecnologiaFk { get; set; }
         public string CriticoS_N { get; set; }
