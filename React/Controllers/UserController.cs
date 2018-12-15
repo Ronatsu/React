@@ -23,17 +23,43 @@ namespace React.Controllers
 
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("UsuarioHabilitado")]
+        public ActionResult GetUsuarioHabilitado()
         {
-            return new string[] { "value1", "value2" };
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+            cmd = new SqlCommand("Proc_ObtenerUsuariosHabilitados", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            dataReader = cmd.ExecuteReader();
+            List<Usuario> userList = new List<Usuario>();
+            while (dataReader.Read())
+            {
+
+                Usuario newUser = new Usuario();
+                newUser.PARTYID = dataReader["Id"].ToString();
+                newUser.NOMBRE = dataReader["Nombre"].ToString();
+                newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
+                newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
+                newUser.ROL_USUARIO = dataReader["Rol"].ToString();
+                newUser.correoElectronico = dataReader["Correo"].ToString();
+
+                userList.Add(newUser);
+            }
+            conexion.Close();
+            var item = userList;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
         }
 
         // GET: api/User/5
-        [HttpGet("{id}", Name = "List")]
+        [HttpGet]
         [Route("userList")]
-        public ActionResult Get(int id)
+        public ActionResult Get()
         {
-           
             conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
             cmd = new SqlCommand("Proc_ObtenerNewParties", conexion);
@@ -61,6 +87,71 @@ namespace React.Controllers
                 return NotFound();
             }
             return Ok(item);
+        }
+
+        [HttpPost]
+        [Route("CambiarContraseña")]
+        public ActionResult CambiarContraseña(Usuario party)
+        {
+            Password password = new Password();
+            if (password.ValidarContrasena(party.password2, party.password1))
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+                string s = password.GetMD5(party.passwordActual);
+
+                cmd = new SqlCommand("Proc_CambiarContrasena", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                cmd.Parameters.AddWithValue("@constrasenaNueva", password.GetMD5(party.password1));
+                cmd.Parameters.AddWithValue("@constrasenaActual",s);
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+            }
+
+            
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("DarseDeBaja")]
+        public ActionResult DarseDeBaja(Usuario party)
+        {
+
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+
+                cmd = new SqlCommand("Proc_DarseDeBaja", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+            
+
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("CambiarNombre")]
+        public ActionResult CambiarNombre(Usuario party)
+        {
+
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+
+            cmd = new SqlCommand("Proc_CambiarNombre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", party.PARTYID);
+            cmd.Parameters.AddWithValue("@nombre", party.NOMBRE);
+            cmd.Parameters.AddWithValue("@primerApellido", party.PRIMER_APELLIDO);
+            cmd.Parameters.AddWithValue("@segundoApellido", party.SEGUNDO_APELLIDO);
+            dataReader = cmd.ExecuteReader();
+
+            conexion.Close();
+            return Ok();
         }
 
         // POST: api/User

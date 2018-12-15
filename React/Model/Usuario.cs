@@ -21,6 +21,7 @@ namespace API_Ejemplo.Model
         public Boolean HABILITADO { get; set; }
         public string password1 { get; set; }
         public string password2 { get; set; }
+        public string passwordActual { get; set; }
         public char TIPO_COLABORADOR { get; set; }
         public string ROL_USUARIO { get; set; }
         public string ASIGNA_INCIDENCIA { get; set; }

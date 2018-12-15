@@ -9,6 +9,11 @@
     float: none;
 }
 
+#card{
+    background-color:#eeeeee;
+    color:#2e5490;
+}
+
 .size{
     
     width: 10%;
