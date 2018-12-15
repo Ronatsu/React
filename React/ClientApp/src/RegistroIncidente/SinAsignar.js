@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
-//import { incidents } from '../components/bd/incident.json';
 import SearchkIcon from '@material-ui/icons/Search';
 import $ from 'jquery';
-import './Home.css';
 import { Link } from "react-router-dom";
 import '../components/ButtonColor.css';
 import axios from 'axios'
 import '../Administrator/Block_User.css';
 
-class Home extends Component {
+class SinAsignar extends Component {
     constructor(props) {
         super();
         this.state = {
@@ -29,7 +27,7 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/GetIncidents/MethodGetIncidents`)
+        axios.get(`http://localhost:58055/api/Incidencia/IncidenciasSinAsignar`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
@@ -39,11 +37,11 @@ class Home extends Component {
         const incidentCard = this.state.incidents.map((incident) => {
             return (
                 <tr>
-                    <td> <Link to="/InformacionIncidencia"><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Dar seguimiento</button></Link></td>
-                    <th scope="row">{incident.impactProbability}</th>
-                    <td>{incident.impactType}</td>
-                    <td>{incident.description}</td>
-                    <td>{incident.dateIncident}</td>
+                    <td> <Link to="/AsignacionIncidencia"><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
+                    <th scope="row">{incident.probabilidaImpacto}</th>
+                    <td>{incident.tipoImpacto}</td>
+                    <td>{incident.descripcion}</td>
+                    <td>{incident.fechaIncidencia}</td>
                 </tr>
 
             )
@@ -80,4 +78,4 @@ class Home extends Component {
 
 }
 
-export default Home;
+export default SinAsignar;

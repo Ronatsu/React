@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using API_Ejemplo.Model;
@@ -16,20 +17,43 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
 
-        // GET: api/Incidencia
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+
 
         // GET: api/Incidencia/5
-        
-        public string Get(int id)
-        {
-            return "value";
-        }
 
+        [HttpGet]
+        [Route("IncidenciasSinAsignar")]
+        public ActionResult<List<DataIncidents>> Get()
+        {
+            conexion = new SqlConnection(new Conexion().getConnection());
+            conexion.Open();
+            cmd = new SqlCommand("Proc_ObtenerIncidenciaSinAsignar", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+
+            List<Incident> ListIncidents = new List<Incident>();
+
+            while (dataReader.Read())
+            {
+                Incident incident = new Incident();
+                incident.Id = Int32.Parse(dataReader["id"].ToString());
+                incident.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                incident.Descripcion = dataReader["Descripcion"].ToString();
+                incident.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                incident.FechaIncidencia = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("G");
+                
+
+                ListIncidents.Add(incident);
+
+            }
+            conexion.Close();
+            var item = ListIncidents;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
         // POST: api/Incidencia
         [HttpPost]
         public void addIncident(Incident newIncident)

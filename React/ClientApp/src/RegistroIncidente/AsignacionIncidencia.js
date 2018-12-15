@@ -1,12 +1,28 @@
 import React from 'react';
 import Navigation from '../components/Navigation';
-import { colaboradores } from '../components/bd/colaborador.json';
+//import { parties } from '../components/bd/colaborador.json';
 import '../Administrator/Block_User.css';
 import $ from 'jquery';
+import axios from 'axios';
 
 class AsignacionIncidencia extends React.Component {
     constructor(props) {
+        super();
+        this.state = {
+            parties: [],
+            party: [],
+            asignacionArray: []
+            , partyId: ""
+             ,checkboxes: {
+                c1: false,
+                c2: false,
+                c3: false,
+                selected: null,
+            }
+        }
         super(props);
+
+
 
         $(document).ready(function () {
 
@@ -30,8 +46,35 @@ class AsignacionIncidencia extends React.Component {
                 });
             })
         });
-
     }
+    handleSubmit = event => {
+        event.preventDefault();
+
+        this.setState({ asignacionArray: [this.state.asignacionArray+-1] });
+        console.log(this.state.asignacionArray)
+    }
+        onCheck(name, val) {
+            const checkboxes = Object.assign({}, this.state.checkboxes, {});
+            for (let key in checkboxes) {
+                checkboxes[key] = false;
+            }
+            checkboxes[name] = true;
+            checkboxes.selected = val;
+            this.setState({ checkboxes });
+            console.log(this.state.checkboxes)
+        }
+        //axios.post(`http://localhost:58055/api/Incidencia`, {
+        //    tipoIncidencia: this.state.tipoIncidencia
+        //    , tipoImpacto: this.state.tipoImpacto
+        //    , gradoControl: this.state.gradoControl
+        //    , tencologia: this.state.tencologia
+        //    , areaAfectada: this.state.areaAfectada
+        //    , descripcion: this.state.descripcion
+        //    , fechaDescubrimiento: this.state.fecha
+        //    , metodoDeteccion: this.state.metodoDeteccion
+        //})
+    
+
     render() {
         return (
             <div className="container-fluid">
@@ -49,12 +92,12 @@ class AsignacionIncidencia extends React.Component {
                             <ColaboradorTabla />
                             <div class="pagination justify-content-end">
                                 <button class="btn btnRed  " type="submit">Cancelar</button>
-                                <button class="btn btnBlue" type="submit">Notificar</button>
+                                <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button>
                             </div>
                         </div>
                     </fieldset>
                 </form>
-
+                <br /> <br /> <br />
             </div>
         )
     }
@@ -64,19 +107,32 @@ class ColaboradorTabla extends React.Component {
     constructor() {
         super();
         this.state = {
-            colaboradores
+            parties: [],
+            party: [],
+            partyId: ""
         }
     }
+    componentWillMount() {
+        axios.get(`http://localhost:58055/api/User/UsuarioHabilitado`)
 
+            .then(res => {
+                var parties = res.data;
+                this.setState({ parties });
+                console.log(parties);
+            })
+
+    }
     render() {
-        const colaboradorCard = this.state.colaboradores.map((colaborador) => {
+        const partiesTable = this.state.parties.map((party) => {
             return (
-                <tr>
-                    <td><input type="checkbox" value="" /></td>
-                    <th scope="row">{colaborador.area}</th>
-                    <td>{colaborador.primernombre}</td>
-                    <td>{colaborador.primerapellido}</td>
-                    <td>{colaborador.correo}</td>
+                <tr key={party.partyid}>
+                    <td><input type="checkbox" value=""/></td>
+                    <td>{party.nombre}</td>
+                    <td>{party.primeR_APELLIDO}</td>
+                    <td>{party.segundO_APELLIDO}</td>
+                    <td >{party.correoElectronico}</td>
+                    <td>{party.roL_USUARIO}</td>
+                   
                 </tr>
 
             )
@@ -87,16 +143,17 @@ class ColaboradorTabla extends React.Component {
                 <table className="table table-hover table-condensed " id="table_id">
                     <thead>
                         <tr>
-                            <th className="size" scope="col">Asignar</th>
-                            <th className="size" scope="col">Area Especializacion</th>
-                            <th className="size" scope="col">Primer Nombre</th>
+                            <th className="size" scope="col"></th>
+                            <th className="size" scope="col">Nombre</th>
                             <th className="size" scope="col">Primer Apellido</th>
+                            <th className="size" scope="col">Segundo Apellido</th>
                             <th className="size" scope="col">Correo Electronico</th>
+                            <th className="size" scope="col">Rol</th>
 
                         </tr>
                     </thead>
                     <tbody id="myTable">
-                        {colaboradorCard}
+                        {partiesTable}
 
                     </tbody>
                 </table>
@@ -136,10 +193,10 @@ function ShowIncident() {
         <div className="container">
             <div className="row">
                 <div className="div-container">
-                    <div >
-                        <blockquote>
-                            <p>Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
-                        </blockquote>
+                    <div className="card" id="card">
+                        <div class="card-body">
+                            <p className="card-text">Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
+                        </div>
                     </div>
                 </div>
             </div>

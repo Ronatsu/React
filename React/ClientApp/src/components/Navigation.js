@@ -10,6 +10,7 @@ import TechIcon from '@material-ui/icons/Domain';
 import AreaIcon from '@material-ui/icons/SupervisedUserCircle';
 import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
 import UserIncident from '@material-ui/icons/HowToReg';
@@ -32,6 +33,10 @@ class navigatiom extends React.Component {
                         </li>
                         <li className="nav-item">
                             <Link to="/InsertarIncidencia"><a className="nav-link" ><NewIncidentIcon /> Crear Incidencia<span className="sr-only">(current)</span></a></Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link to="/SinAsignar"><a className="nav-link" ><AssignmentIcon /> Asignar Incidencia<span className="sr-only">(current)</span></a></Link>
                         </li>
 
                         <li className="nav-item">

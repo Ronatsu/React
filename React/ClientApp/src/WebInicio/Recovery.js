@@ -39,15 +39,13 @@ class recover extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-
-        console.log(this.state.email2 + " 2");
-        console.log(this.state.email1 + " 1");
-
-        axios.post(`https://localhost:44357/api/RecuperarContraseña`, {
+        axios.post(`https://localhost:58055/api/RecuperarContraseña`, {
             email1: this.state.email1,
             email2: this.state.email2,
 
         });
+        console.log(this.state.email2 + " 2");
+        console.log(this.state.email1 + " 1");
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
@@ -69,7 +67,7 @@ class recover extends React.Component {
                         <div className="form-group">
                             <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
                             <span className="help-block"></span>
-                            <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
+                            <button className="btn btnBlue btn-block" type="submit" id="id_send2">Enviar</button>
                         </div>
 
                     </form>
