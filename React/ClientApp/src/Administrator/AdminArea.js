@@ -25,10 +25,15 @@ class AdminArea extends React.Component {
             NombreArea: '',
             selectGeneric: '',
             selectArea: '',
-            AreaIDBorrar: ''
+            AreaIDBorrar: '',
+            AreaIDModificar: '',
+            NombreAreaModificar: '',
+            SelectAreaTecnologiaModificar: '',
+            SelectAreaPrincipalModificar:''
         }
         this.handleChange = this.handleChange.bind(this);
         this.borrar = this.borrar.bind(this);
+        this.AreaModificar = this.AreaModificar.bind(this);
 
         
 
@@ -79,7 +84,7 @@ class AdminArea extends React.Component {
         event.preventDefault();
 
 
-        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarArea`, {
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea`, {
             NombreArea: this.state.NombreArea,
             tecnologiaFk: this.state.selectGeneric,
             AreaFk: this.state.selectArea
@@ -91,7 +96,7 @@ class AdminArea extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Area`)
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`)
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });
@@ -120,17 +125,58 @@ class AdminArea extends React.Component {
     }
 
 
-    render() {
-        const areasTable = this.state.areas.map((area) => {
-            return (
-                <tr>
-                    <th scope="row">{area.nombreArea}</th>
-                    <td><button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
-                        <button className="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
-                </tr>
+    AreaModificar(Area) {
 
-            )
-        })
+        alert("Se selecciono el ID : " + Area);
+        this.setState({
+            AreaIDModificar: Area
+        });
+        
+
+    }
+
+
+    ModificarArea() {
+
+        alert("Se selecciono el ID : " + this.state.AreaIDModificar);
+        if (this.state.NombreAreaModificar == "") {
+            alert("Inserte el nombre del área que desea modificar.");
+        } else {
+            if (this.state.SelectAreaTecnologiaModificar == "") {
+                alert("Seleccione la tecnologia del área que desea modificar.");
+            }
+            else {
+                if (this.state.SelectAreaPrincipalModificar == "") {
+                    alert("Seleccione la tecnologia del área que desea modificar.");
+                } else {
+                    alert("Llego aqui");
+                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarArea`, {
+                        AreaID: this.state.AreaIDModificar,
+                        NombreArea: this.state.NombreAreaModificar,
+                        TecnologiaFk: this.state.SelectAreaTecnologiaModificar,
+                        AreaFk: this.state.SelectAreaPrincipalModificar
+                    }).then(res => {
+                        if (res.status == 200) {
+                            alert("Se modifico exitosamente");
+                        }
+                    })
+                }
+            }
+        }
+
+
+    }
+
+
+    render() {
+        const listaTecnologia = this.state.tecno.map((tecnologia) =>
+            <option value={tecnologia.nombreTecnologia}>{tecnologia.nombreTecnologia}</option>
+        );
+
+        const listaArea = this.state.areas.map((area) =>
+            <option value={area.nombreArea}>{area.nombreArea}</option>
+        );
+
         return (
             <div>
                 <Navigation />
@@ -199,7 +245,7 @@ class AdminArea extends React.Component {
                                                 {elemento.nombreArea}
                                             </td>
                                             <td>
-                                                <button className="btn btnBlue" type="submit"><EditIcon />  Editar</button>
+                                                <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.AreaModificar(elemento.areaID)}><EditIcon />  Editar</button>
                                                 <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.areaID)}><DeleteIcon />  Eliminar</button>
                                             </td>
                                         </tr>
@@ -213,17 +259,26 @@ class AdminArea extends React.Component {
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
-                            <Modal.Title id="titleModal"></Modal.Title>
+                            <Modal.Title id="titleModal">Modificación de área</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <FormControl className="form-control" placeholder="Nombre del area"></FormControl>
+                            <label>Nombre del área</label>
+                            <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
                             <br />
-                            {Select_Tech("form-control container")}
+                            <label>Seleccione la tecnología</label>
+                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
+                                {listaTecnologia}
+                            </select>
+                            <br />
+                            <label>Seleccione el área principal</label>
+                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaPrincipalModificar" onClick={this.handleChange}>
+                                {listaArea}
+                            </select>
                         </Modal.Body>
 
                         <Modal.Footer>
-                            <Button id="close" className="btnRed">Cancelar</Button>
-                            <Button id="close" className="btnBlue">Aceptar</Button>
+                            <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
+                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarArea()}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
@@ -233,17 +288,13 @@ class AdminArea extends React.Component {
 }
 
 
-function Select_Tech(styleClassName , ) {
+//function Select_Tech(styleClassName , ) {
 
-    return (
+//    return (
 
-        <select className={styleClassName} id="exampleFormControlSelect1" name="tecnologia">
-            <option>Router Cisco</option>
-            <option>Servidor A-97r</option>
-            <option>SQL Azure</option>
-            <option>Windows 2016</option>
-            <option>Log Storage Activy</option>
-        </select>
-    );
-}
+//        <select className={styleClassName} id="exampleFormControlSelect1" name="tecnologia">
+//            {listaTipoTecnologia}
+//        </select>
+//    );
+//}
 export default AdminArea;
