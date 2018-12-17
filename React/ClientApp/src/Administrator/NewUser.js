@@ -13,7 +13,7 @@ class newUser extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            parties:[],
+            parties: [],
             party: [],
             email: ""
             , partyId: ""
@@ -45,9 +45,9 @@ class newUser extends React.Component {
         //})
 
 
-       
+
     }
-  
+
     handleChange = event => {
         const nameInput = event.target.name;
         const valueInput = event.target.value;
@@ -59,43 +59,46 @@ class newUser extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/User/userList`)
-          
+        axios.get(`https://localhost:44372/api/User/userList`)
             .then(res => {
                 var parties = res.data;
-                this.setState({ parties });
+                this.setState({ parties: parties });
                 console.log(parties);
             })
-      
+
     }
 
     deshabilitar(cod) {
-        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
+        axios.post(`https://localhost:44372/api/User/Deshabilitar`, {
             partyId: cod,
         })
-    }  
+        window.location.reload();
+        this.componentWillMount()
+    }
 
     aceptar(cod) {
-        axios.post(`https://localhost:44357/api/User/Habilitar`, {
+        axios.post(`https://localhost:44372/api/User/Habilitar`, {
             partyId: cod,
         })
+        window.location.reload();
+        this.componentWillMount()
     }
 
 
 
     handleSubmitH = event => {
-        event.preventDefault();
-        axios.post(`https://localhost:44357/api/User`, {
+        
+        axios.post(`https://localhost:44372/api/User`, {
             emial: this.state.email
-           
+
         })
         console.log(this.state.email)
     }
 
     handleSubmitD = event => {
-        event.preventDefault();
+        
 
-        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
+        axios.post(`https://localhost:44372/api/User/Deshabilitar`, {
             emial: this.state.email
         })
 
@@ -113,32 +116,20 @@ class newUser extends React.Component {
         });
     }*/
     render() {
-        const partiesTable = this.state.parties.map((party) => {
-            return (
-                <tr key={party.partyid}>
-                    <td scope="row">{party.nombre}</td>
-                    <td>{party.primeR_APELLIDO}</td>
-                    <td>{party.segundO_APELLIDO}</td>
-                    <td name="emial">{party.correoElectronico}</td>
-                    <td>{party.roL_USUARIO}</td>
-                    <td><button class="btn btnGreen" type="submit" onClick={() => this.aceptar(party.partyid)}><AcceptUserIcon/>  Aceptar</button>
-                        <button class="btn btnRed" type="submit" onClick={() => this.deshabilitar(party.partyid)} ><BlockIcon/>  Rechazar</button></td>
-                </tr>
-
-            )
-        })
+        const { parties } = this.state;
+           
 
         return (
             <div className="container ">
                 <Navigation />
-                
+
                 <br />
                 <br />
                 <br />
                 <br />
 
                 <div className="w-auto p-3">
-                <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
+                    <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
                 </div>
                 <div className="container table-responsive " id="main_div">
                     <table className="table table-hover table-condensed " id="table_id">
@@ -150,11 +141,23 @@ class newUser extends React.Component {
                                 <th className="size" scope="col">Correo Electrónico</th>
                                 <th className="size" scope="col">Rol</th>
                                 <th className="size" scope="col"></th>
-                               
+
                             </tr>
                         </thead>
                         <tbody id="myTable">
-                            {partiesTable}
+                            {parties.map(elemento => {
+                                return (
+                                    <tr key={elemento.partyid}>
+                                        <td scope="row">{elemento.nombre}</td>
+                                        <td>{elemento.primeR_APELLIDO}</td>
+                                        <td>{elemento.segundO_APELLIDO}</td>
+                                        <td name="emial">{elemento.correoElectronico}</td>
+                                        <td>{elemento.roL_USUARIO}</td>
+                                        <td><button class="btn btnGreen" type="submit" onClick={() => this.aceptar(elemento.partyid)}><AcceptUserIcon />  Aceptar</button>
+                                            <button class="btn btnRed" type="submit" onClick={() => this.deshabilitar(elemento.partyid)} ><BlockIcon />  Rechazar</button></td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>

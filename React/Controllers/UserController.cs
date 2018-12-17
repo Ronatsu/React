@@ -23,9 +23,39 @@ namespace React.Controllers
 
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("GetAllUsers")]
+        public ActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+            cmd = new SqlCommand("Proc_GetAllUsers", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            dataReader = cmd.ExecuteReader();
+            List<Usuario> userList = new List<Usuario>();
+            while (dataReader.Read())
+            {
+
+                Usuario newUser = new Usuario
+                {
+                    PARTYID = dataReader["PartyId"].ToString(),
+                    NOMBRE = dataReader["Nombre"].ToString(),
+                    PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString(),
+                    SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString(),
+                    ROL_USUARIO = dataReader["RolUsuario"].ToString(),
+                    correoElectronico = dataReader["ValorMecanismo"].ToString()
+                };
+
+                userList.Add(newUser);
+            }
+            conexion.Close();
+            var item = userList;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
         }
 
         // GET: api/User/5
@@ -44,13 +74,15 @@ namespace React.Controllers
             while (dataReader.Read())
             {
 
-                Usuario newUser = new Usuario();
-                newUser.PARTYID = dataReader["PartyId"].ToString();
-                newUser.NOMBRE = dataReader["Nombre"].ToString();
-                newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
-                newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
-                newUser.ROL_USUARIO = dataReader["RolUsuario"].ToString();
-                newUser.correoElectronico = dataReader["Correo"].ToString();
+                Usuario newUser = new Usuario
+                {
+                    PARTYID = dataReader["PartyId"].ToString(),
+                    NOMBRE = dataReader["Nombre"].ToString(),
+                    PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString(),
+                    SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString(),
+                    ROL_USUARIO = dataReader["RolUsuario"].ToString(),
+                    correoElectronico = dataReader["Correo"].ToString()
+                };
 
                 userList.Add(newUser);
             }
@@ -121,18 +153,6 @@ namespace React.Controllers
 
 
 
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
