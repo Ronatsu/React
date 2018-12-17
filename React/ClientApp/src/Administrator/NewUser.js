@@ -18,9 +18,6 @@ class newUser extends React.Component {
             email: ""
             , partyId: ""
         }
-
-        //this.borrar = this.borrar.bind(this);
-
         super(props);
 
         $(document).ready(function () {
@@ -101,7 +98,7 @@ class newUser extends React.Component {
         axios.post(`https://localhost:44372/api/User/Deshabilitar`, {
             emial: this.state.email
         })
-
+      
     }
 
 

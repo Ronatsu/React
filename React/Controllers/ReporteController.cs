@@ -24,6 +24,7 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
+        List<CsvFile> csvList = new List<CsvFile>();
 
 
         // GET: api/Reporte
@@ -54,6 +55,43 @@ namespace React.Controllers
             return item;
         }
 
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerCsv")]
+        public ActionResult<List<CsvFile>> GetCsv()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_CsvDownload", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                CsvFile file = new CsvFile();
+                file.Asignado = dataReader["Asignado"].ToString();
+                file.FechaDescubrimiento = dataReader["FechaDescubrimiento"].ToString();
+                file.FechaIncidencia = dataReader["FechaIncidencia"].ToString();
+                file.FechaResuelto = dataReader["FechaResuelto"].ToString();
+                file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
+                file.MetaEstado = dataReader["MetaEstado"].ToString();
+                file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
+                file.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                file.Descripcion = dataReader["Descripcion"].ToString();
+                file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();
+
+
+                csvList.Add(file);
+
+            }
+            conexion.Close();
+            var item = csvList;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
 
         public void EstablecerConexion()
         {

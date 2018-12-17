@@ -88,13 +88,7 @@ class Form extends React.Component {
             , fechaDescubrimiento: this.state.fecha
             , metodoDeteccion: this.state.metodoDeteccion
         })
-        console.log(this.state.tipoImpacto + " impacto");
-        console.log(this.state.tipoIncidencia + " tipoIncidencia");
-        console.log(this.state.gradoControl + " gradoControl");
-        console.log(this.state.tencologia + " tencologia");
-        console.log(this.state.areaAfectada + " area");
-        console.log(this.state.descripcion + " descripcion");
-        console.log(this.state.metodoDeteccion + " metodo");
+
     }
 
 
@@ -206,10 +200,11 @@ class Form extends React.Component {
                         <div class="pagination justify-content-end">
                             <button class="btn btnRed" type="submit">Cancelar</button>
                             <button className="btn btnBlue" type="submit" onClick={this.handleSubmit}>Enviar</button>
-                            <Link to="/AsignacionIncidencia"><button className="btn " type="submit" >Enviar</button></Link>
+                          
                         </div>
                     </div>
                 </form>
+                <br /> <br /> <br />
             </div>
         )
     }

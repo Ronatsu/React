@@ -7,6 +7,7 @@ import Registro from '../Registro/Registro';
 import Home from '../WebInicio/Home';
 import Form from '../RegistroIncidente/Form';
 import AsignacionIncidencia from '../RegistroIncidente/AsignacionIncidencia';
+import SinAsignar from '../RegistroIncidente/SinAsignar';
 import Configuracion from '../configuracion/Perfil';
 import GetAdmin from '../Administrator/GetAdmin';
 import BlockUser from '../Administrator/Block_User';
@@ -42,6 +43,7 @@ const AppRutas = () =>
             <Route exact path="/MenuGrafico" component={MenuReportes} />
             <Route exact path="/SelectUserIncident" component={SelectUserIncident} />
             <Route exact path="/TableUserList" component={TableUserList} />
+            <Route exact path="/SinAsignar" component={SinAsignar} />
         </Switch>
 
     </App>;
