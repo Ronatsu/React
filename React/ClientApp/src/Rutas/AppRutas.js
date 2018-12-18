@@ -20,6 +20,7 @@ import AdminTech from '../Administrator/AdminTech';
 import ForgotPass from '../WebInicio/Recovery';
 import SingIn from '../Registro/signIn';
 import SelectUserIncident from '../RegistroIncidente/SelectUserIncidents'
+import TableUserList from '../RegistroIncidente/TableIncidentUser';
 
 
 const AppRutas = () =>
@@ -41,6 +42,7 @@ const AppRutas = () =>
             <Route exact path="/SignIn" component={SingIn} />
             <Route exact path="/MenuGrafico" component={MenuReportes} />
             <Route exact path="/SelectUserIncident" component={SelectUserIncident} />
+            <Route exact path="/TableUserList" component={TableUserList} />
             <Route exact path="/SinAsignar" component={SinAsignar} />
         </Switch>
 

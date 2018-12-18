@@ -13,7 +13,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
-import UserIncident from '@material-ui/icons/HowToReg';
+import UserIncident from '@material-ui/icons/FolderShared';
 import '../components/ButtonColor.css';
 
 

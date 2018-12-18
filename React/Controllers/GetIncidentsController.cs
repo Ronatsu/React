@@ -15,21 +15,27 @@ namespace React.Controllers
     [ApiController]
     public class GetIncidentsController : ControllerBase
     {
+        private int Id = 0;
         string ConnectionString = new Conexion().getConnection();
         SqlConnection Connection;
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<DataIncidents> ListIncidents = new List<DataIncidents>();
-        // GET: api/GetIncidents
-        [HttpGet]
+
+
+
+       
+
+
+        [HttpPost]
         [Route("MethodGetIncidents")]
-        public ActionResult<List<DataIncidents>> Get()
+        public ActionResult<List<DataIncidents>> Get(Correo correo)
         {
             Connection = new SqlConnection(ConnectionString);
             Connection.Open();
             cmd = new SqlCommand("ObtenerIncidencia", Connection);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@PARTY_ID", 2);
+            cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
@@ -38,7 +44,7 @@ namespace React.Controllers
                 incidents.Description = dataReader["Descripcion"].ToString();
                 incidents.ImpactType = dataReader["TipoImpacto"].ToString();
                 incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("dd/MM/yyyy");
-               // incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                // incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
 
                 ListIncidents.Add(incidents);
 
@@ -51,5 +57,7 @@ namespace React.Controllers
             }
             return Ok(item);
         }
+
+        
     }
 }
