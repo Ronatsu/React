@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
@@ -95,7 +96,7 @@ namespace React.Controllers
 
         public void EstablecerConexion()
         {
-            conexion = new SqlConnection(connectionString);
+            conexion = new SqlConnection(new Conexion().getConnection());
             conexion.Open();
         }
 

@@ -81,6 +81,37 @@ namespace React.Controllers
             //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
         }
 
+        [HttpPost]
+        [Route("AsignarIncident")]
+        public void AsignarIncident(Usuario usuarios)
+        {
+
+            conexion = new SqlConnection(new Conexion().getConnection());
+           
+            foreach (var item in usuarios.AsignacionArray)
+            {
+                if (item.Add)
+                {
+                    conexion.Open();
+                    cmd = new SqlCommand("Proc_AsignarIncidencia", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
+                    cmd.Parameters.AddWithValue("@incidenciaId", 2901);
+
+
+                    dataReader = cmd.ExecuteReader();
+                    conexion.Close();
+                }
+
+            }
+           
+
+
+
+
+            //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
+        }
+
         // PUT: api/Incidencia/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

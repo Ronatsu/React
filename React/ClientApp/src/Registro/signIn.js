@@ -101,7 +101,7 @@ class registroColaborador extends Component {
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`https://localhost:44357/api/Registro`, {
+        axios.post(`https://localhost:58055/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
             primer_apellido: this.state.apellido,

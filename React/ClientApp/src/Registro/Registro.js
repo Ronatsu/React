@@ -46,7 +46,7 @@ class registroColaborador extends Component {
 
         };
 
-        axios.post(`https://localhost:44357/api/Registro`, { colaborador })
+        axios.post(`https://localhost:58055/api/Registro`, { colaborador })
             .then(res => {
                 console.log(res);
                 console.log(res.data);

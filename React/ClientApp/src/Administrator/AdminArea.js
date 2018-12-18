@@ -84,7 +84,7 @@ class AdminArea extends React.Component {
         event.preventDefault();
 
 
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea`, {
+        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarArea`, {
             NombreArea: this.state.NombreArea,
             tecnologiaFk: this.state.selectGeneric,
             AreaFk: this.state.selectArea
@@ -96,13 +96,13 @@ class AdminArea extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Area`)
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });
             })
 
-        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia')
+        axios.get('http://localhost:58055/api/AdministracionAreaTecnologia/Tecnologia')
             .then(res => {
                 const tecno = res.data;
                 this.setState({ tecno });
@@ -113,7 +113,7 @@ class AdminArea extends React.Component {
     borrar(Area) {
 
         alert("Se selecciono el ID : " + Area);
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarArea`, {
+        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/eliminarArea`, {
             AreaID: Area
         }).then(res => {
             if (res.status == 200) {

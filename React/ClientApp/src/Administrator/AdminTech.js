@@ -77,7 +77,7 @@ class AdminTech extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
             nombreTecnologia: this.state.nombreTecnologia,
             tipoTecnologiaFk: this.state.selectGeneric,
             criticoS_N: this.state.criticoS_N
@@ -100,7 +100,7 @@ class AdminTech extends React.Component {
     borrar(tecnologiaBorrar) {
 
         alert("Se selecciono el ID : " + tecnologiaBorrar);
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
+        axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
             TecnologiaId: tecnologiaBorrar
         }).then(res => {
             if (res.status == 200) {
@@ -113,13 +113,13 @@ class AdminTech extends React.Component {
 
 
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/Tecnologia`)
             .then(res => {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });
             })
 
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`)
+        axios.get(`http://localhost:58055/api/AdministracionAreaTecnologia/TipoTecnologia`)
             .then(res => {
                 const tipoTecno = res.data;
                 this.setState({ tipoTecno });

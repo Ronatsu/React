@@ -19,12 +19,13 @@ class MyCsvLink extends React.Component {
     }*/
 
     componentDidMount() {
-        axios.get(`http://localhost:56461/api/Reporte/ObtenerCsv`)
+        axios.get(`http://localhost:58055/api/Reporte/ObtenerCsv`)
             .then(res => {
                 const data = res.data;
                 this.setState({ data });
                 this.csvLink.current.link.click()
             })
+        console.log(this.state.data)
     }
   
     render() {      

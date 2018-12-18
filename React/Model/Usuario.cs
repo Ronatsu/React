@@ -1,4 +1,5 @@
-﻿using System;
+﻿using React.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,8 +27,8 @@ namespace API_Ejemplo.Model
         public string ROL_USUARIO { get; set; }
         public string ASIGNA_INCIDENCIA { get; set; }
         public string correoElectronico { get; set; }
-
-
+        public List<Asignacion> AsignacionArray { get; set; }
+    
     }
   
 }

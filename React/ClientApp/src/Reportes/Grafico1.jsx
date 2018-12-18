@@ -23,7 +23,7 @@ class App1 extends Component {
     }
 
     componentDidMount() {
-        axios.get(`https://localhost:44357/api/Reporte/ObtenerIncidente`)
+        axios.get(`http://localhost:58055/api/Reporte/ObtenerIncidente`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
