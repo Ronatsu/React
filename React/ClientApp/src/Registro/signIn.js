@@ -101,7 +101,7 @@ class registroColaborador extends Component {
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`https://localhost:58055/api/Registro`, {
+        axios.post(`http://localhost:58055/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
             primer_apellido: this.state.apellido,
@@ -132,24 +132,24 @@ class registroColaborador extends Component {
                             <form onSubmit={this.handleSubmit}>
                                 <div className="form-group">
                                     <div className="form-group">
-                                        <label for="nombreUsuario">Nombre</label>
-                                        <input type="text" className="form-control validar" name="nombre" id="valor" placeholder="Ingrese su nombre" value={this.state.nombre} onChange={this.handleChange}></input>
+                                        <label >Nombre</label>
+                                        <input type="text" className="form-control validar" name="nombre"  placeholder="Ingrese su nombre" value={this.state.nombre} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="apellidoUsuario">Primer apellido</label>
-                                        <input type="text" className="form-control" name="apellido" id="valor" placeholder="Primer apellido" value={this.state.apellido} onChange={this.handleChange}></input>
+                                        <label>Primer apellido</label>
+                                        <input type="text" className="form-control" name="apellido"  placeholder="Primer apellido" value={this.state.apellido} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="segundoApellidoUsuario">Segundo apellido</label>
-                                        <input type="text" className="form-control" name="segundoApellido" id="valor" placeholder="Segundo apellido" value={this.state.segundoApellido} onChange={this.handleChange}></input>
+                                        <label >Segundo apellido</label>
+                                        <input type="text" className="form-control" name="segundoApellido"  placeholder="Segundo apellido" value={this.state.segundoApellido} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="InputEmail">Correo electrónico </label>
-                                        <input type="email" className="form-control" name="email" id="valor" aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" value={this.state.email} onChange={this.handleChange}></input>
+                                        <label >Correo electrónico </label>
+                                        <input type="email" className="form-control" name="email"  aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" value={this.state.email} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="contraseñaRegistro">Contraseña</label>
+                                        <label >Contraseña</label>
                                         <input type="password" className="form-control" name="password1" id="contraseñaRegistro" placeholder="Contraseña" value={this.state.contraseña1} onChange={this.handleChange}></input>
                                         <span className={styleAlert()} role="alert" id="passstrength"></span>
 
                                         <br></br>
-                                        <label for="confirnContraseña">Contraseña</label>
+                                        <label>Contraseña</label>
                                         <input type="password" className="form-control" name="password2" id="confirnContraseña"  onChange={this.handleChange}  placeholder="Confirmación contraseña"></input>
                                         <br></br>
                                         <legend>Tipo usuario</legend>

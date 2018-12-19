@@ -24,11 +24,7 @@ namespace React.Controllers
         // GET: api/User
         [HttpGet]
         [Route("GetAllUsers")]
-        public ActionResult Get()
-        [Route("UsuarioHabilitado")]
-        public ActionResult GetUsuarioHabilitado()
-        {
-
+        public ActionResult GetAllUsers() {
             conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
             cmd = new SqlCommand("Proc_GetAllUsers", conexion);
@@ -58,7 +54,14 @@ namespace React.Controllers
                 return NotFound();
             }
             return Ok(item);
+
         }
+        [Route("UsuarioHabilitado")]
+        public ActionResult GetUsuarioHabilitado()
+        {
+
+           
+        
             conexion = new SqlConnection(conexionString.getConnection());
             conexion.Open();
             cmd = new SqlCommand("Proc_ObtenerUsuariosHabilitados", conexion);

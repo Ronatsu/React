@@ -41,11 +41,12 @@ namespace React.Controllers
                 incident.Descripcion = dataReader["Descripcion"].ToString();
                 incident.TipoImpacto = dataReader["TipoImpacto"].ToString();
                 incident.FechaIncidencia = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("G");
-                
+
 
                 ListIncidents.Add(incident);
 
             }
+
             conexion.Close();
             var item = ListIncidents;
             if (item == null)
@@ -72,11 +73,11 @@ namespace React.Controllers
             cmd.Parameters.AddWithValue("@AreaAfectada", newIncident.AreaAfectada);
 
             dataReader = cmd.ExecuteReader();
-            
+
             conexion.Close();
-            
-                
-           
+
+
+
 
             //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
         }
@@ -87,7 +88,11 @@ namespace React.Controllers
         {
 
             conexion = new SqlConnection(new Conexion().getConnection());
+
+            string mailRecovery;
            
+            List<string> mailList = new List<string>();
+      
             foreach (var item in usuarios.AsignacionArray)
             {
                 if (item.Add)
@@ -100,11 +105,29 @@ namespace React.Controllers
 
 
                     dataReader = cmd.ExecuteReader();
+
+                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
+
+                    while (dataReader.Read())
+                    {
+
+                        mailRecovery = dataReader["ValorMecanismo"].ToString();
+                        mailList.Add(mailRecovery);
+                    }
+
                     conexion.Close();
                 }
-
             }
-           
+            if (mailList.Count!=0)
+            {
+                string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
+               "\nPara darle seguimiento diríjase al sitio web: http://localhost:58055/";
+                string subject = "Nueva asignación";
+                new EnviarCorreo().enviarCorreo(mailList, subject, body);
+            }
+
 
 
 
