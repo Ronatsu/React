@@ -11,7 +11,7 @@ namespace React.Model
     {
         public void SaveDataError(string error, string errorInfo)
         {
-            string path = @"C:\Users\error_ANDERSON.json";
+            string path = @"C:\Users\Ronald Alfaro H\Documents\error_ANDERSON.json";
             if (File.Exists(path))
             {
                 SaveDataJSON(error, errorInfo, path, CurrentData(path));

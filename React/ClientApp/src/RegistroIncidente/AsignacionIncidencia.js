@@ -47,7 +47,7 @@ class AsignacionIncidencia extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/Incidencia/AsignarIncident`, {
+        axios.post(`https://localhost:44372/api/Incidencia/AsignarIncident`, {
             asignacionArray: this.state.asignacionArray
         });
         console.log(this.state.itemChecked);
@@ -57,14 +57,13 @@ class AsignacionIncidencia extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/User/UsuarioHabilitado`)
+        axios.get(`https://localhost:44372/api/User/UsuarioHabilitado`)
 
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });
                 console.log(parties);
             })
-
     }
 
     checkItem(partyid, e) {
@@ -95,7 +94,7 @@ class AsignacionIncidencia extends React.Component {
 
 
 
-    //axios.post(`http://localhost:58055/api/Incidencia`, {
+    //axios.post(`https://localhost:44372/api/Incidencia`, {
     //    tipoIncidencia: this.state.tipoIncidencia
     //    , tipoImpacto: this.state.tipoImpacto
     //    , gradoControl: this.state.gradoControl

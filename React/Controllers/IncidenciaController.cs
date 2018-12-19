@@ -57,7 +57,8 @@ namespace React.Controllers
         }
         // POST: api/Incidencia
         [HttpPost]
-        public void addIncident(Incident newIncident)
+        [Route("AddIncident")]
+        public void AddIncident(Incident newIncident)
         {
 
             conexion = new SqlConnection(new Conexion().getConnection());
@@ -90,9 +91,9 @@ namespace React.Controllers
             conexion = new SqlConnection(new Conexion().getConnection());
 
             string mailRecovery;
-           
+
             List<string> mailList = new List<string>();
-      
+
             foreach (var item in usuarios.AsignacionArray)
             {
                 if (item.Add)
@@ -118,20 +119,30 @@ namespace React.Controllers
                     }
 
                     conexion.Close();
+
+                    conexion.Open();
+                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", item.Partyid);
+                    dataReader = cmd.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+
+                        mailRecovery = dataReader["Correo"].ToString();
+                        mailList.Add(mailRecovery);
+                    }
+
+                    conexion.Close();
                 }
             }
-            if (mailList.Count!=0)
+            if (mailList.Count != 0)
             {
                 string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
-               "\nPara darle seguimiento diríjase al sitio web: http://localhost:58055/";
+               "\nPara darle seguimiento diríjase al sitio web: http://localhost:44372/";
                 string subject = "Nueva asignación";
                 new EnviarCorreo().enviarCorreo(mailList, subject, body);
             }
-
-
-
-
-
             //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
         }
 

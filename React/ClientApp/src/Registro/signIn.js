@@ -39,6 +39,18 @@ class registroColaborador extends Component {
         //    });
         //});
         $(document).ready(function () {
+            $('#btn1').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
+                });
+            });
+        });
+
+
+        $(document).ready(function () {
             $("#btn1").click(function () {
                 if (validatePassword() == false) {
                     $("#msj").html('La contraseña tiene que ser fuerte para poder completar el registro');
@@ -162,7 +174,7 @@ class registroColaborador extends Component {
                                                 <input type="radio" className="form-check-input" name="optionsRadios" id="optionsRadios2" value="E" onChange={this.handleChange}></input>Externo</label>
                                         </div>
                                         <br></br>
-                                        <button id="btn1" className="btn btnBlue" type="submit"  value="sumit">Registrar</button>
+                                        <button id="btn1" className="btn btnBlue" type="submit" value="sumit">Registrar</button>
                                         <div id="btn_click">{validatePassword()}</div>
                                     </div>
                                 </div>

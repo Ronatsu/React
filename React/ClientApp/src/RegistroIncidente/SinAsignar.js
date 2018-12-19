@@ -27,7 +27,7 @@ class SinAsignar extends Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/Incidencia/IncidenciasSinAsignar`)
+        axios.get(`https://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });

@@ -23,29 +23,36 @@ namespace React.Controllers
         List<Tecnologia> Lista_tecnologia = new List<Tecnologia>();
         List<Area> Lista_Area = new List<Area>();
         List<TipoTecnologia> Lista_TipoTecnologia = new List<TipoTecnologia>();
+        JSON errorHandle = new JSON();
         // GET: api/AdministracionAreaTecnologia
         [HttpGet]
         [Route("Tecnologia")]
         public ActionResult<List<Tecnologia>> Get()
         {
-            Connection = new SqlConnection(ConnectionString);
-            Connection.Open();
-            cmd = new SqlCommand("Proc_ObtenerTecnologia", Connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                Tecnologia tecnologia = new Tecnologia();
-                tecnologia.TecnologiaId = dataReader["TECNOLOGIA_ID"].ToString();
-                tecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
-                tecnologia.TipoTecnologiaFk = int.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
-                tecnologia.CriticoS_N = char.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerTecnologia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Tecnologia tecnologia = new Tecnologia();
+                    tecnologia.TecnologiaId = dataReader["TECNOLOGIA_ID"].ToString();
+                    tecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
+                    tecnologia.TipoTecnologiaFk = int.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
+                    tecnologia.CriticoS_N = char.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
 
-
-                Lista_tecnologia.Add(tecnologia);
-
+                    Lista_tecnologia.Add(tecnologia);
+                }
+                Connection.Close();
             }
-            Connection.Close();
+            catch (Exception ex)
+            {
+                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
             var item = Lista_tecnologia;
             if (item == null)
             {
@@ -59,21 +66,29 @@ namespace React.Controllers
         [Route("TipoTecnologia")]
         public ActionResult<List<TipoTecnologia>> GetTipoTecnologia()
         {
-            Connection = new SqlConnection(ConnectionString);
-            Connection.Open();
-            cmd = new SqlCommand("Proc_TipoTecnologia", Connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+
+            try
             {
-                TipoTecnologia tipoTecnologia = new TipoTecnologia();
-                tipoTecnologia.TIPO_TECNOLOGIA_ID = int.Parse(dataReader["TIPO_TECNOLOGIA_ID"].ToString());
-                tipoTecnologia.TIPO_TECNOLOGIA = dataReader["TIPO_TECNOLOGIA"].ToString();
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_TipoTecnologia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    TipoTecnologia tipoTecnologia = new TipoTecnologia();
+                    tipoTecnologia.TIPO_TECNOLOGIA_ID = int.Parse(dataReader["TIPO_TECNOLOGIA_ID"].ToString());
+                    tipoTecnologia.TIPO_TECNOLOGIA = dataReader["TIPO_TECNOLOGIA"].ToString();
 
-                Lista_TipoTecnologia.Add(tipoTecnologia);
+                    Lista_TipoTecnologia.Add(tipoTecnologia);
 
+                }
+                Connection.Close();
             }
-            Connection.Close();
+            catch (Exception ex)
+            {
+                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = Lista_TipoTecnologia;
             if (item == null)
             {
@@ -86,23 +101,30 @@ namespace React.Controllers
         [Route("Area")]
         public ActionResult<List<Area>> GetArea()
         {
-            Connection = new SqlConnection(ConnectionString);
-            Connection.Open();
-            cmd = new SqlCommand("Proc_ObtenerArea", Connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                Area area = new Area();
-                area.AreaID = dataReader["AREA_ID"].ToString();
-                area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
-                area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
-                area.AreaFk = dataReader["AREA_PADRE"].ToString();
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerArea", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Area area = new Area();
+                    area.AreaID = dataReader["AREA_ID"].ToString();
+                    area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
+                    area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
+                    area.AreaFk = dataReader["AREA_PADRE"].ToString();
 
-                Lista_Area.Add(area);
+                    Lista_Area.Add(area);
 
+                }
+                Connection.Close();
             }
-            Connection.Close();
+            catch (Exception ex)
+            {
+                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = Lista_Area;
             if (item == null)
             {
@@ -143,7 +165,7 @@ namespace React.Controllers
             {
                 validacionTecnologia = dataReader["NOMBRE_TECNOLOGIA"].ToString();
             }
-                
+
             ConnectionTecno.Close();
             //valida que la tecnologia venga vacia.
             if (validacionTecnologia.Equals(""))
@@ -160,8 +182,8 @@ namespace React.Controllers
                 {
                     IDTipoTecnologia = int.Parse(dataReader["ID_TIPO_TECNOLOGIA"].ToString());
                 }
-                    
-                
+
+
                 ConnectionTipoTecnologia.Close();
                 if (IDTipoTecnologia > 0)
                 {
@@ -187,7 +209,7 @@ namespace React.Controllers
             {
                 return NotFound();
             }
-            
+
         }
 
         //POST: api/AdministracionAreaTecnologia
@@ -237,7 +259,7 @@ namespace React.Controllers
                 }
                 ConnectionTecnoID.Close();
                 //Si el atributo es mayor que cero, existe.
-                if(TecnologiaID > 0)
+                if (TecnologiaID > 0)
                 {
                     Connection = new SqlConnection(ConnectionString);
                     Connection.Open();
@@ -262,7 +284,7 @@ namespace React.Controllers
                 return NotFound();
             }
 
-            
+
         }
 
         [HttpPost]
@@ -286,7 +308,7 @@ namespace React.Controllers
             {
                 return NotFound();
             }
-            
+
 
 
         }
@@ -376,7 +398,7 @@ namespace React.Controllers
         {
             try
             {
-                if(!(value.AreaFk == null) || !value.AreaFk.Trim().Equals(""))
+                if (!(value.AreaFk == null) || !value.AreaFk.Trim().Equals(""))
                 {
                     // Obtener ID AreaPrincipal
                     SqlConnection ConnectionAreaID = new SqlConnection(ConnectionString);
@@ -407,7 +429,7 @@ namespace React.Controllers
                         }
                         ConnectionTecnoID.Close();
 
-                        if(!(TecnologiaID == 0))
+                        if (!(TecnologiaID == 0))
                         {
                             Connection = new SqlConnection(ConnectionString);
                             Connection.Open();
@@ -422,21 +444,24 @@ namespace React.Controllers
                             dataReader = cmd.ExecuteReader();
                             Connection.Close();
                             return Ok(value);
-                        }else
+                        }
+                        else
                         {
                             return NotFound();
                         }
-                    }else
+                    }
+                    else
                     {
                         return NotFound();
                     }
 
-                }else
+                }
+                else
                 {
                     return NotFound();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return NotFound();
             }

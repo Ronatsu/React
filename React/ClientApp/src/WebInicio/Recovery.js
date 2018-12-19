@@ -22,6 +22,17 @@ class recover extends React.Component {
                 });
             });
         });
+
+        $(document).ready(function () {
+            $('#id_send2').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
+                });
+            });
+        });
     }
 
     state = {
@@ -39,7 +50,7 @@ class recover extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/RecuperarContraseña`, {
+        axios.post(`https://localhost:44372/api/RecuperarContraseña`, {
             email1: this.state.email1,
             email2: this.state.email2,
 

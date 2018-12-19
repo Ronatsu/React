@@ -28,40 +28,40 @@ class Form extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/Tecnologias`)
+        axios.get(`https://localhost:44372/api/Tecnologias`)
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
 
-        axios.get(`http://localhost:58055/api/MetodoDeteccion/VerMetodos`)
+        axios.get(`https://localhost:44372/api/MetodoDeteccion/VerMetodos`)
             .then(res => {
                 const metodoDeteccionList = res.data;
                 this.setState({ metodoDeteccionList });
                 console.log(this.state.metodoDeteccionList)
             })
-    
 
-        axios.get(`http://localhost:58055/api/ImpactoIncidencia`)
+
+        axios.get(`https://localhost:44372/api/ImpactoIncidencia`)
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`http://localhost:58055/api/TipoIncidencia`)
+        axios.get(`https://localhost:44372/api/TipoIncidencia`)
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
 
-        axios.get(`http://localhost:58055/api/AreaAfectada`)
+        axios.get(`https://localhost:44372/api/AreaAfectada`)
             .then(res => {
                 const AREA_AFECTADA = res.data;
                 this.setState({ AREA_AFECTADA });
             })
 
-        axios.get(`http://localhost:58055/api/GradoControl`)
+        axios.get(`https://localhost:44372/api/GradoControl`)
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -77,8 +77,8 @@ class Form extends React.Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        axios.post(`https://localhost:58055/api/Incidencia`, {
+
+        axios.post(`https://localhost:44372/api/Incidencia/AddIncident`, {
             tipoIncidencia: this.state.tipoIncidencia
             , tipoImpacto: this.state.tipoImpacto
             , gradoControl: this.state.gradoControl
@@ -88,7 +88,7 @@ class Form extends React.Component {
             , fechaDescubrimiento: this.state.fecha
             , metodoDeteccion: this.state.metodoDeteccion
         })
-
+       // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
@@ -198,9 +198,9 @@ class Form extends React.Component {
                         </div>
 
                         <div class="pagination justify-content-end">
-                            <button class="btn btnRed" type="submit">Cancelar</button>
+                            <button className="btn btnRed" type="submit">Cancelar</button>
                             <button className="btn btnBlue" type="submit" onClick={this.handleSubmit}>Enviar</button>
-                          
+
                         </div>
                     </div>
                 </form>

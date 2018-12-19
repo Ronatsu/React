@@ -29,8 +29,9 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:58055/api/GetIncidents/MethodGetIncidents`)
-            .then(res => {
+        axios.post(`https://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
+            email1: this.state.email1
+        }).then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
             })
@@ -42,7 +43,6 @@ class Home extends Component {
                 <Navigation />
                 <div className="container">
                     <br /><br />
-                    <a>{this.props.partyId} "holi"</a>
                     <div className="w-auto p-3">
                         <input className="form-control " type="text" id="inputSearch" placeholder="Buscar"></input>
                     </div>

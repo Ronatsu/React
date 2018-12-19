@@ -33,7 +33,7 @@ namespace React.Controllers
         {
             Connection = new SqlConnection(ConnectionString);
             Connection.Open();
-            cmd = new SqlCommand("ObtenerIncidencia", Connection);
+            cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
             dataReader = cmd.ExecuteReader();

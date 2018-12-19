@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import BoundaryError from './ErrorBoundary';
 
 render(
-    <BoundaryError>}>
+    <BoundaryError>>
         <Router>
             <Approutes />
         </Router>

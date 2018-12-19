@@ -16,22 +16,6 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
 
-
-        // GET: api/RecuperarContraseña
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/RecuperarContraseña/5
-        [HttpGet("{id}", Name = "correo")]
-        public void Get(string email1, string email2)
-        {
-          
-            
-        }
-
         // POST: api/RecuperarContraseña
         [HttpPost]
         public void RecuperarContraseña(Correo correo)
@@ -98,18 +82,6 @@ namespace React.Controllers
 
                 //    }
             }
-        }
-
-        // PUT: api/RecuperarContraseña/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
