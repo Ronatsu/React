@@ -23,7 +23,7 @@ class App1 extends Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:58055/api/PromedioTiempoContineciaDescubrimientoMes/ObtenerPromTiempoContiDesc`)
+        axios.get(`https://localhost:44372/api/PromedioTiempoContineciaDescubrimientoMes/ObtenerPromTiempoContiDesc`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });

@@ -30,7 +30,7 @@ class AjustesPerfil extends Component {
     }
     handleSubmitName = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/User/CambiarNombre`, {
+        axios.post(`http://localhost:44372/api/User/CambiarNombre`, {
             partyId: 3,
             nombre: this.state.nombre,
             primer_apellido: this.state.primerApellido,
@@ -45,7 +45,7 @@ class AjustesPerfil extends Component {
 
     handleSubmitPass = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/User/CambiarContraseña`, {
+        axios.post(`http://localhost:44372/api/User/CambiarContraseña`, {
             partyId: 3,
             password1: this.state.password1,
             password2: this.state.password2,
@@ -55,7 +55,7 @@ class AjustesPerfil extends Component {
     }
     handleSubmitBaja = event => {
         event.preventDefault();
-        axios.post(`http://localhost:58055/api/User/DarseDeBaja`, {
+        axios.post(`http://localhost:44372/api/User/DarseDeBaja`, {
             partyId: 3
         })
     }

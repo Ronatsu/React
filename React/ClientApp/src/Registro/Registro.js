@@ -5,6 +5,7 @@ import Background from '../components/Background';
 import axios from 'axios';
 import Nav from '../components/NavigationUnregistred';
 import '../components/ButtonColor.css';
+import $ from 'jquery';
 
 class registroColaborador extends Component {
 
@@ -21,6 +22,17 @@ class registroColaborador extends Component {
             rol_usuario: 'Administrador'
         }
         this.handleChange = this.handleChange.bind(this);
+
+        $(document).ready(function () {
+            $('#log-in-btn').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
+                });
+            });
+        });
     }
 
     handleChange = event => {
@@ -46,7 +58,7 @@ class registroColaborador extends Component {
 
         };
 
-        axios.post(`https://localhost:58055/api/Registro`, { colaborador })
+        axios.post(`https://localhost:44372/api/Registro`, { colaborador })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -88,7 +100,7 @@ class registroColaborador extends Component {
                                     <Link to="/ForgotPass"><small id="forgotPassword" className="form-text">¿Olvidaste la contraseña?</small></Link>
 
                                 </div>
-                                <Link to="/incidentes"><button className="btn btnBlue">Ingresar</button></Link>
+                                <Link to="/incidentes"><button className="btn btnBlue" id="log-in-btn">Ingresar</button></Link>
                             </form>
                         </div>
                         <div className="col-xs-4 col-sm-4 col-lg-4">

@@ -39,6 +39,18 @@ class registroColaborador extends Component {
         //    });
         //});
         $(document).ready(function () {
+            $('#btn1').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
+                });
+            });
+        });
+
+
+        $(document).ready(function () {
             $("#btn1").click(function () {
                 if (validatePassword() == false) {
                     $("#msj").html('La contraseña tiene que ser fuerte para poder completar el registro');
@@ -101,7 +113,7 @@ class registroColaborador extends Component {
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`https://localhost:58055/api/Registro`, {
+        axios.post(`https://localhost:44372/api/Registro`, {
             email: this.state.email,
             nombre: this.state.nombre,
             primer_apellido: this.state.apellido,
@@ -133,7 +145,7 @@ class registroColaborador extends Component {
                                 <div className="form-group">
                                     <div className="form-group">
                                         <label for="nombreUsuario">Nombre</label>
-                                        <input type="text" className="form-control validar" name="nombre" id="valor" placeholder="Ingrese su nombre" value={this.state.nombre} onChange={this.handleChange}></input>
+                                        <input type="text" className="form-control validar" name="nombre" id="valor" placeholder="Ingresar nombre" value={this.state.nombre} onChange={this.handleChange}></input>
                                         <br></br>
                                         <label for="apellidoUsuario">Primer apellido</label>
                                         <input type="text" className="form-control" name="apellido" id="valor" placeholder="Primer apellido" value={this.state.apellido} onChange={this.handleChange}></input>
@@ -150,7 +162,7 @@ class registroColaborador extends Component {
 
                                         <br></br>
                                         <label for="confirnContraseña">Contraseña</label>
-                                        <input type="password" className="form-control" name="password2" id="confirnContraseña"  onChange={this.handleChange}  placeholder="Confirmación contraseña"></input>
+                                        <input type="password" className="form-control" name="password2" id="confirnContraseña" onChange={this.handleChange} placeholder="Confirmación contraseña"></input>
                                         <br></br>
                                         <legend>Tipo usuario</legend>
                                         <div className="form-check">
@@ -162,7 +174,7 @@ class registroColaborador extends Component {
                                                 <input type="radio" className="form-check-input" name="optionsRadios" id="optionsRadios2" value="E" onChange={this.handleChange}></input>Externo</label>
                                         </div>
                                         <br></br>
-                                        <button id="btn1" className="btn btnBlue" type="submit"  value="sumit">Registrar</button>
+                                        <button id="btn1" className="btn btnBlue" type="submit" value="sumit">Registrar</button>
                                         <div id="btn_click">{validatePassword()}</div>
                                     </div>
                                 </div>
