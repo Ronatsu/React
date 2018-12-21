@@ -131,6 +131,39 @@ namespace React.Controllers
             return Ok(item);
         }
 
+
+        // GET: api/User/5
+        [HttpPost]
+        [Route("GetNombre")]
+        public ActionResult GetNombre(Usuario usuario)
+        {
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
+            cmd = new SqlCommand("Proc_ObtenerNombre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id",usuario.PARTYID);
+
+            dataReader = cmd.ExecuteReader();
+           // List<Usuario> userList = new List<Usuario>();
+            Usuario newUser=new Usuario();
+            while (dataReader.Read())
+            {
+
+                newUser.NOMBRE = dataReader["Nombre"].ToString();
+                newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
+                newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
+                
+               // userList.Add(newUser);
+            }
+            conexion.Close();
+            var item = newUser;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
         [HttpPost]
         [Route("CambiarContraseña")]
         public ActionResult CambiarContraseña(Usuario party)

@@ -17,6 +17,7 @@ import InformacionIncidencia from '../RegistroIncidente/InformacionIncidencia';
 import MenuReportes from '../Reportes/MenuGrafico';
 import AdminArea from '../Administrator/AdminArea';
 import AdminTech from '../Administrator/AdminTech';
+import AdminIncidencia from '../Administrator/AdminTipoIncidencia';
 import ForgotPass from '../WebInicio/Recovery';
 import SingIn from '../Registro/signIn';
 import SelectUserIncident from '../RegistroIncidente/SelectUserIncidents'
@@ -44,6 +45,7 @@ const AppRutas = () =>
             <Route exact path="/SelectUserIncident" component={SelectUserIncident} />
             <Route exact path="/TableUserList" component={TableUserList} />
             <Route exact path="/SinAsignar" component={SinAsignar} />
+            <Route exact path="/TipoIncidencia" component={AdminIncidencia} />
         </Switch>
 
     </App>;

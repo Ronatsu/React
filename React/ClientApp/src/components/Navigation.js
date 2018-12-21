@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import PersonIcon from '@material-ui/icons/Person';
 import ExitIcon from '@material-ui/icons/Input';
 import SettingsIcon from '@material-ui/icons/Settings';
-import NewUserIcon from '@material-ui/icons/GroupAdd';
-import BlockUserIcon from '@material-ui/icons/Block';
-import TechIcon from '@material-ui/icons/Domain';
-import AreaIcon from '@material-ui/icons/SupervisedUserCircle';
+import SupervisorIcon from '@material-ui/icons/SupervisorAccount';
+import BuildIcon from '@material-ui/icons/Build';
+import BlockIcon from '@material-ui/icons/Block';
+import AddUserIcon from '@material-ui/icons/GroupAdd';
 import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -47,15 +47,18 @@ class navigatiom extends React.Component {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
 
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <Link to="/newUser">  <a className="dropdown-item" href="#"><NewUserIcon /> Nuevas Solicitudes</a></Link>
+                                <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
+                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
+
                                 <div className="dropdown-divider"></div>
-                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockUserIcon /> Bloquear Usuarios</a></Link>
+
+                                <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
+                                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
+                                <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
+
                                 <div className="dropdown-divider"></div>
-                                <Link to="/AdminTech">   <a className="dropdown-item" href="#"><TechIcon /> Tecnologías</a></Link>
-                                <div className="dropdown-divider"></div>
-                                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><AreaIcon /> Áreas</a></Link>
-                                <div className="dropdown-divider"></div>
-                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><UserIncident /> Incidencias por usuario</a></Link>
+
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon/> Incidencias por usuario</a></Link>
                             </div>
                         </li>
                         <li className="nav-item">
