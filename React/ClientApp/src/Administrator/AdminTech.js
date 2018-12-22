@@ -91,7 +91,6 @@ class AdminTech extends React.Component {
     }
 
     borrar(tecnologiaBorrar) {
-
         alert("Se selecciono el ID : " + tecnologiaBorrar);
         axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
             TecnologiaId: tecnologiaBorrar
@@ -101,7 +100,6 @@ class AdminTech extends React.Component {
             }
         })
     }
-
 
     componentWillMount() {
         axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`)
@@ -116,7 +114,6 @@ class AdminTech extends React.Component {
                 this.setState({ tipoTecno });
             })
     }
-
 
     ModificarTecnologia() {
 
