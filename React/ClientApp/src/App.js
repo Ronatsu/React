@@ -28,8 +28,8 @@ class App extends Component {
         return (
             <body>
 
-                <div className="container-fluid" id="div_ancho_comchildren.idpleto">
-                        <Contenedor body={children} />
+                <div className="container-fluid" id="div_ancho_completo">
+                    <Contenedor body={children} />
                 </div>
                 <footer className="page-footer" id="footer">
                     <Footer />
