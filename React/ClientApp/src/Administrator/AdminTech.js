@@ -21,7 +21,6 @@ class AdminTech extends React.Component {
             tipoTecno: [],
             nombreTecnologia: '',
             selectGeneric: '',
-            selectArea: '',
             criticoS_N: '',
             tecnologiaID: '',
             SelectTipoTecnologiaModificar: "",
@@ -101,7 +100,7 @@ class AdminTech extends React.Component {
         axios.post(`https://localhost:44372/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
             TecnologiaId: tecnologiaBorrar
         }).then(res => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 alert("Se elimino exitosamente");
             }
         })
@@ -128,14 +127,14 @@ class AdminTech extends React.Component {
     ModificarTecnologia() {
 
         alert("Se selecciono el ID : " + this.state.tecnologiaID);
-        if (this.state.NombreAreaModificar == "") {
+        if (this.state.NombreAreaModificar === "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
-            if (this.state.SelectAreaTecnologiaModificar == "") {
+            if (this.state.SelectAreaTecnologiaModificar === "") {
                 alert("Seleccione la tecnologia del área que desea modificar.");
             }
             else {
-                if (this.state.SelectAreaPrincipalModificar == "") {
+                if (this.state.SelectAreaPrincipalModificar === "") {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
                     alert("Llego aqui");
@@ -145,7 +144,7 @@ class AdminTech extends React.Component {
                         TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
                         CriticoS_N: this.state.criticoS_N_Modificar
                     }).then(res => {
-                        if (res.status == 200) {
+                        if (res.status === 200) {
                             alert("Se modifico exitosamente");
                         }
                     })
