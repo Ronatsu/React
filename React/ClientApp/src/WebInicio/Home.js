@@ -29,12 +29,12 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        axios.post(`https://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
+        axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
             email1: this.state.email1
         }).then(res => {
-                const incidents = res.data;
-                this.setState({ incidents });
-            })
+            const incidents = res.data;
+            this.setState({ incidents });
+        })
     }
 
     render() {

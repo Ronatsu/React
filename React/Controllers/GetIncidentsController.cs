@@ -15,41 +15,45 @@ namespace React.Controllers
     [ApiController]
     public class GetIncidentsController : ControllerBase
     {
-        private int Id = 0;
         string ConnectionString = new Conexion().getConnection();
         SqlConnection Connection;
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<DataIncidents> ListIncidents = new List<DataIncidents>();
-
-
-
-       
+        JSON HandleError = new JSON();
 
 
         [HttpPost]
         [Route("MethodGetIncidents")]
-        public ActionResult<List<DataIncidents>> Get(Correo correo)
+        public ActionResult<List<DataIncidents>> GetIncidents(Correo correo)
         {
-            Connection = new SqlConnection(ConnectionString);
-            Connection.Open();
-            cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                DataIncidents incidents = new DataIncidents();
-                incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
-                incidents.Description = dataReader["Descripcion"].ToString();
-                incidents.ImpactType = dataReader["TipoImpacto"].ToString();
-                incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("dd/MM/yyyy");
-                // incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    DataIncidents incidents = new DataIncidents();
+                    incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
+                    incidents.Description = dataReader["Descripcion"].ToString();
+                    incidents.ImpactType = dataReader["TipoImpacto"].ToString();
+                    incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
 
-                ListIncidents.Add(incidents);
+                    ListIncidents.Add(incidents);
 
+                }
+                Connection.Close();
             }
-            Connection.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+
             var item = ListIncidents;
             if (item == null)
             {
@@ -57,7 +61,5 @@ namespace React.Controllers
             }
             return Ok(item);
         }
-
-        
     }
 }
