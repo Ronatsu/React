@@ -9,7 +9,6 @@ import Form from '../RegistroIncidente/Form';
 import AsignacionIncidencia from '../RegistroIncidente/AsignacionIncidencia';
 import SinAsignar from '../RegistroIncidente/SinAsignar';
 import Configuracion from '../configuracion/Perfil';
-import GetAdmin from '../Administrator/GetAdmin';
 import BlockUser from '../Administrator/Block_User';
 import sidebar from '../components/SidebarAdmin';
 import NewUser from '../Administrator/NewUser';
@@ -31,7 +30,6 @@ const AppRutas = () =>
             <Route exact path="/incidentes" component={Home} />
             <Route exact path="/InsertarIncidencia" component={Form} />
             <Route exact path="/AjustePerfil" component={Configuracion} />
-            <Route exact path="/getAdmin" component={GetAdmin} />
             <Route exact path="/BlockUser" component={BlockUser} />
             <Route exact path="/AsignacionIncidencia" component={AsignacionIncidencia} />
             <Route exact path="/AdminArea" component={AdminArea} />

@@ -21,6 +21,7 @@ class navigatiom extends React.Component {
     render() {
         return (
             <nav className="container-fluid navbar navbar-expand-lg navbar-light" id="nav">
+                g
                 <Link to="/Incidentes"><img src={require("./imagenesImpesa/ICONO ANDERSON1.png")} width="35" height="35"></img></Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>

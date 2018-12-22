@@ -19,26 +19,16 @@ class AdminTipoIncidencia extends React.Component {
         super();
         super(props);
         this.state = {
-            areas: [],
-            tecno: [],
-            NombreArea: '',
-            selectGeneric: '',
-            selectArea: '',
-            AreaIDBorrar: '',
-            AreaIDModificar: '',
-            NombreAreaModificar: '',
-            SelectAreaTecnologiaModificar: '',
-            SelectAreaPrincipalModificar: ''
-            , tecnoAdd: ""
+            tipos: []
+            , estados: []
+            , nombre: ''
+            ,estado:''
+          
         }
         this.handleChange = this.handleChange.bind(this);
-        this.borrar = this.borrar.bind(this);
+
         this.AreaModificar = this.AreaModificar.bind(this);
-
-
-
-
-
+        
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -92,32 +82,15 @@ class AdminTipoIncidencia extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Area`)
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetTipos')
             .then(res => {
-                const areas = res.data;
-                this.setState({ areas });
-            })
-
-        axios.get('http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia')
-            .then(res => {
-                const tecno = res.data;
-                this.setState({ tecno });
+                const tipos = res.data;
+                this.setState({ tipos });
             })
     }
 
 
-    borrar(Area) {
-        alert("Se selecciono el ID : " + Area);
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/eliminarArea`, {
-            AreaID: Area
-        }).then(res => {
-            if (res.status == 200) {
-                alert("Se elimino exitosamente");
-            }
-        })
 
-
-    }
 
 
     AreaModificar(Area) {
@@ -130,9 +103,7 @@ class AdminTipoIncidencia extends React.Component {
     }
 
 
-    ModificarArea() {
-
-        alert("Se selecciono el ID : " + this.state.AreaIDModificar);
+    ModificarTipo(id) {
         if (this.state.NombreAreaModificar == "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
@@ -144,16 +115,20 @@ class AdminTipoIncidencia extends React.Component {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
                     alert("Llego aqui");
-                    axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/modificarArea`, {
-                        AreaID: this.state.AreaIDModificar,
-                        NombreArea: this.state.NombreAreaModificar,
-                        TecnologiaFk: this.state.SelectAreaTecnologiaModificar,
-                        AreaFk: this.state.SelectAreaPrincipalModificar
+                    axios.post(`http://localhost:44372/api/TipoIncidencia/ObtenerPorId`, {
+                        id: id
                     }).then(res => {
-                        if (res.status == 200) {
-                            alert("Se modifico exitosamente");
-                        }
-                    })
+                        const tipoI = res.data;
+                        this.setState({
+                            nombre: tipoI.descripcion,
+                            estado:tipoI.estado
+                        });
+                        })
+                    axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
+                        .then(res => {
+                            const estados = res.data;
+                            this.setState({ estados });
+                        })
                 }
             }
         }
@@ -161,14 +136,12 @@ class AdminTipoIncidencia extends React.Component {
 
 
     render() {
-        const listaTecnologia = this.state.tecno.map((tecnologia) =>
-            <option value={tecnologia.nombreTecnologia}>{tecnologia.nombreTecnologia}</option>
-        );
 
-        const listaArea = this.state.areas.map((area) =>
-            <option value={area.nombreArea}>{area.nombreArea}</option>
-        );
+        const listaEstados = this.state.estados;
 
+        const listaEstado = listaEstados.map((estado) =>
+            <option value={estado.id}>{estado.estado}</option>
+        );
         return (
             <div>
                 <Navigation />
@@ -232,17 +205,18 @@ class AdminTipoIncidencia extends React.Component {
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                {this.state.areas.map(elemento => {
+                                {this.state.tipos.map(tipo => {
                                     return (
-                                        <tr key={elemento.areaID}>
+                                        <tr key={tipo.id}>
                                             <td>
-                                                {elemento.areaID}
+                                                {tipo.id}
                                             </td>
                                             <td>
-                                                {elemento.nombreArea}
+                                                {tipo.descripcion}
                                             </td>
+                                          
                                             <td className="pagination justify-content-center">
-                                                <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.AreaModificar(elemento.areaID)}><EditIcon />  Editar</button>
+                                                <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.ModificarTipo(tipo.id)}><EditIcon />  Editar</button>
                                             </td>
                                         </tr>
                                     )
@@ -262,11 +236,14 @@ class AdminTipoIncidencia extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <label>Tipo incidencia</label>
-                            <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
+                            <FormControl className="form-control" name="nombre" value={this.state.nombre} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                             <div className="form-group">
                             <label>Estado</label>
-                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
-                                {listaTecnologia}
+                                <select className="form-control container" id="exampleFormControlSelect1" name="estado" onClick={this.handleChange}>
+                                    <option value={this.state.estado} disabled selected="selected">{this.state.estado}</option>
+                                    <option value={this.state.estado} >this.state.estado</option>
+                                    <option value={this.state.estado} >this.state</option>
+
                             </select>
                             </div>
                            
