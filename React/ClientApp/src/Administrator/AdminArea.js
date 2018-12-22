@@ -3,13 +3,10 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-//import { areas } from '../components/bd/area.json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap'
-import { func } from 'prop-types';
-import { Input } from '@material-ui/core';
 import axios from 'axios';
 import SelectComponentArea from '../Administrator/SelectComponentArea';
 import SelectArea from '../Administrator/SelectArea'
@@ -131,7 +128,12 @@ class AdminArea extends React.Component {
         this.setState({
             AreaIDModificar: Area
         });
-        
+
+        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia')
+            .then(res => {
+                const tecno = res.data;
+                this.setState({ tecno });
+            })
 
     }
 
@@ -177,11 +179,17 @@ class AdminArea extends React.Component {
             <option value={area.nombreArea}>{area.nombreArea}</option>
         );
 
+        var result = this.state.areas.filter(elem => elem.areaID === this.state.AreaIDModificar)
+
+        const listaAreaConLosDatosCargados = result.map((area) =>
+            <option value={area.tecnologiaFk}>{area.tecnologiaFk}</option>
+        );
+
+
         return (
             <div>
                 <Navigation />
-                <div className="container ">
-
+                <div className="container">
                     <div className="row ">
                         <div className="col mt-4 ">
                             <br /><br />
@@ -266,6 +274,9 @@ class AdminArea extends React.Component {
                             <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
                             <br />
                             <label>Seleccione la tecnología</label>
+                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
+                                {listaAreaConLosDatosCargados}
+                            </select>
                             <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
                                 {listaTecnologia}
                             </select>

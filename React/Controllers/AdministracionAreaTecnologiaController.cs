@@ -94,10 +94,13 @@ namespace React.Controllers
             while (dataReader.Read())
             {
                 Area area = new Area();
-                area.AreaID = dataReader["AREA_ID"].ToString();
+                area.AreaID = dataReader["ID_AREA"].ToString();
                 area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
-                area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
-                area.AreaFk = dataReader["AREA_PADRE"].ToString();
+                area.NombreArea = dataReader["HABILITADO"].ToString();
+                area.NombreArea = dataReader["TECNOLOGIA_ID"].ToString();
+                area.NombreArea = dataReader["AREA_PRINCIPAL_ID"].ToString();
+                area.TecnologiaFk = dataReader["NOMBRE_TECNOLOGIA"].ToString();
+                area.AreaFk = dataReader["NOMBRE_AREA_PRINCIPAL"].ToString();
 
                 Lista_Area.Add(area);
 
@@ -409,8 +412,12 @@ namespace React.Controllers
 
                         if(!(TecnologiaID == 0))
                         {
+   
                             Connection = new SqlConnection(ConnectionString);
                             Connection.Open();
+
+
+
                             cmd = new SqlCommand("Proc_ModificarArea", Connection);
                             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -418,6 +425,7 @@ namespace React.Controllers
                             cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
                             cmd.Parameters.AddWithValue("@TecnologiaFk", TecnologiaID);
                             cmd.Parameters.AddWithValue("@AreaFk", AreaID);
+                            cmd.Parameters.AddWithValue("@Habilitado", value.Habilitado);
 
                             dataReader = cmd.ExecuteReader();
                             Connection.Close();
