@@ -25,11 +25,9 @@ class AdminTech extends React.Component {
             tecnologiaID: '',
             SelectTipoTecnologiaModificar: "",
             criticoS_N_Modificar: "",
-            nombreTecnologiaModificar: ""
+            nombreTecnologiaModificar: "",
         }
         this.handleChange = this.handleChange.bind(this);
-
-        
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -50,20 +48,7 @@ class AdminTech extends React.Component {
                 });
             });
         });
-
-
-        $(function () {
-            $("#myTable tr td").click(function () {
-                const cell = $(this).parents("tr").find("th").eq(0).text();//$(this).index(0).text();
-                /*const row = $(this).parents('tr').index();
-                const contenido = $(this).html();
-                $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
-                $("#titleModal").html("Editando " + cell)
-
-            })
-        })
     }
-    
 
     handleChange = event => {
         const nameInput = event.target.name;
@@ -75,54 +60,60 @@ class AdminTech extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        
-        axios.post(`https://localhost:44372/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+
+        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
             nombreTecnologia: this.state.nombreTecnologia,
             tipoTecnologiaFk: this.state.selectGeneric,
             criticoS_N: this.state.criticoS_N
         })
-        alert("Valor: " + this.state.criticoS_N);   
+        alert("Valor: " + this.state.criticoS_N);
     }
 
     TecnologiaModificar(tecnoID) {
-
-        alert("Se selecciono el ID : " + tecnoID);
         this.setState({
             tecnologiaID: tecnoID
         });
+        this.GetTypeTechnology(tecnoID)
+    }
 
-
+    GetTypeTechnology(tecnoID) {
+        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/MethodGetTypeTech`, {
+            TecnologiaId: tecnoID
+        }).then(res => {
+            const listTypeTechnology = res.data;
+            this.setState({
+                criticoS_N_Modificar: listTypeTechnology.criticoS_N,
+                nombreTecnologiaModificar: listTypeTechnology.nombreTecnologia,
+                SelectTipoTecnologiaModificar: listTypeTechnology.tipoTecnologiaNombre,
+                nombreTecnologia: listTypeTechnology.nombreTecnologia
+            });
+        })
     }
 
     borrar(tecnologiaBorrar) {
-
         alert("Se selecciono el ID : " + tecnologiaBorrar);
-        axios.post(`https://localhost:44372/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
+        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
             TecnologiaId: tecnologiaBorrar
         }).then(res => {
             if (res.status === 200) {
                 alert("Se elimino exitosamente");
             }
         })
-
-
     }
 
-
-    GetData() {
-        axios.get(`https://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`)
+    componentWillMount() {
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`)
             .then(res => {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });
             })
 
-        axios.get(`https://localhost:44372/api/AdministracionAreaTecnologia/TipoTecnologia`)
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/TipoTecnologia`)
             .then(res => {
                 const tipoTecno = res.data;
                 this.setState({ tipoTecno });
             })
     }
-
 
     ModificarTecnologia() {
 
@@ -138,7 +129,7 @@ class AdminTech extends React.Component {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
                     alert("Llego aqui");
-                    axios.post(`https://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`, {
+                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`, {
                         TecnologiaId: this.state.tecnologiaID,
                         NombreTecnologia: this.state.nombreTecnologiaModificar,
                         TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
@@ -152,21 +143,7 @@ class AdminTech extends React.Component {
             }
         }
     }
-
-
-
     render() {
-        //const areasTable = this.state.tecnologias.map((tecnologia) => {
-        //    return (
-        //        <tr >
-        //            <th scope="row">{tecnologia.nombreTecnologia}</th>
-        //            <td><button class="btn btnBlue" type="submit"  ><EditIcon />  Editar</button>
-        //                <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
-        //        </tr>
-        //    )
-        //})
-        this.GetData()
-
         const listaTipoTecnologia = this.state.tipoTecno.map((tipoTecnologia) =>
             <option value={tipoTecnologia.tipO_TECNOLOGIA}>{tipoTecnologia.tipO_TECNOLOGIA}</option>
         );
@@ -254,25 +231,28 @@ class AdminTech extends React.Component {
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
-                            <Modal.Title id="titleModal" />
+                            <Modal.Title id="titleModal"> Editando {this.state.nombreTecnologia}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <label>Nombre de la tecnología</label>
-                            <FormControl className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></FormControl>
+                            <input className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></input>
                             <br />
                             <label>Tipo de Tecnología</label>
                             <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
+                                <option selected disabled>
+                                    {this.state.SelectTipoTecnologiaModificar}
+                                </option>
                                 {listaTipoTecnologia}
                             </select>
                             <br />
                             <label>tecnología critica</label>
                             <div className=" justify-content-end">
                                 <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
+                                    <option disabled selected>{ShowCritical(this.state.criticoS_N_Modificar)}</option>
                                     <option value="s">Sí</option>
                                     <option value="n">No</option>
                                 </select>
                             </div>
-
                         </Modal.Body>
 
                         <Modal.Footer>
@@ -286,26 +266,11 @@ class AdminTech extends React.Component {
         )
     }
 }
-function Select_Type_Technology() {
-    return (
-
-        <select className="form-control" id="">
-            <option disabled="true" selected="true">Tipo de Tecnología</option>
-            <option>Software</option>
-            <option>Hardware</option>
-        </select>
-    );
-}
-
-function Select_Area() {
-    return (
-
-        <select className="form-control" id="">
-            <option disabled="true" selected="true">Área</option>
-            <option>Redes</option>
-            <option>Bases de datos</option>
-            <option>Producción</option>
-        </select>
-    );
+function ShowCritical(value) {
+    if (value === 's') {
+        return 'Sí'
+    } else if (value === 'n') {
+        return 'No'
+    }
 }
 export default AdminTech;

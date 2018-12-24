@@ -49,7 +49,6 @@ class AjustesPerfil extends Component {
         });
         this.state.primerApellido = this.state.primerApellidoNuevo
         this.state.segundoApellido = this.state.segundoApellidoNuevo
-        console.log(this.state.nombre)
     }
 
     handleSubmitPass() {

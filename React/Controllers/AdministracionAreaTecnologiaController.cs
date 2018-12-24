@@ -61,6 +61,39 @@ namespace React.Controllers
             return Ok(item);
         }
 
+        [HttpPost]
+        [Route("MethodGetTypeTech")]
+        public ActionResult GetTypeTech(Tecnologia tecnologia)
+        {
+            Tecnologia typeTechnoloy = new Tecnologia();
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerTipoTecnologia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID_TECHNOLOGY", tecnologia.TecnologiaId);
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    typeTechnoloy.TipoTecnologiaNombre = dataReader["TipoTecnologia"].ToString();
+                    typeTechnoloy.CriticoS_N = char.Parse(dataReader["Critico"].ToString());
+                    typeTechnoloy.NombreTecnologia = dataReader["NombreTecnologia"].ToString();
+                }
+                Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+            var item = typeTechnoloy;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
 
         [HttpGet]
         [Route("TipoTecnologia")]

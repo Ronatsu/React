@@ -13,11 +13,11 @@ class Home extends Component {
         super(props);
         this.state = {
             incidents: [],
-            email1: '5'
+            email1: '5',
+            email2: '',
+            stateIncident: []
         }
-
-        super(props);
-
+        this.handleChange = this.handleChange.bind(this);
         $(document).ready(function () {
             $("#inputSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -27,25 +27,51 @@ class Home extends Component {
             });
         });
     }
-
     componentWillMount() {
-        axios.post(`https://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
-            email1: this.state.email1
+        this.carga()
+    }
+    carga() {
+        axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
+            email1: this.state.email1,
+            email2: this.state.email2
         }).then(res => {
-                const incidents = res.data;
-                this.setState({ incidents });
+            const incidents = res.data;
+            this.setState({ incidents });
+        })
+        this.ShowSelectIncidentState()
+    }
+    ShowSelectIncidentState() {
+        axios.get(`http://localhost:44372/api/GetIncidents/MethodGetStateIncident`)
+            .then(res => {
+                const stateIncident = res.data;
+                this.setState({ stateIncident });
             })
     }
-
+    handleChange = (event) => {   
+        this.setState({ email2: event.target.value });
+        this.carga()
+    };
     render() {
         return (
             <div >
                 <Navigation />
                 <div className="container">
                     <br /><br />
-                    <div className="w-auto p-3">
-                        <input className="form-control " type="text" id="inputSearch" placeholder="Buscar"></input>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <input className="form-control" type="text" id="inputSearch" placeholder="Buscar"></input>
+                        </div>
+                        <div className="col-md-4">
+                            <select className="form-control" onChange={this.handleChange}>
+                                {this.state.stateIncident.map(elemento => {
+                                    return (
+                                        <option value={elemento.email2}>{elemento.email1}</option>
+                                    )
+                                })}
+                            </select>
+                        </div>
                     </div>
+                    <br />
                     <div className="container table-responsive " id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
