@@ -22,13 +22,17 @@ class AdminTipoIncidencia extends React.Component {
             tipos: []
             , estados: []
             , nombre: ''
-            ,estado:''
-          
+            , estado: ""
+            , id: ""
+            , estadoActual: ''
+            , nombreNuevo: ''
+            , estadoNuevo: ''
         }
-        this.handleChange = this.handleChange.bind(this);
 
-        this.AreaModificar = this.AreaModificar.bind(this);
-        
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmitAgregar = this.handleSubmitAgregar.bind(this);
+        this.ModificarTipo = this.ModificarTipo.bind(this);
+
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -37,25 +41,6 @@ class AdminTipoIncidencia extends React.Component {
                 });
             });
         });
-
-        $(document).ready(function () {
-            $(".btnBlue").click(function () {
-                $(this).each(function () {
-                    $("#modal2").show();
-                    $("#close").click(function () {
-                        $("#modal2").css("display", "none");
-                    });
-                });
-            });
-        });
-
-        $(function () {
-            $("#myTable tr td").click(function () {
-                const cell = $(this).parents("tr").find("th").eq(0).text();
-                $("#titleModal").html("Editando " + cell);
-
-            })
-        })
     }
 
     handleChange = event => {
@@ -66,19 +51,56 @@ class AdminTipoIncidencia extends React.Component {
         });
     }
 
-    handleSubmit = event => {
+    handleSubmitModificar = event => {
+        console.log("modificar")
         event.preventDefault();
 
+        if (this.state.estado === "Estado" || this.state.estado === "") {
+            alert("Favor seleccione un estado")
+        } else if (this.state.nombre === "") {
+            alert("Favor ingrese un el nombre del tipo de incidencia que desea modificar")
+        } else {
+            axios.post(`http://localhost:44372/api/TipoIncidencia/ModificarTipo`, {
+                Descripcion: this.state.nombre,
+                Estado: this.state.estado,
+                Id: this.state.id
+            }).then(res => {
 
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarArea`, {
-            NombreArea: this.state.NombreArea,
-            tecnologiaFk: this.state.selectGeneric,
-            AreaFk: this.state.selectArea
+                    if (res.status === 200) {
+                        alert("Modificado con éxito")
+                    } else {
+                        alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
 
-        }).then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
+                    }
+                })
+        }
+    }
+
+    handleSubmitAgregar = event => {
+        event.preventDefault();
+
+        if (this.state.estadoNuevo === "Estado" || this.state.estadoNuevo === "") {
+            alert("Favor seleccione un estado")
+        } else if (this.state.nombreNuevo === "") {
+            alert("Favor ingrese un el nombre del tipo de incidencia que desea agregar")
+        } else {
+            axios.post(`http://localhost:44372/api/TipoIncidencia/AgregarTipo`, {
+                Descripcion: this.state.nombreNuevo,
+                Estado: this.state.estadoNuevo
+            }).then(res => {
+
+                if (res.status === 200) {
+                    alert("Agregado con éxito")
+                    this.setState({
+                        estadoNuevo: ""
+                        , nombreNuevo: ""
+                    });
+                } else {
+                    alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
+
+                }
+            })
+        }
     }
 
     componentWillMount() {
@@ -87,55 +109,43 @@ class AdminTipoIncidencia extends React.Component {
                 const tipos = res.data;
                 this.setState({ tipos });
             })
-    }
-
-
-
-
-
-    AreaModificar(Area) {
-        alert("Se selecciono el ID : " + Area);
-        this.setState({
-            AreaIDModificar: Area
-        });
-
-
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
     }
 
 
     ModificarTipo(id) {
-        if (this.state.NombreAreaModificar == "") {
-            alert("Inserte el nombre del área que desea modificar.");
-        } else {
-            if (this.state.SelectAreaTecnologiaModificar == "") {
-                alert("Seleccione la tecnologia del área que desea modificar.");
-            }
-            else {
-                if (this.state.SelectAreaPrincipalModificar == "") {
-                    alert("Seleccione la tecnologia del área que desea modificar.");
-                } else {
-                    alert("Llego aqui");
-                    axios.post(`http://localhost:44372/api/TipoIncidencia/ObtenerPorId`, {
-                        id: id
-                    }).then(res => {
-                        const tipoI = res.data;
-                        this.setState({
-                            nombre: tipoI.descripcion,
-                            estado:tipoI.estado
-                        });
-                        })
-                    axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
-                        .then(res => {
-                            const estados = res.data;
-                            this.setState({ estados });
-                        })
-                }
-            }
-        }
+        axios.post(`http://localhost:44372/api/TipoIncidencia/ObtenerPorId`, {
+            id: id
+        }).then(res => {
+            const tipoI = res.data;
+            this.setState({
+                nombre: tipoI.descripcion,
+                estadoActual: tipoI.estado
+                ,id:id
+            });
+        })
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
     }
 
+    recargar() {
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetTipos')
+            .then(res => {
+                const tipos = res.data;
+                this.setState({ tipos });
+            })
+    }
 
     render() {
+
+        this.recargar();
 
         const listaEstados = this.state.estados;
 
@@ -170,23 +180,32 @@ class AdminTipoIncidencia extends React.Component {
                                                 <Modal.Body>
                                                     <div className="form-group">
                                                         <label id="txtModal">Tipo de incidencia</label>
-                                                        <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
+                                                        <FormControl className="form-control" name="nombreNuevo" value={this.state.nombreNuevo} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                                                     </div>
-                                                    
+
+                                                    <div className="form-group">
+                                                        <label>Estado</label>
+                                                        <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
+                                                            <option disabled selected="selected">Estado</option>
+                                                            {listaEstado}
+
+                                                        </select>
+                                                    </div>
+
                                                 </Modal.Body>
 
                                                 <Modal.Footer>
                                                     <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmit}>Agregar</Button>
+                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitAgregar}>Agregar</Button>
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>
 
                                     </div>
-                                       
 
 
-                              
+
+
 
                                 </div>
 
@@ -201,6 +220,7 @@ class AdminTipoIncidencia extends React.Component {
                                 <tr>
                                     <th className="size" scope="col">Código</th>
                                     <th className="size" scope="col">Tipo de incidencia</th>
+                                    <th className="size" scope="col">Estado</th>
                                     <th className="size" scope="col"></th>
                                 </tr>
                             </thead>
@@ -214,7 +234,10 @@ class AdminTipoIncidencia extends React.Component {
                                             <td>
                                                 {tipo.descripcion}
                                             </td>
-                                          
+                                            <td>
+                                                {tipo.estado}
+                                            </td>
+
                                             <td className="pagination justify-content-center">
                                                 <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.ModificarTipo(tipo.id)}><EditIcon />  Editar</button>
                                             </td>
@@ -238,20 +261,19 @@ class AdminTipoIncidencia extends React.Component {
                             <label>Tipo incidencia</label>
                             <FormControl className="form-control" name="nombre" value={this.state.nombre} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                             <div className="form-group">
-                            <label>Estado</label>
-                                <select className="form-control container" id="exampleFormControlSelect1" name="estado" onClick={this.handleChange}>
-                                    <option value={this.state.estado} disabled selected="selected">{this.state.estado}</option>
-                                    <option value={this.state.estado} >this.state.estado</option>
-                                    <option value={this.state.estado} >this.state</option>
+                                <label>Estado</label>
+                                <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    {listaEstado}
 
-                            </select>
+                                </select>
                             </div>
-                           
+
                         </Modal.Body>
 
                         <Modal.Footer>
                             <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarArea()}>Aceptar</Button>
+                            <Button  className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitModificar}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
