@@ -41,7 +41,7 @@ const AppRutas = () =>
             <Route exact path="/SignIn" component={SingIn} />
             <Route exact path="/MenuGrafico" component={MenuReportes} />
             <Route exact path="/SelectUserIncident" component={SelectUserIncident} />
-            <Route exact path="/TableUserList" component={TableUserList} />
+            <Route exact path="/TableUserList/:id?/:completeName?" component={TableUserList} />
             <Route exact path="/SinAsignar" component={SinAsignar} />
             <Route exact path="/TipoIncidencia" component={AdminIncidencia} />
         </Switch>

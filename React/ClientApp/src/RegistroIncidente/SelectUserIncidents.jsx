@@ -6,6 +6,7 @@ import Navigation from '../components/Navigation';
 import Search from '@material-ui/icons/Search';
 import '../components/ButtonColor.css';
 import axios from 'axios';
+import { element } from 'prop-types';
 
 class SelectUserIncident extends React.Component {
 
@@ -27,7 +28,7 @@ class SelectUserIncident extends React.Component {
         });
     }
     componentWillMount() {
-        axios.get(`https://localhost:44372/api/User/GetAllUsers`)
+        axios.get(`http://localhost:44372/api/User/GetAllUsers`)
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });
@@ -66,7 +67,7 @@ class SelectUserIncident extends React.Component {
                                         <td>{elemento.segundO_APELLIDO}</td>
                                         <td name="emial">{elemento.correoElectronico}</td>
                                         <td>{elemento.roL_USUARIO}</td>
-                                        <td><Link to="/TableUserList"><button className="btn btnBlue  " type="submit"><Search /> Ver Incidencias</button></Link></td>
+                                        <td><Link to={'/TableUserList/' + elemento.partyid + '/' + (elemento.nombre + " " + elemento.primeR_APELLIDO + " " + elemento.segundO_APELLIDO)}><button className="btn btnBlue  " type="submit"><Search /> Ver Incidencias</button></Link></td>
                                     </tr>
                                 )
                             })}
