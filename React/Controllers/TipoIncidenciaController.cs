@@ -8,6 +8,8 @@ using React.Model;
 
 namespace React.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class TipoIncidenciaController : ControllerBase
@@ -17,6 +19,9 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
+
+        //manejo de errores
+        JSON HandleError = new JSON();
 
 
         // GET: api/TipoIncidencia
@@ -163,8 +168,9 @@ namespace React.Controllers
                 conexion.Close();
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
             }
         }

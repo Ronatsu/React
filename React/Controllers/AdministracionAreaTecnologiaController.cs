@@ -23,7 +23,10 @@ namespace React.Controllers
         List<Tecnologia> Lista_tecnologia = new List<Tecnologia>();
         List<Area> Lista_Area = new List<Area>();
         List<TipoTecnologia> Lista_TipoTecnologia = new List<TipoTecnologia>();
-        JSON errorHandle = new JSON();
+
+        //manejo de errores
+        JSON HandleError = new JSON();
+
         // GET: api/AdministracionAreaTecnologia
         [HttpGet]
         [Route("Tecnologia")]
@@ -41,8 +44,9 @@ namespace React.Controllers
                     Tecnologia tecnologia = new Tecnologia();
                     tecnologia.TecnologiaId = dataReader["TECNOLOGIA_ID"].ToString();
                     tecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
-                    tecnologia.TipoTecnologiaFk = int.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
-                    tecnologia.CriticoS_N = char.Parse(dataReader["TIPO_TECNOLOGIA"].ToString());
+                    tecnologia.TipoTecnologia = dataReader["TIPO_TECNOLOGIA"].ToString();
+                    tecnologia.Critico = dataReader["Critico"].ToString();
+                    tecnologia.Estado = dataReader["Estado"].ToString();
 
                     Lista_tecnologia.Add(tecnologia);
                 }
@@ -50,7 +54,7 @@ namespace React.Controllers
             }
             catch (Exception ex)
             {
-                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
 
             var item = Lista_tecnologia;
@@ -61,11 +65,50 @@ namespace React.Controllers
             return Ok(item);
         }
 
+
+        [HttpGet]
+        [Route("GetTecnologiaHabilitado")]
+        public ActionResult<List<Tecnologia>> GetTecnologiaHabilitado()
+        {
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerTecnologiaHabilitado", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Tecnologia tecnologia = new Tecnologia();
+                    tecnologia.TecnologiaId = dataReader["TECNOLOGIA_ID"].ToString();
+                    tecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
+                    tecnologia.TipoTecnologia = dataReader["TIPO_TECNOLOGIA"].ToString();
+                    tecnologia.Critico = dataReader["Critico"].ToString();
+                    tecnologia.Estado = dataReader["Estado"].ToString();
+
+                    Lista_tecnologia.Add(tecnologia);
+                }
+                Connection.Close();
+
+                var item = Lista_tecnologia;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
+
         [HttpPost]
         [Route("MethodGetTypeTech")]
         public ActionResult GetTypeTech(Tecnologia tecnologia)
         {
-            Tecnologia typeTechnoloy = new Tecnologia();
+            //Tecnologia tecnologia = new Tecnologia();
             try
             {
                 Connection = new SqlConnection(ConnectionString);
@@ -76,18 +119,53 @@ namespace React.Controllers
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    typeTechnoloy.TipoTecnologiaNombre = dataReader["TipoTecnologia"].ToString();
-                    typeTechnoloy.CriticoS_N = char.Parse(dataReader["Critico"].ToString());
-                    typeTechnoloy.NombreTecnologia = dataReader["NombreTecnologia"].ToString();
+                    tecnologia.TipoTecnologiaNombre = dataReader["TipoTecnologia"].ToString();
+                    tecnologia.Critico = dataReader["Critico"].ToString();
+                    tecnologia.NombreTecnologia = dataReader["NombreTecnologia"].ToString();
+                    tecnologia.Estado = dataReader["ESTADO"].ToString();
                 }
                 Connection.Close();
             }
             catch (Exception ex)
             {
-                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 throw;
             }
-            var item = typeTechnoloy;
+            var item = tecnologia;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpPost]
+        [Route("GetAreaPorId")]
+        public ActionResult GetAreaPorId(Area area)
+        {
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerAreaPorId", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID", area.AreaID);
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
+                    area.AreaFk = dataReader["AREA_PADRE"].ToString();
+                    area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
+                    area.Estado = dataReader["ESTADO"].ToString();
+                }
+                Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+            var item = area;
             if (item == null)
             {
                 return NotFound();
@@ -120,7 +198,7 @@ namespace React.Controllers
             }
             catch (Exception ex)
             {
-                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
             var item = Lista_TipoTecnologia;
             if (item == null)
@@ -148,6 +226,7 @@ namespace React.Controllers
                     area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
                     area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
                     area.AreaFk = dataReader["AREA_PADRE"].ToString();
+                    area.Estado = dataReader["Estado"].ToString();
 
                     Lista_Area.Add(area);
 
@@ -156,7 +235,7 @@ namespace React.Controllers
             }
             catch (Exception ex)
             {
-                errorHandle.SaveDataError(ex.Message, ex.StackTrace);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
             var item = Lista_Area;
             if (item == null)
@@ -166,25 +245,11 @@ namespace React.Controllers
             return Ok(item);
         }
 
-        // GET: api/AdministracionAreaTecnologia/5
-        [HttpGet("{id}", Name = "GetTecnologia")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // GET: api/AdministracionAreaTecnologia/5
-        [HttpGet("{id}", Name = "GetArea")]
-        [Route("ObtenerArea")]
-        public string GetArea(int id)
-        {
-            return "value";
-        }
 
         // POST: api/AdministracionAreaTecnologia
         [HttpPost]
         [Route("InsertarTecnologia")]
-        public ActionResult Post(ModelT Tecno)
+        public ActionResult Post(Tecnologia Tecno)
         {
             //Verificación de la existencia de la tecnologia entrante
             SqlConnection ConnectionTecno = new SqlConnection(ConnectionString);
@@ -203,217 +268,117 @@ namespace React.Controllers
             //valida que la tecnologia venga vacia.
             if (validacionTecnologia.Equals(""))
             {
-                //Metodo que retorna el ID del tipo de tecnologia segun su nombre
-                SqlConnection ConnectionTipoTecnologia = new SqlConnection(ConnectionString);
-                ConnectionTipoTecnologia.Open();
-                cmd = new SqlCommand("Proc_ObtenerIDTipoTecnologia", ConnectionTipoTecnologia);
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_insetarNuevaTecnologia", Connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@NOMBRE_TIPO", Tecno.TipoTecnologiaFk);
+
+                cmd.Parameters.AddWithValue("@NombreTecnologia", Tecno.NombreTecnologia);
+                cmd.Parameters.AddWithValue("@TipoTecnologia", Tecno.TipoTecnologia);
+                cmd.Parameters.AddWithValue("@CriticoS_N", Tecno.Critico);
+                cmd.Parameters.AddWithValue("@Estado", Tecno.Estado);
+
                 dataReader = cmd.ExecuteReader();
-                int IDTipoTecnologia = 0;
-                while (dataReader.Read())
-                {
-                    IDTipoTecnologia = int.Parse(dataReader["ID_TIPO_TECNOLOGIA"].ToString());
-                }
-
-
-                ConnectionTipoTecnologia.Close();
-                if (IDTipoTecnologia > 0)
-                {
-                    Connection = new SqlConnection(ConnectionString);
-                    Connection.Open();
-                    cmd = new SqlCommand("Proc_insetarNuevaTecnologia", Connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@NombreTecnologia", Tecno.NombreTecnologia);
-                    cmd.Parameters.AddWithValue("@TipoTecnologia", IDTipoTecnologia);
-                    cmd.Parameters.AddWithValue("@CriticoS_N", Tecno.CriticoS_N);
-
-                    dataReader = cmd.ExecuteReader();
-                    Connection.Close();
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                Connection.Close();
+                return Ok();
             }
             else
             {
                 return NotFound();
             }
+
 
         }
 
         //POST: api/AdministracionAreaTecnologia
         [HttpPost]
         [Route("InsertarArea")]
-        public ActionResult Post(Area value)
+        public ActionResult InsertarArea(Area value)
         {
-            // Validar la existencia del área
-            SqlConnection ConnectionValid = new SqlConnection(ConnectionString);
-            ConnectionValid.Open();
-            cmd = new SqlCommand("Proc_ValidarExistenciaArea", ConnectionValid);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@NOMBRE_AREA", value.NombreArea);
-            dataReader = cmd.ExecuteReader();
-            String ValidacionArea = "";
-            while (dataReader.Read())
+            try
             {
-                ValidacionArea = dataReader["ID_AREA"].ToString();
-            }
-            ConnectionValid.Close();
-            // Obtener ID AreaPrincipal
-            SqlConnection ConnectionAreaID = new SqlConnection(ConnectionString);
-            ConnectionAreaID.Open();
-            cmd = new SqlCommand("Proc_ValidarExistenciaArea", ConnectionAreaID);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@NOMBRE_AREA", value.AreaFk);
-            dataReader = cmd.ExecuteReader();
-            String AreaID = "";
-            while (dataReader.Read())
-            {
-                AreaID = dataReader["ID_AREA"].ToString();
-            }
-            ConnectionAreaID.Close();
-            //Validar si existe el id de la tecnologia.
-            if (ValidacionArea.Equals(""))
-            {
-                SqlConnection ConnectionTecnoID = new SqlConnection(ConnectionString);
-                ConnectionTecnoID.Open();
-                cmd = new SqlCommand("Proc_ObtenerIDTecnologia", ConnectionTecnoID);
+                // Validar la existencia del área
+                SqlConnection ConnectionValid = new SqlConnection(ConnectionString);
+                ConnectionValid.Open();
+                cmd = new SqlCommand("Proc_ValidarExistenciaArea", ConnectionValid);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@NOMBRE_TECNOLGIA", value.TecnologiaFk);
+                cmd.Parameters.AddWithValue("@NOMBRE_AREA", value.NombreArea);
                 dataReader = cmd.ExecuteReader();
-                int TecnologiaID = 0;
+                String ValidacionArea = "";
                 while (dataReader.Read())
                 {
-                    TecnologiaID = int.Parse(dataReader["ID_TECNOLOGIA"].ToString());
+                    ValidacionArea = dataReader["ID_AREA"].ToString();
                 }
-                ConnectionTecnoID.Close();
-                //Si el atributo es mayor que cero, existe.
-                if (TecnologiaID > 0)
+                ConnectionValid.Close();
+
+                //Validar si existe el id de la tecnologia.
+                if (ValidacionArea.Equals(""))
                 {
-                    Connection = new SqlConnection(ConnectionString);
-                    Connection.Open();
-                    cmd = new SqlCommand("Proc_insetarNuevaArea", Connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (value.AreaFk.Equals("0"))
+                    {
+                        Connection = new SqlConnection(ConnectionString);
+                        Connection.Open();
+                        cmd = new SqlCommand("Proc_insetarNuevaAreaSinArea", Connection);
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
-                    cmd.Parameters.AddWithValue("@TecnologiaFk", TecnologiaID);
-                    cmd.Parameters.AddWithValue("@AreaFk", AreaID);
+                        cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
+                        cmd.Parameters.AddWithValue("@TecnologiaFk", value.TecnologiaFk);
+                        cmd.Parameters.AddWithValue("@Estado", value.Estado);
+                        dataReader = cmd.ExecuteReader();
+                        Connection.Close();
+                        return Ok();
+                    }
+                    else
+                    {
+                        Connection = new SqlConnection(ConnectionString);
+                        Connection.Open();
+                        cmd = new SqlCommand("Proc_insetarNuevaAreaConArea", Connection);
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                    dataReader = cmd.ExecuteReader();
-                    Connection.Close();
-                    return Ok(value);
+                        cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
+                        cmd.Parameters.AddWithValue("@TecnologiaFk", value.TecnologiaFk);
+                        cmd.Parameters.AddWithValue("@AreaFk", value.AreaFk);
+                        cmd.Parameters.AddWithValue("@Estado", value.Estado);
+                        dataReader = cmd.ExecuteReader();
+                        Connection.Close();
+                        return Ok();
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok(value.NombreArea);
                 }
+
             }
-            else
+            catch (Exception ex)
             {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
             }
-
-
-        }
-
-        [HttpPost]
-        [Route("eliminarArea")]
-        public ActionResult eliminarArea(Area value)
-        {
-            try
-            {
-                Connection = new SqlConnection(ConnectionString);
-                Connection.Open();
-                cmd = new SqlCommand("Proc_BorrarArea", Connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@AREA_BORRAR", value.AreaID);
-
-                dataReader = cmd.ExecuteReader();
-                Connection.Close();
-                return Ok(value);
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
-
-
-
-        }
-
-
-        [HttpPost]
-        [Route("eliminarTecnologia")]
-        public ActionResult eliminarTecnologia(Tecnologia value)
-        {
-            try
-            {
-                Connection = new SqlConnection(ConnectionString);
-                Connection.Open();
-                cmd = new SqlCommand("Proc_BorrarTecnologia", Connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@TECNOLOGIA_BORRAR", value.TecnologiaId);
-
-                dataReader = cmd.ExecuteReader();
-                Connection.Close();
-                return Ok(value);
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
-
-
 
         }
 
         [HttpPost]
         [Route("modificarTecnologia")]
-        public ActionResult ModificarTecnologia(ModelT value)
+        public ActionResult ModificarTecnologia(Tecnologia value)
         {
             try
             {
-                //Metodo que retorna el ID del tipo de tecnologia segun su nombre
-                SqlConnection ConnectionTipoTecnologia = new SqlConnection(ConnectionString);
-                ConnectionTipoTecnologia.Open();
-                cmd = new SqlCommand("Proc_ObtenerIDTipoTecnologia", ConnectionTipoTecnologia);
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_modificarTecnologia", Connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@NOMBRE_TIPO", value.TipoTecnologiaFk);
+
+                cmd.Parameters.AddWithValue("@TecnologiaID", value.TecnologiaId);
+                cmd.Parameters.AddWithValue("@NombreTecnologia", value.NombreTecnologia);
+                cmd.Parameters.AddWithValue("@TipoTecnologia", value.TipoTecnologia);
+                cmd.Parameters.AddWithValue("@CriticoS_N", value.Critico);
+                cmd.Parameters.AddWithValue("@Estado", value.Estado);
+
                 dataReader = cmd.ExecuteReader();
-                int IDTipoTecnologia = 0;
-                while (dataReader.Read())
-                {
-                    IDTipoTecnologia = int.Parse(dataReader["ID_TIPO_TECNOLOGIA"].ToString());
-                }
+                Connection.Close();
+                return Ok(value);
 
-
-                ConnectionTipoTecnologia.Close();
-                if (!(IDTipoTecnologia == 0))
-                {
-                    Connection = new SqlConnection(ConnectionString);
-                    Connection.Open();
-                    cmd = new SqlCommand("Proc_modificarTecnologia", Connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@TecnologiaID", value.TecnologiaId);
-                    cmd.Parameters.AddWithValue("@NombreTecnologia", value.NombreTecnologia);
-                    cmd.Parameters.AddWithValue("@TipoTecnologia", IDTipoTecnologia);
-                    cmd.Parameters.AddWithValue("@CriticoS_N", value.CriticoS_N);
-
-                    dataReader = cmd.ExecuteReader();
-                    Connection.Close();
-                    return Ok(value);
-                }
-                else
-                {
-                    return NotFound();
-                }
             }
             catch (Exception)
             {
@@ -447,41 +412,23 @@ namespace React.Controllers
                     }
                     ConnectionAreaID.Close();
 
-                    if (!(value.TecnologiaFk == null) || !value.TecnologiaFk.Trim().Equals(""))
+                    if (AreaID.Equals(""))
                     {
-                        SqlConnection ConnectionTecnoID = new SqlConnection(ConnectionString);
-                        ConnectionTecnoID.Open();
-                        cmd = new SqlCommand("Proc_ObtenerIDTecnologia", ConnectionTecnoID);
+                        Connection = new SqlConnection(ConnectionString);
+                        Connection.Open();
+                        cmd = new SqlCommand("Proc_ModificarArea", Connection);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@NOMBRE_TECNOLGIA", value.TecnologiaFk);
+
+                        cmd.Parameters.AddWithValue("@AreaID", value.AreaID);
+                        cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
+                        cmd.Parameters.AddWithValue("@TecnologiaFk", value.TecnologiaFk);
+                        cmd.Parameters.AddWithValue("@AreaFk", value.AreaFk);
+                        cmd.Parameters.AddWithValue("@estado", value.Estado);
+
                         dataReader = cmd.ExecuteReader();
-                        int TecnologiaID = 0;
-                        while (dataReader.Read())
-                        {
-                            TecnologiaID = int.Parse(dataReader["ID_TECNOLOGIA"].ToString());
-                        }
-                        ConnectionTecnoID.Close();
+                        Connection.Close();
+                        return Ok(value);
 
-                        if (!(TecnologiaID == 0))
-                        {
-                            Connection = new SqlConnection(ConnectionString);
-                            Connection.Open();
-                            cmd = new SqlCommand("Proc_ModificarArea", Connection);
-                            cmd.CommandType = CommandType.StoredProcedure;
-
-                            cmd.Parameters.AddWithValue("@AreaID", value.AreaID);
-                            cmd.Parameters.AddWithValue("@NombreArea", value.NombreArea);
-                            cmd.Parameters.AddWithValue("@TecnologiaFk", TecnologiaID);
-                            cmd.Parameters.AddWithValue("@AreaFk", AreaID);
-
-                            dataReader = cmd.ExecuteReader();
-                            Connection.Close();
-                            return Ok(value);
-                        }
-                        else
-                        {
-                            return NotFound();
-                        }
                     }
                     else
                     {
@@ -496,30 +443,9 @@ namespace React.Controllers
             }
             catch (Exception ex)
             {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
             }
-        }
-
-        // PUT: api/AdministracionAreaTecnologia/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        [Route("eliminarArea")]
-        public void Delete(string id)
-        {
-            Connection = new SqlConnection(ConnectionString);
-            Connection.Open();
-            cmd = new SqlCommand("Proc_BorrarArea", Connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@AREA_BORRAR", id);
-
-            dataReader = cmd.ExecuteReader();
-            Connection.Close();
         }
     }
 }

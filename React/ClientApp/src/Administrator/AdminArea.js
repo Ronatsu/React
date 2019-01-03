@@ -1,17 +1,13 @@
 import '../components/ButtonColor.css';
-import React, { Component } from 'react';
+import React from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import { func } from 'prop-types';
-import { Input } from '@material-ui/core';
 import axios from 'axios';
-import SelectComponentArea from '../Administrator/SelectComponentArea';
-import SelectArea from '../Administrator/SelectArea'
+
 
 class AdminArea extends React.Component {
 
@@ -21,6 +17,7 @@ class AdminArea extends React.Component {
         this.state = {
             areas: [],
             tecno: [],
+            estados: [],
             NombreArea: '',
             selectGeneric: '',
             selectArea: '',
@@ -29,15 +26,12 @@ class AdminArea extends React.Component {
             NombreAreaModificar: '',
             SelectAreaTecnologiaModificar: '',
             SelectAreaPrincipalModificar: ''
-            , tecnoAdd:""
+            , tecnoAdd: ""
+            , estadoNuevo: ""
+            , estadoActual: ""
         }
         this.handleChange = this.handleChange.bind(this);
-        this.borrar = this.borrar.bind(this);
         this.AreaModificar = this.AreaModificar.bind(this);
-
-
-
-
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -47,28 +41,6 @@ class AdminArea extends React.Component {
                 });
             });
         });
-
-        $(document).ready(function () {
-            $(".btnBlue").click(function () {
-                $(this).each(function () {
-                    $("#modal2").show();
-                    $("#close").click(function () {
-                        $("#modal2").css("display", "none");
-                    });
-                });
-            });
-        });
-
-        $(function () {
-            $("#myTable tr td").click(function () {
-                const cell = $(this).parents("tr").find("th").eq(0).text();//$(this).index(0).text();
-                /*const row = $(this).parents('tr').index();
-                const contenido = $(this).html();
-                $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
-                $("#titleModal").html("Editando " + cell);
-
-            })
-        })
     }
 
     handleChange = event => {
@@ -79,19 +51,37 @@ class AdminArea extends React.Component {
         });
     }
 
-    handleSubmit = event => {
+    handleSubmitAgregar = event => {
         event.preventDefault();
-
-
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarArea`, {
-            NombreArea: this.state.NombreArea,
-            tecnologiaFk: this.state.selectGeneric,
-            AreaFk: this.state.selectArea
-
-        }).then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
+        alert("Se selecciono el ID : " + this.state.AreaIDModificar);
+        if (this.state.NombreArea === "") {
+            alert("Inserte el nombre del área que desea modificar.");
+        } else if (this.state.selectGeneric === "") {
+            alert("Seleccione la tecnologia del área que desea modificar.");
+        }
+        else if (this.state.selectArea === "") {
+            alert("Seleccione la tecnologia del área que desea modificar.");
+        } else {
+            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarArea`, {
+                NombreArea: this.state.NombreArea,
+                tecnologiaFk: this.state.selectGeneric,
+                AreaFk: this.state.selectArea
+                , Estado: this.state.estadoNuevo
+            }).then(res => {
+                if (res.data === "") {
+                    alert("Agregado con éxito")
+                    console.log()
+                    this.setState({
+                        estadoNuevo: ""
+                        , NombreArea: ""
+                        , selectGeneric: ""
+                        , selectArea: ""
+                    });
+                } else {
+                    alert("¡Lo sentimos! " + res.data + " ya existe")
+                }
+            })
+        }
     }
 
     componentWillMount() {
@@ -101,43 +91,36 @@ class AdminArea extends React.Component {
                 this.setState({ areas });
             })
 
-        axios.get('http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia')
+        axios.get('http://localhost:44372/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado')
             .then(res => {
                 const tecno = res.data;
                 this.setState({ tecno });
             })
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
     }
-
-
-    borrar(Area) {
-
-        alert("Se selecciono el ID : " + Area);
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/eliminarArea`, {
-            AreaID: Area
-        }).then(res => {
-            if (res.status == 200) {
-                alert("Se elimino exitosamente");
-            }
-        })
-
-
-    }
-
 
     AreaModificar(Area) {
-
-        alert("Se selecciono el ID : " + Area);
-        this.setState({
-            AreaIDModificar: Area
-        });
-
+        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/GetAreaPorId`, {
+            AreaID: Area
+        }).then(res => {
+            const area = res.data;
+            this.setState({
+                AreaIDModificar: Area,
+                NombreAreaModificar: area.nombreArea,
+                SelectAreaTecnologiaModificar: area.tecnologiaFk,
+                SelectAreaPrincipalModificar: area.areaFk,
+                estadoActual: area.estado
+            });
+        })
 
     }
 
 
     ModificarArea() {
-
-        alert("Se selecciono el ID : " + this.state.AreaIDModificar);
         if (this.state.NombreAreaModificar == "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
@@ -148,15 +131,20 @@ class AdminArea extends React.Component {
                 if (this.state.SelectAreaPrincipalModificar == "") {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
-                    alert("Llego aqui");
-                    axios.post(`http://localhost:58055/api/AdministracionAreaTecnologia/modificarArea`, {
+                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarArea`, {
                         AreaID: this.state.AreaIDModificar,
                         NombreArea: this.state.NombreAreaModificar,
                         TecnologiaFk: this.state.SelectAreaTecnologiaModificar,
-                        AreaFk: this.state.SelectAreaPrincipalModificar
+                        AreaFk: this.state.SelectAreaPrincipalModificar,
+                        Estado: this.state.estado
                     }).then(res => {
+                        console.log(this.state.SelectAreaPrincipalModificar + " flflfl")
                         if (res.status == 200) {
                             alert("Se modifico exitosamente");
+
+                        } else {
+                            alert("¡Lo sentimos! Ha ocurrido un error inesperado")
+
                         }
                     })
                 }
@@ -164,15 +152,32 @@ class AdminArea extends React.Component {
         }
     }
 
+    recargar() {
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Area`)
+            .then(res => {
+                const areas = res.data;
+                this.setState({ areas });
+            })
+    }
+
 
     render() {
         const listaTecnologia = this.state.tecno.map((tecnologia) =>
-            <option value={tecnologia.nombreTecnologia}>{tecnologia.nombreTecnologia}</option>
+            <option value={tecnologia.tecnologiaId}>{tecnologia.nombreTecnologia}</option>
         );
 
         const listaArea = this.state.areas.map((area) =>
-            <option value={area.nombreArea}>{area.nombreArea}</option>
+            <option value={area.areaID}>{area.nombreArea}</option>
         );
+
+
+        const listaEstados = this.state.estados;
+
+        const listaEstado = listaEstados.map((estado) =>
+            <option value={estado.id}>{estado.estado}</option>
+        );
+
+        this.recargar();
 
         return (
             <div>
@@ -184,34 +189,11 @@ class AdminArea extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-3 mb-3">
-                                        <label>Buscar</label>
-                                        <input type="text" className="form-control" id="myInput" placeholder="Buscar el área" />
+                                    <div className="col-md-6 mb-3">
+                                        <input type="text" className="form-control" id="myInput" placeholder="Buscar" />
                                     </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label>Agregar</label>
-                                        <input type="text" className="form-control" id="validationCustom02" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del área" />
-                                    </div>
-                                    <div className="col-md-2 mb-3">
-                                        <label>Tecnología</label>
-                                        <div className=" justify-content-end">
-                                            <SelectComponentArea
-                                                tecno={this.state.tecno}
-                                                handleChange={this.handleChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-2 mb-3">
-                                        <label>Área principal</label>
-                                        <div className=" justify-content-end">
-                                            <SelectArea
-                                                area={this.state.areas}
-                                                handleChange={this.handleChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-1 mb-3">
-                                        <br />
+
+                                    <div className="col-md-6 mb-3 pagination justify-content-end">
                                         <div id="myModal" className="modal fade in">
                                             <Modal.Dialog>
                                                 <Modal.Header>
@@ -223,28 +205,37 @@ class AdminArea extends React.Component {
                                                 </Modal.Header>
                                                 <Modal.Body>
                                                     <div className="form-group">
-                                                    <label id="txtModal">Nombre del área</label>
+                                                        <label id="txtModal">Nombre del área</label>
                                                         <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
                                                     </div>
                                                     <label id="txtModal">Seleccione la tecnología</label>
                                                     <select className="form-control container" id="exampleFormControlSelect1" name="selectGeneric" onClick={this.handleChange}>
+                                                        <option disabled selected="selected">Tecnología</option>
                                                         {listaTecnologia}
                                                     </select>
                                                     <br />
                                                     <label id="txtModal">Seleccione el área principal</label>
-                                                    <select className="form-control container" id="exampleFormControlSelect1" name="SelectArea" onClick={this.handleChange}>
+                                                    <select className="form-control container" id="exampleFormControlSelect1" name="selectArea" onClick={this.handleChange}>
+                                                        <option disabled selected="selected">Área</option>
+                                                        <option value="0">Ninguna</option>
                                                         {listaArea}
                                                     </select>
+                                                    <div className="form-group">
+                                                        <label id="txtModal">Estado</label>
+                                                        <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
+                                                            <option disabled selected="selected">Estado</option>
+                                                            {listaEstado}
+                                                        </select>
+                                                    </div>
                                                 </Modal.Body>
 
                                                 <Modal.Footer>
                                                     <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmit}>Agregar</Button>
+                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitAgregar}>Agregar</Button>
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>
-                                        <button data-toggle="modal" href="#myModal" className="btn btnGrey">Insertar Pasos</button>
-                                        <button class=" btn btnGrey " type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
+                                        <button data-toggle="modal" href="#myModal" className="btn btnGrey"><AddIcon />  Agregar </button>
                                     </div>
 
                                 </div>
@@ -258,8 +249,11 @@ class AdminArea extends React.Component {
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
                                 <tr>
-                                    <th className="size" scope="col">Área ID</th>
+                                    <th className="size" scope="col">Código</th>
                                     <th className="size" scope="col">Nombre</th>
+                                    <th className="size" scope="col">Área principal</th>
+                                    <th className="size" scope="col">Tecnología</th>
+                                    <th className="size" scope="col">Estado</th>
                                     <th className="size" scope="col"></th>
                                 </tr>
                             </thead>
@@ -274,8 +268,16 @@ class AdminArea extends React.Component {
                                                 {elemento.nombreArea}
                                             </td>
                                             <td>
+                                                {elemento.areaFk}
+                                            </td>
+                                            <td>
+                                                {elemento.tecnologiaFk}
+                                            </td>
+                                            <td>
+                                                {elemento.estado}
+                                            </td>
+                                            <td>
                                                 <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.AreaModificar(elemento.areaID)}><EditIcon />  Editar</button>
-                                                <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.areaID)}><DeleteIcon />  Eliminar</button>
                                             </td>
                                         </tr>
                                     )
@@ -294,18 +296,32 @@ class AdminArea extends React.Component {
                             <Modal.Title id="titleModal">Modificación de área</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <label>Nombre del área</label>
-                            <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
-                            <br />
-                            <label>Seleccione la tecnología</label>
-                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
-                                {listaTecnologia}
-                            </select>
-                            <br />
-                            <label>Seleccione el área principal</label>
-                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaPrincipalModificar" onClick={this.handleChange}>
-                                {listaArea}
-                            </select>
+                            <div className="form-group">
+                                <label>Nombre del área</label>
+                                <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
+                            </div>
+                            <div className="form-group">
+                                <label>Seleccione la tecnología</label>
+                                <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.SelectAreaTecnologiaModificar}</option>
+                                    {listaTecnologia}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Seleccione el área principal</label>
+                                <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaPrincipalModificar" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.SelectAreaPrincipalModificar}</option>
+                                    {listaArea}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label id="txtModal">Estado</label>
+                                <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    {listaEstado}
+
+                                </select>
+                            </div>
                         </Modal.Body>
 
                         <Modal.Footer>
@@ -314,21 +330,7 @@ class AdminArea extends React.Component {
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
-
-
             </div>
         )
     }
-}
-
-
-//function Select_Tech(styleClassName , ) {
-
-//    return (
-
-//        <select className={styleClassName} id="exampleFormControlSelect1" name="tecnologia">
-//            {listaTipoTecnologia}
-//        </select>
-//    );
-//}
-export default AdminArea;
+} export default AdminArea;

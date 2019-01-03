@@ -1,17 +1,13 @@
 import '../components/ButtonColor.css';
-import React, { Component } from 'react';
-import $ from 'jquery';
+import React from 'react';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import { func } from 'prop-types';
-import { Input } from '@material-ui/core';
 import axios from 'axios';
-import SelectComponentArea from '../Administrator/SelectComponentArea';
-import SelectArea from '../Administrator/SelectArea'
+import $ from 'jquery';
+
 
 class AdminTipoIncidencia extends React.Component {
 
@@ -27,6 +23,7 @@ class AdminTipoIncidencia extends React.Component {
             , estadoActual: ''
             , nombreNuevo: ''
             , estadoNuevo: ''
+
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -41,7 +38,9 @@ class AdminTipoIncidencia extends React.Component {
                 });
             });
         });
+
     }
+
 
     handleChange = event => {
         const nameInput = event.target.name;
@@ -52,7 +51,6 @@ class AdminTipoIncidencia extends React.Component {
     }
 
     handleSubmitModificar = event => {
-        console.log("modificar")
         event.preventDefault();
 
         if (this.state.estado === "Estado" || this.state.estado === "") {
@@ -66,13 +64,13 @@ class AdminTipoIncidencia extends React.Component {
                 Id: this.state.id
             }).then(res => {
 
-                    if (res.status === 200) {
-                        alert("Modificado con éxito")
-                    } else {
-                        alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
+                if (res.status === 200) {
+                    alert("Modificado con éxito")
+                } else {
+                    alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
 
-                    }
-                })
+                }
+            })
         }
     }
 
@@ -125,7 +123,7 @@ class AdminTipoIncidencia extends React.Component {
             this.setState({
                 nombre: tipoI.descripcion,
                 estadoActual: tipoI.estado
-                ,id:id
+                , id: id
             });
         })
         axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados')
@@ -184,7 +182,7 @@ class AdminTipoIncidencia extends React.Component {
                                                     </div>
 
                                                     <div className="form-group">
-                                                        <label>Estado</label>
+                                                        <label id="txtModal">Estado</label>
                                                         <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
                                                             <option disabled selected="selected">Estado</option>
                                                             {listaEstado}
@@ -200,19 +198,10 @@ class AdminTipoIncidencia extends React.Component {
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>
-
                                     </div>
-
-
-
-
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
                     <div className="table-responsive " id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
@@ -261,7 +250,7 @@ class AdminTipoIncidencia extends React.Component {
                             <label>Tipo incidencia</label>
                             <FormControl className="form-control" name="nombre" value={this.state.nombre} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                             <div className="form-group">
-                                <label>Estado</label>
+                                <label id="txtModal">Estado</label>
                                 <select className="form-control container" name="estado" onClick={this.handleChange}>
                                     <option disabled selected="selected">{this.state.estadoActual}</option>
                                     {listaEstado}
@@ -273,7 +262,7 @@ class AdminTipoIncidencia extends React.Component {
 
                         <Modal.Footer>
                             <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                            <Button  className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitModificar}>Aceptar</Button>
+                            <Button className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitModificar}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
