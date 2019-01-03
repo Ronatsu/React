@@ -13,8 +13,7 @@ class Home extends Component {
         super(props);
         this.state = {
             incidents: [],
-            email1: '5',
-            email2: '',
+            email1: ChooseParty(this.props.idParty),
             stateIncident: []
         }
         this.handleChange = this.handleChange.bind(this);
@@ -28,17 +27,17 @@ class Home extends Component {
         });
     }
     componentWillMount() {
-        this.carga()
+        this.ShowSelectIncidentState()
+        this.DataUpload(18)
     }
-    carga() {
+    DataUpload(IdTypeIncident) {
         axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
             email1: this.state.email1,
-            email2: this.state.email2
+            email2: IdTypeIncident
         }).then(res => {
             const incidents = res.data;
             this.setState({ incidents });
         })
-        this.ShowSelectIncidentState()
     }
     ShowSelectIncidentState() {
         axios.get(`http://localhost:44372/api/GetIncidents/MethodGetStateIncident`)
@@ -47,22 +46,22 @@ class Home extends Component {
                 this.setState({ stateIncident });
             })
     }
-    handleChange = (event) => {   
-        this.setState({ email2: event.target.value });
-        this.carga()
+    handleChange = (event) => {
+        this.DataUpload(event.target.value)
     };
     render() {
         return (
             <div >
                 <Navigation />
+                <br /><br /><br />
                 <div className="container">
-                    <br /><br />
                     <div className="row">
                         <div className="col-md-4">
                             <input className="form-control" type="text" id="inputSearch" placeholder="Buscar"></input>
                         </div>
                         <div className="col-md-4">
                             <select className="form-control" onChange={this.handleChange}>
+                                <option selected disabled>Asignada</option>
                                 {this.state.stateIncident.map(elemento => {
                                     return (
                                         <option value={elemento.email2}>{elemento.email1}</option>
@@ -105,5 +104,11 @@ class Home extends Component {
     }
 
 }
-
+function ChooseParty(partyID) {
+    if (partyID == undefined || partyID == null || partyID == 0) {
+        return 5;
+    } else {
+        return partyID;
+    }
+}
 export default Home;

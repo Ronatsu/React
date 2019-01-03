@@ -9,7 +9,8 @@ namespace API_Ejemplo.Model
                                   "Initial Catalog=ProyectoAnderson10;" +
                                   "Integrated security=True;";
 
-        public Conexion() {
+        public Conexion()
+        {
 
         }
 
