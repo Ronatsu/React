@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
@@ -94,18 +94,18 @@ class navigatiom extends React.Component {
 export default navigatiom;
 
 function showStatusBlock (status){
-    if (status == true) {
+    if (status === true) {
         $("#textButton").html("Desbloquear");
         return "btn btnGreen"
-    } else if (status == false) {
+    } else if (status === false) {
         $("#textButton").html("Bloquear");
         return "btn btnRed"
     }
 }
 function showTextStatusBlock(status) {
-    if (status == true) {
+    if (status === true) {
         return "Desbloquear"
-    } else if (status == false) {
+    } else if (status === false) {
         return "Bloquear"
     }
 }

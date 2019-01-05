@@ -45,6 +45,8 @@ export default class {
     }
 
     getToken() {
+        const tokenDecode = localStorage.getItem('id_token');
+        console.log(tokenDecode);
         return localStorage.getItem('id_token');
     }
 
@@ -53,7 +55,12 @@ export default class {
     }
 
     getProfile() {
-        return decode(this.getToken());
+        try {
+            
+            return decode(this.getToken());
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     fetch(url, options) {
@@ -85,4 +92,28 @@ export default class {
             throw error
         }
     }
+
+    isAdmin() {
+        const token = this.getProfile();
+        if (token != null) {
+            if (token.role = "admin") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+    }
 }
+
+
+export const isAuthenticated = user => !!user;
+
+export const isAllowed = (user, rights) =>
+    rights.some(right => user.rights.includes(right));
+
+export const hasRole = (user, roles) =>
+    roles.some(role => user.roles.includes(role));

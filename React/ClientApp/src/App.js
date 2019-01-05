@@ -1,42 +1,58 @@
 import React, { Component } from 'react';
 import './App.css';
-import PropTypes from 'prop-types';
-import Contenedor from './Contenerdor';
-import Footer from './components/Footer';
-import $ from 'jquery';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import AuthService from './components/AuthService';
 
+import Registro from './Registro/Registro';
+import Home from './WebInicio/Home';
+import Form from './RegistroIncidente/Form';
+import AsignacionIncidencia from './RegistroIncidente/AsignacionIncidencia';
+import Configuracion from './configuracion/Perfil';
+//import GetAdmin from './Administrator/GetAdmin';
+import BlockUser from './Administrator/Block_User';
+import sidebar from './components/SidebarAdmin';
+import NewUser from './Administrator/NewUser';
+import InformacionIncidencia from './RegistroIncidente/InformacionIncidencia';
+import MenuReportes from './Reportes/MenuGrafico';
+import AdminArea from './Administrator/AdminArea';
+import AdminTech from './Administrator/AdminTech';
+import ForgotPass from './WebInicio/Recovery';
+import SingIn from './Registro/signIn';
+import SelectUserIncident from './RegistroIncidente/SelectUserIncidents';
+import PrivateRoute from './PrivateRoute';
 
 class App extends Component {
-    static propTypes = {
-        children: PropTypes.object.isRequired
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: ""
+        };
+        this.Auth = new AuthService();
+    }
 
-    /* constructor(props) {
-       super();
-       this.state = {
-       }
-   
-       super(props);
-   
-       $(document).ready(function () {
-         if($("body").height() < $(window).height()){
-          $("footer").css({"position":"absolute","bottom":"0px"});
-               }
-       });
-   }*/
     render() {
-        const { children } = this.props;
-        return (
-            <body>
 
-                <div className="container-fluid" id="div_ancho_comchildren.id}pleto">
-                        <Contenedor body={children} />
+        return (
+            <Switch>
+                <div>
+                    <Route exact path="/" component={Registro} />
+                    <PrivateRoute authed={true} path="/incidentes" component={Home} />
+                    <PrivateRoute authed={true} path="/InsertarIncidencia" component={Form} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/AjustePerfil" component={Configuracion} />
+                    {this.Auth.isAdmin() && <PrivateRoute authed={this.Auth.loggedIn} path="/BlockUser" component={BlockUser} />}
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/AsignacionIncidencia" component={AsignacionIncidencia} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/AdminArea" component={AdminArea} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/AdminTech" component={AdminTech} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/sidebar" component={sidebar} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/newUser" component={NewUser} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/ForgotPass" component={ForgotPass} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/InformacionIncidencia" component={InformacionIncidencia} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/SignIn" component={SingIn} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/MenuGrafico" component={MenuReportes} />
+                    <PrivateRoute authed={this.Auth.loggedIn} path="/SelectUserIncident" component={SelectUserIncident} />
                 </div>
-                <footer className="page-footer" id="footer">
-                    <Footer />
-                </footer>
-            </body>
-        );
+            </Switch>
+        )
     }
 }
 

@@ -1,12 +1,27 @@
 import React from 'react';
 import Navigation from '../components/Navigation';
-import { colaboradores } from '../components/bd/colaborador.json';
+import { Link } from "react-router-dom";
 import '../Administrator/Block_User.css';
 import $ from 'jquery';
+import axios from 'axios';
+import AuthService from '../components/AuthService';
 
 class AsignacionIncidencia extends React.Component {
     constructor(props) {
+        super();
+        this.state = {
+            parties: [],
+            party: [],
+            asignacionArray: []
+            , partyId: "",
+            itemChecked: []
+
+
+        }
+        this.Auth = new AuthService();
         super(props);
+
+
 
         $(document).ready(function () {
 
@@ -30,9 +45,102 @@ class AsignacionIncidencia extends React.Component {
                 });
             })
         });
+    }
+
+    handleSubmit = event => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        event.preventDefault();
+        axios.post(`https://localhost:44331/api/Incidencia/AsignarIncident`,
+            {
+                asignacionArray: this.state.asignacionArray
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        );
+        console.log(this.state.itemChecked);
+
+        this.handleSubmit = this.handleSubmit.bind(this);
 
     }
+
+    componentWillMount() {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/User/UsuarioHabilitado`, { headers: { "Authorization": headerOptions } })
+
+            .then(res => {
+                var parties = res.data;
+                this.setState({ parties });
+                console.log(parties);
+            })
+    }
+
+    checkItem(partyid, e) {
+        var usuario = new Object();
+        usuario.partyid = partyid;
+        usuario.add = e.target.checked;
+
+        if (this.state.asignacionArray.length == 0) {
+            this.state.asignacionArray.push(usuario);
+
+        } else {
+
+            var existe = false
+            for (var item = 0; item < this.state.asignacionArray.length; item++) {
+                if (this.state.asignacionArray[item].partyid === usuario.partyid) {
+                    this.state.asignacionArray[item] = usuario;
+                    existe = true
+                }
+            }
+            if (!existe) {
+                this.state.asignacionArray.push(usuario);
+
+            }
+        }
+        //this.setState({ itemChecked });
+        console.log(this.state.asignacionArray);
+    }
+
+
+
+    //axios.post(`https://localhost:44331/api/Incidencia`, {
+    //    tipoIncidencia: this.state.tipoIncidencia
+    //    , tipoImpacto: this.state.tipoImpacto
+    //    , gradoControl: this.state.gradoControl
+    //    , tencologia: this.state.tencologia
+    //    , areaAfectada: this.state.areaAfectada
+    //    , descripcion: this.state.descripcion
+    //    , fechaDescubrimiento: this.state.fecha
+    //    , metodoDeteccion: this.state.metodoDeteccion
+    //})
+
+
     render() {
+
+        const partiesTable = this.state.parties.map((party) => {
+            return (
+                <tr key={party.partyid}>
+                    <td><input type="checkbox" onChange={(e) => this.checkItem(party.partyid, e)} /></td>
+                    <td>{party.nombre}</td>
+                    <td>{party.primeR_APELLIDO}</td>
+                    <td>{party.segundO_APELLIDO}</td>
+                    <td >{party.correoElectronico}</td>
+                    <td>{party.roL_USUARIO}</td>
+
+                </tr>
+            )
+        })
         return (
             <div className="container-fluid">
                 <Navigation />
@@ -43,69 +151,46 @@ class AsignacionIncidencia extends React.Component {
                             <br /><br /><br />
                             <h3 className="mt-4"><b>Asignar Incidencia</b></h3>
                         </header>
-                        <div>
-                            {ShowIncident()}
-                            {FilterUser()}
-                            <ColaboradorTabla />
-                            <div class="pagination justify-content-end">
-                                <button class="btn btnRed  " type="submit">Cancelar</button>
-                                <button class="btn btnBlue" type="submit">Notificar</button>
+
+                        <div className="card" id="card">
+                            <div class="card-body">
+                                <p className="card-text">
+                                    Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.
+                                    </p>
                             </div>
                         </div>
+                        <br />
+
+                        <table className="table table-hover table-condensed " id="table_id">
+                            <thead>
+                                <tr>
+                                    <th className="size" scope="col"></th>
+                                    <th className="size" scope="col">Nombre</th>
+                                    <th className="size" scope="col">Primer Apellido</th>
+                                    <th className="size" scope="col">Segundo Apellido</th>
+                                    <th className="size" scope="col">Correo Electronico</th>
+                                    <th className="size" scope="col">Rol</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                {partiesTable}
+                            </tbody>
+                        </table>
+
+                        <div class="pagination justify-content-end">
+                            <Link to="/SinAsignar">  <button class="btn btnRed  " type="submit">Cancelar</button></Link>
+                            <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button>
+                        </div>
+
                     </fieldset>
                 </form>
-
+                <br /> <br /> <br />
             </div>
         )
     }
 }
 
-class ColaboradorTabla extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            colaboradores
-        }
-    }
 
-    render() {
-        const colaboradorCard = this.state.colaboradores.map((colaborador) => {
-            return (
-                <tr>
-                    <td><input type="checkbox" value="" /></td>
-                    <th scope="row">{colaborador.area}</th>
-                    <td>{colaborador.primernombre}</td>
-                    <td>{colaborador.primerapellido}</td>
-                    <td>{colaborador.correo}</td>
-                </tr>
-
-            )
-        })
-
-        return (
-            <div className="container table-responsive " id="main_div">
-                <table className="table table-hover table-condensed " id="table_id">
-                    <thead>
-                        <tr>
-                            <th className="size" scope="col">Asignar</th>
-                            <th className="size" scope="col">Area Especializacion</th>
-                            <th className="size" scope="col">Primer Nombre</th>
-                            <th className="size" scope="col">Primer Apellido</th>
-                            <th className="size" scope="col">Correo Electronico</th>
-
-                        </tr>
-                    </thead>
-                    <tbody id="myTable">
-                        {colaboradorCard}
-
-                    </tbody>
-                </table>
-            </div>
-
-
-        );
-    }
-}
 
 function FilterUser() {
     return (
@@ -136,10 +221,12 @@ function ShowIncident() {
         <div className="container">
             <div className="row">
                 <div className="div-container">
-                    <div >
-                        <blockquote>
-                            <p>Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.</p>
-                        </blockquote>
+                    <div className="card" id="card">
+                        <div class="card-body">
+                            <p className="card-text">
+                                Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

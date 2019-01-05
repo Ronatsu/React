@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MailController : ControllerBase
     {
 

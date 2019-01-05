@@ -4,6 +4,8 @@ import 'react-day-picker/lib/style.css';
 import Navigation from '../components/Navigation';
 import '../components/ButtonColor.css';
 import axios from 'axios';
+import AuthService from '../components/AuthService';
+
 
 class Form extends React.Component {
     constructor(props) {
@@ -25,43 +27,50 @@ class Form extends React.Component {
             GRADO_CONTROL: [],
             metodoDeteccionList: []
         };
+        this.Auth = new AuthService();
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/Tecnologias`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/Tecnologias`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
 
-        axios.get(`https://localhost:44357/api/MetodoDeteccion/VerMetodos`)
+        axios.get(`https://localhost:44357/api/MetodoDeteccion/VerMetodos`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const metodoDeteccionList = res.data;
                 this.setState({ metodoDeteccionList });
                 console.log(this.state.metodoDeteccionList)
             })
-    
 
-        axios.get(`https://localhost:44357/api/ImpactoIncidencia`)
+
+        axios.get(`https://localhost:44357/api/ImpactoIncidencia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`https://localhost:44357/api/TipoIncidencia`)
+        axios.get(`https://localhost:44357/api/TipoIncidencia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
 
-        axios.get(`https://localhost:44357/api/AreaAfectada`)
+        axios.get(`https://localhost:44357/api/AreaAfectada`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const AREA_AFECTADA = res.data;
                 this.setState({ AREA_AFECTADA });
             })
 
-        axios.get(`https://localhost:44357/api/GradoControl`)
+        axios.get(`https://localhost:44357/api/GradoControl`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -77,24 +86,29 @@ class Form extends React.Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        axios.post(`https://localhost:44357/api/Incidencia`, {
-            tipoIncidencia: this.state.tipoIncidencia
-            , tipoImpacto: this.state.tipoImpacto
-            , gradoControl: this.state.gradoControl
-            , tencologia: this.state.tencologia
-            , areaAfectada: this.state.areaAfectada
-            , descripcion: this.state.descripcion
-            , fechaDescubrimiento: this.state.fecha
-            , metodoDeteccion: this.state.metodoDeteccion
-        })
-        console.log(this.state.tipoImpacto + " impacto");
-        console.log(this.state.tipoIncidencia + " tipoIncidencia");
-        console.log(this.state.gradoControl + " gradoControl");
-        console.log(this.state.tencologia + " tencologia");
-        console.log(this.state.areaAfectada + " area");
-        console.log(this.state.descripcion + " descripcion");
-        console.log(this.state.metodoDeteccion + " metodo");
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44331/api/Incidencia/AddIncident`,
+            {
+                tipoIncidencia: this.state.tipoIncidencia
+                , tipoImpacto: this.state.tipoImpacto
+                , gradoControl: this.state.gradoControl
+                , tencologia: this.state.tencologia
+                , areaAfectada: this.state.areaAfectada
+                , descripcion: this.state.descripcion
+                , fechaDescubrimiento: this.state.fecha
+                , metodoDeteccion: this.state.metodoDeteccion
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        )
+       // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
@@ -204,12 +218,13 @@ class Form extends React.Component {
                         </div>
 
                         <div class="pagination justify-content-end">
-                            <button class="btn btnRed" type="submit">Cancelar</button>
+                            <button className="btn btnRed" type="submit">Cancelar</button>
                             <button className="btn btnBlue" type="submit" onClick={this.handleSubmit}>Enviar</button>
-                            <Link to="/AsignacionIncidencia"><button className="btn " type="submit" >Enviar</button></Link>
+
                         </div>
                     </div>
                 </form>
+                <br /> <br /> <br />
             </div>
         )
     }

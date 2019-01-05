@@ -58,13 +58,10 @@ class registroColaborador extends Component {
             <div className="App">
                
                 <Nav />
-                <br /><br />
+                
                 <Background />
                 <div className="container">
                     <div className="row">
-                        <br /><br />
-
-
                         <div className="col-xs-4 col-sm-4 col-lg-4">
 
                         </div>
@@ -75,9 +72,8 @@ class registroColaborador extends Component {
                                 <br></br>
                                 <br></br>
                                 <br></br>
-                                <br></br>
-                                <br></br>
-                                <br></br>
+                        
+                                
                                     <h3>Gestión de incidentes de seguridad</h3>
                                 </div>
                                 <div className="form-group">

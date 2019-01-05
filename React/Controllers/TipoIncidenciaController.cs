@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 
@@ -10,12 +11,10 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TipoIncidenciaController : ControllerBase
     {
-        //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-        //                          "Initial Catalog=ProyectoAnderson;" +
-        //                          "Integrated security=True;";
-
+        
         Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
@@ -24,6 +23,7 @@ namespace React.Controllers
 
         // GET: api/TipoIncidencia
         [HttpGet]
+        [Route("GetTipos")]
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
@@ -50,17 +50,59 @@ namespace React.Controllers
             return Ok(item);
         }
 
-        // GET: api/TipoIncidencia/5
-        [HttpGet("{id}", Name = "GetTipoIncidencia")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("GetEstados")]
+        public ActionResult<List<string>> GetEstados()
         {
-            return "value";
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_ObtenerEstadoTipoIncidencia", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+
+            List<MetaEstado> nuevaLista = new List<MetaEstado>();
+            while (dataReader.Read())
+            {
+                MetaEstado estado = new MetaEstado();
+                estado.Estado = dataReader["estado"].ToString();
+                estado.Id = Int32.Parse(dataReader["ID"].ToString());
+
+                nuevaLista.Add(estado);
+
+            }
+            conexion.Close();
+            var item = nuevaLista;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
         }
+
+        
 
         // POST: api/TipoIncidencia
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("ObtenerPorId")]
+        public ActionResult<List<string>> ObtenerPorId(TipoIncidencia tipoIncidencia)
         {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_ObtenerTipoIncidenciaPorId", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", tipoIncidencia.Id);
+            dataReader = cmd.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+                tipoIncidencia.Descripcion = dataReader["tipo"].ToString();
+                tipoIncidencia.Estado = dataReader["estado"].ToString();
+            }
+            conexion.Close();
+            var item = tipoIncidencia;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
         }
 
         // PUT: api/TipoIncidencia/5

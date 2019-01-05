@@ -6,11 +6,13 @@ import '../components/ButtonColor.css';
 import Nav from '../components/NavigationToHome';
 import { Link } from "react-router-dom";
 import { Button, Modal } from 'react-bootstrap'
+import AuthService from '../components/AuthService';
 
 
 class recover extends React.Component {
     constructor(props) {
         super(props);
+        this.Auth = new AuthService();
 
         $(document).ready(function () {
             $("#id_send").click(function () {
@@ -19,6 +21,17 @@ class recover extends React.Component {
                     $("#close").click(function () {
                         $("#modal2").css("display", "none");
                     });
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#id_send2').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
                 });
             });
         });
@@ -38,16 +51,25 @@ class recover extends React.Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        event.preventDefault();
+        axios.post(`https://localhost:44331/api/RecuperarContraseña`, 
+            {
+                email1: this.state.email1,
+                email2: this.state.email2,
+
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        );
         console.log(this.state.email2 + " 2");
         console.log(this.state.email1 + " 1");
-
-        axios.post(`https://localhost:44357/api/RecuperarContraseña`, {
-            email1: this.state.email1,
-            email2: this.state.email2,
-
-        });
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
@@ -69,7 +91,7 @@ class recover extends React.Component {
                         <div className="form-group">
                             <input type="mail" name="email2" className="form-control" value={this.state.email2} onChange={this.handleChange} placeholder="Confirmar correo electrónico " />
                             <span className="help-block"></span>
-                            <button className="btn btnBlue btn-block" type="submit" id="id_send">Enviar</button>
+                            <button className="btn btnBlue btn-block" type="submit" id="id_send2">Enviar</button>
                         </div>
 
                     </form>

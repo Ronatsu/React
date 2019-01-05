@@ -2,25 +2,21 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-//import { parties } from '../components/bd/party.json';
 import BlockIcon from '@material-ui/icons/Block';
 import AcceptUserIcon from '@material-ui/icons/PersonAdd';
 import axios from 'axios';
 import '../components/ButtonColor.css';
+import AuthService from '../components/AuthService';
 
 class newUser extends React.Component {
 
     constructor(props) {
         super();
         this.state = {
-            parties:[],
-            party: [],
-            email: ""
-            , partyId: ""
+            parties: [],
+            partyId: ""
         }
-
-        //this.borrar = this.borrar.bind(this);
-
+        this.Auth = new AuthService();
         super(props);
 
         $(document).ready(function () {
@@ -31,23 +27,8 @@ class newUser extends React.Component {
                 });
             });
         });
-
-        //$(function () {
-        //    $("#myTable tr td").click(function () {
-        //       const cell = $(this).parents("tr").find("td").eq(3).text();//$(this).index(0).text();
-        //        $("#show").attr("placeholder", cell).val("").focus().blur();
-        //        /*const row = $(this).parents('tr').index();
-        //        const contenido = $(this).html();
-        //        $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
-        //        //$("#show").css("display", "none");
-        //        $("#show").html(cell);
-        //    })
-        //})
-
-
-       
     }
-  
+
     handleChange = event => {
         const nameInput = event.target.name;
         const valueInput = event.target.value;
@@ -55,90 +36,64 @@ class newUser extends React.Component {
             [nameInput]: valueInput
         });
         this.handleChange = this.handleChange.bind(this);
-        console.log(this.state.email);
     }
 
-    componentWillMount() {
-        axios.get(`https://localhost:44357/api/User/userList`)
-          
+    getData() {
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44331/api/User/userList`, { headers: { "Authorization": headerOptions } })
+
             .then(res => {
                 var parties = res.data;
-                this.setState({ parties });
-                console.log(parties);
+                this.setState({ parties: parties });
             })
-      
     }
 
-    deshabilitar(cod) {
-        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
-            partyId: cod,
-        })
-    }  
+    DisableUser(id) {
 
-    aceptar(cod) {
-        axios.post(`https://localhost:44357/api/User/Habilitar`, {
-            partyId: cod,
-        })
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44331/api/User/Deshabilitar`,
+            {
+                partyId: id,
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        )
     }
 
+    AcceptUser(id) {
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
 
-    handleSubmitH = event => {
-        event.preventDefault();
-        axios.post(`https://localhost:44357/api/User`, {
-            emial: this.state.email
-           
-        })
-        console.log(this.state.email)
+        }
+
+        axios.post(`https://localhost:44331/api/User/Habilitar`,
+            {
+                partyId: id,
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        )
     }
-
-    handleSubmitD = event => {
-        event.preventDefault();
-
-        axios.post(`https://localhost:44357/api/User/Deshabilitar`, {
-            emial: this.state.email
-        })
-
-    }
-
-
-    /*constructor(props) {
-      super(props);
-      this.state = { forecasts: [], loading: true };
-  
-      fetch('api/SampleData/WeatherForecasts')
-        .then(response => response.json())
-        .then(data => {
-          this.setState({ forecasts: data, loading: false });
-        });
-    }*/
     render() {
-        const partiesTable = this.state.parties.map((party) => {
-            return (
-                <tr key={party.partyid}>
-                    <td scope="row">{party.nombre}</td>
-                    <td>{party.primeR_APELLIDO}</td>
-                    <td>{party.segundO_APELLIDO}</td>
-                    <td name="emial">{party.correoElectronico}</td>
-                    <td>{party.roL_USUARIO}</td>
-                    <td><button class="btn btnGreen" type="submit" onClick={() => this.aceptar(party.partyid)}><AcceptUserIcon/>  Aceptar</button>
-                        <button class="btn btnRed" type="submit" onClick={() => this.deshabilitar(party.partyid)} ><BlockIcon/>  Rechazar</button></td>
-                </tr>
-
-            )
-        })
-
+        this.getData()
         return (
             <div className="container ">
                 <Navigation />
-                
                 <br />
                 <br />
-                <br />
-                <br />
-
                 <div className="w-auto p-3">
-                <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
+                    <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
                 </div>
                 <div className="container table-responsive " id="main_div">
                     <table className="table table-hover table-condensed " id="table_id">
@@ -150,11 +105,23 @@ class newUser extends React.Component {
                                 <th className="size" scope="col">Correo Electrónico</th>
                                 <th className="size" scope="col">Rol</th>
                                 <th className="size" scope="col"></th>
-                               
+
                             </tr>
                         </thead>
                         <tbody id="myTable">
-                            {partiesTable}
+                            {this.state.parties.map(elemento => {
+                                return (
+                                    <tr key={elemento.partyid}>
+                                        <td scope="row">{elemento.nombre}</td>
+                                        <td>{elemento.primeR_APELLIDO}</td>
+                                        <td>{elemento.segundO_APELLIDO}</td>
+                                        <td name="emial">{elemento.correoElectronico}</td>
+                                        <td>{elemento.roL_USUARIO}</td>
+                                        <td><button class="btn btnGreen" type="submit" onClick={() => this.AcceptUser(elemento.partyid)}><AcceptUserIcon />  Aceptar</button>
+                                            <button class="btn btnRed" type="submit" onClick={() => this.DisableUser(elemento.partyid)} ><BlockIcon />  Rechazar</button></td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>

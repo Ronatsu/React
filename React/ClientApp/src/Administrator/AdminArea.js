@@ -6,10 +6,13 @@ import Navigation from '../components/Navigation';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
-import { Button, Modal, FormControl } from 'react-bootstrap'
+import { Button, Modal, FormControl } from 'react-bootstrap';
+import { func } from 'prop-types';
+import { Input } from '@material-ui/core';
 import axios from 'axios';
 import SelectComponentArea from '../Administrator/SelectComponentArea';
-import SelectArea from '../Administrator/SelectArea'
+import SelectArea from '../Administrator/SelectArea';
+import AuthService from '../components/AuthService';
 
 class AdminArea extends React.Component {
 
@@ -26,15 +29,17 @@ class AdminArea extends React.Component {
             AreaIDModificar: '',
             NombreAreaModificar: '',
             SelectAreaTecnologiaModificar: '',
-            SelectAreaPrincipalModificar:''
+            SelectAreaPrincipalModificar: ''
+            , tecnoAdd:""
         }
         this.handleChange = this.handleChange.bind(this);
         this.borrar = this.borrar.bind(this);
         this.AreaModificar = this.AreaModificar.bind(this);
+        this.Auth = new AuthService();
 
-        
 
-        
+
+
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -55,7 +60,6 @@ class AdminArea extends React.Component {
                 });
             });
         });
-
 
         $(function () {
             $("#myTable tr td").click(function () {
@@ -78,28 +82,52 @@ class AdminArea extends React.Component {
     }
 
     handleSubmit = event => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
         event.preventDefault();
 
 
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea`, {
-            NombreArea: this.state.NombreArea,
-            tecnologiaFk: this.state.selectGeneric,
-            AreaFk: this.state.selectArea
+        axios.post('https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea',
+            {
+                NombreArea: this.state.NombreArea,
+                tecnologiaFk: this.state.selectGeneric,
+                AreaFk: this.state.selectArea
 
-        }).then(res => {
-                console.log(res);
-                console.log(res.data);
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        ).then(res => {
+            console.log(res);
+            console.log(res.data);
         })
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`)
+
+        alert("estado de logeo: " + this.Auth.loggedIn());
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        const headers = {
+            'Authorization': headerOptions
+        }
+        console.log("el puto token: " + headers.Authorization)
+
+
+        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Area', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });
             })
 
-        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia')
+        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tecno = res.data;
                 this.setState({ tecno });
@@ -109,16 +137,27 @@ class AdminArea extends React.Component {
 
     borrar(Area) {
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
         alert("Se selecciono el ID : " + Area);
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarArea`, {
-            AreaID: Area
-        }).then(res => {
+        axios.post('https://localhost:44357/api/AdministracionAreaTecnologia/eliminarArea',
+            {
+                AreaID: Area
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        ).then(res => {
             if (res.status == 200) {
                 alert("Se elimino exitosamente");
             }
         })
 
-        
+
     }
 
 
@@ -129,11 +168,6 @@ class AdminArea extends React.Component {
             AreaIDModificar: Area
         });
 
-        axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia')
-            .then(res => {
-                const tecno = res.data;
-                this.setState({ tecno });
-            })
 
     }
 
@@ -151,13 +185,24 @@ class AdminArea extends React.Component {
                 if (this.state.SelectAreaPrincipalModificar == "") {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
-                    alert("Llego aqui");
-                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarArea`, {
-                        AreaID: this.state.AreaIDModificar,
-                        NombreArea: this.state.NombreAreaModificar,
-                        TecnologiaFk: this.state.SelectAreaTecnologiaModificar,
-                        AreaFk: this.state.SelectAreaPrincipalModificar
-                    }).then(res => {
+
+                    if (this.Auth.loggedIn()) {
+                        var headerOptions = "Bearer " + this.Auth.getToken()
+
+                    }
+
+                    axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/modificarArea`,
+                        {
+                            AreaID: this.state.AreaIDModificar,
+                            NombreArea: this.state.NombreAreaModificar,
+                            TecnologiaFk: this.state.SelectAreaTecnologiaModificar,
+                            AreaFk: this.state.SelectAreaPrincipalModificar
+                        },
+                        {
+                            headers: { 'Authorization': headerOptions }
+                        }
+
+                    ).then(res => {
                         if (res.status == 200) {
                             alert("Se modifico exitosamente");
                         }
@@ -165,8 +210,6 @@ class AdminArea extends React.Component {
                 }
             }
         }
-
-
     }
 
 
@@ -209,7 +252,7 @@ class AdminArea extends React.Component {
                                             <SelectComponentArea
                                                 tecno={this.state.tecno}
                                                 handleChange={this.handleChange}
-                                            />                                     
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-2 mb-3">
@@ -222,9 +265,41 @@ class AdminArea extends React.Component {
                                         </div>
                                     </div>
                                     <div className="col-md-1 mb-3">
-                                      <br/>
-                                        <button class=" btn btnGrey " type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
+                                        <br />
+                                        <div id="myModal" className="modal fade in">
+                                            <Modal.Dialog>
+                                                <Modal.Header>
+                                                    <Modal.Title id="titleModal">
+                                                        <h3 id="txtModal">
+                                                            Agregar una nueva área
+                                                        </h3>
+                                                    </Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    <div className="form-group">
+                                                    <label id="txtModal">Nombre del área</label>
+                                                        <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
+                                                    </div>
+                                                    <label id="txtModal">Seleccione la tecnología</label>
+                                                    <select className="form-control container" id="exampleFormControlSelect1" name="selectGeneric" onClick={this.handleChange}>
+                                                        {listaTecnologia}
+                                                    </select>
+                                                    <br />
+                                                    <label id="txtModal">Seleccione el área principal</label>
+                                                    <select className="form-control container" id="exampleFormControlSelect1" name="SelectArea" onClick={this.handleChange}>
+                                                        {listaArea}
+                                                    </select>
+                                                </Modal.Body>
+
+                                                <Modal.Footer>
+                                                    <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
+                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmit}>Agregar</Button>
+                                                </Modal.Footer>
+                                            </Modal.Dialog>
                                         </div>
+                                        <button data-toggle="modal" href="#myModal" className="btn btnGrey">Insertar Pasos</button>
+                                        <button class=" btn btnGrey " type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
+                                    </div>
 
                                 </div>
 
@@ -233,7 +308,7 @@ class AdminArea extends React.Component {
                         </div>
 
                     </div>
-                    <div className="container table-responsive " id="main_div">
+                    <div className="table-responsive " id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
                                 <tr>
@@ -258,12 +333,15 @@ class AdminArea extends React.Component {
                                             </td>
                                         </tr>
                                     )
-                                })}    
+                                })}
 
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+
+
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
@@ -293,6 +371,8 @@ class AdminArea extends React.Component {
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
+
+
             </div>
         )
     }

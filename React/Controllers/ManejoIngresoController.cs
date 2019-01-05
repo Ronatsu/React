@@ -4,10 +4,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -97,18 +99,18 @@ namespace React.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.email),
-                new Claim("ValorX", "Cualquier valor"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("role", "user")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Llave_secreta"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApiAuth:SecretKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expirationTime = DateTime.UtcNow.AddHours(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
-               issuer: "yourdomain.com",
-               audience: "yourdomain.com",
+               issuer: Configuration["ApiAuth:Issuer"],
+               audience: Configuration["ApiAuth:Audience"],
                claims: claims,
                expires: expirationTime,
                signingCredentials: creds);

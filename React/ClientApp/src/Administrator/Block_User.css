@@ -9,6 +9,24 @@
     float: none;
 }
 
+#card{
+    background-color:#eeeeee;
+    color:#2e5490;
+}
+
+#txtCard{
+   text-align:justify;
+}
+
+
+#btnEdit {
+    background-color: #eeeeee;
+}
+
+#txtModal {
+    color: #2e5490;
+}
+
 .size{
     
     width: 10%;

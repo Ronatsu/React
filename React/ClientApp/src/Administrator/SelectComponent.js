@@ -16,7 +16,6 @@ class SelectComponent extends React.Component {
 
     render() {
         const tipo_tecnologia = this.props.tecno
-        console.log(tipo_tecnologia);
         const listaTipoTecnologia = tipo_tecnologia.map((tecnologia) =>
             <option value={tecnologia.tipO_TECNOLOGIA}>{tecnologia.tipO_TECNOLOGIA}</option>
         );

@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
@@ -13,6 +14,7 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AreaAfectadaController : ControllerBase
     {
         //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
@@ -38,7 +40,7 @@ namespace React.Controllers
             {
                 Area AreaAfectada = new Area();
                 AreaAfectada.NombreArea = dataReader["NOMBRE_AREA"].ToString();
-                AreaAfectada.AreaID = dataReader["ID"].ToString();
+                AreaAfectada.AreaID = dataReader["AREA_ID"].ToString();
 
                 nuevaLista.Add(AreaAfectada);
 

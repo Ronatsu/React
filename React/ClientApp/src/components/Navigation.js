@@ -4,22 +4,41 @@ import { Link } from "react-router-dom";
 import PersonIcon from '@material-ui/icons/Person';
 import ExitIcon from '@material-ui/icons/Input';
 import SettingsIcon from '@material-ui/icons/Settings';
-import NewUserIcon from '@material-ui/icons/GroupAdd';
-import BlockUserIcon from '@material-ui/icons/Block';
-import TechIcon from '@material-ui/icons/Domain';
-import AreaIcon from '@material-ui/icons/SupervisedUserCircle';
+import SupervisorIcon from '@material-ui/icons/SupervisorAccount';
+import BuildIcon from '@material-ui/icons/Build';
+import BlockIcon from '@material-ui/icons/Block';
+import AddUserIcon from '@material-ui/icons/GroupAdd';
 import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
-import UserIncident from '@material-ui/icons/HowToReg';
+import UserIncident from '@material-ui/icons/FolderShared';
 import '../components/ButtonColor.css';
+import AuthService from './AuthService';
 
 
 class navigatiom extends React.Component {
+    constructor(props) {
+        super(props);
+        this.Auth = new AuthService();
+    } 
+
+
+    handleLogout = event => {
+        if (this.Auth.loggedIn) {
+            this.Auth.logout();
+        }
+        
+    }
+
+    
+
+
     render() {
         return (
             <nav className="container-fluid navbar navbar-expand-lg navbar-light" id="nav">
+                g
                 <Link to="/Incidentes"><img src={require("./imagenesImpesa/ICONO ANDERSON1.png")} width="35" height="35"></img></Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -35,6 +54,10 @@ class navigatiom extends React.Component {
                         </li>
 
                         <li className="nav-item">
+                            <Link to="/SinAsignar"><a className="nav-link" ><AssignmentIcon /> Asignar Incidencia<span className="sr-only">(current)</span></a></Link>
+                        </li>
+
+                        <li className="nav-item">
                             <Link to="/MenuGrafico"><a className="nav-link" ><ChartIcon />Reportes<span className="sr-only">(current)</span></a></Link>
                         </li>
                         <li className="nav-item dropdown">
@@ -42,15 +65,18 @@ class navigatiom extends React.Component {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
 
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <Link to="/newUser">  <a className="dropdown-item" href="#"><NewUserIcon /> Nuevas Solicitudes</a></Link>
+                                <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
+                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
+
                                 <div className="dropdown-divider"></div>
-                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockUserIcon /> Bloquear Usuarios</a></Link>
+
+                                <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
+                                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
+                                <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
+
                                 <div className="dropdown-divider"></div>
-                                <Link to="/AdminTech">   <a className="dropdown-item" href="#"><TechIcon /> Tecnologías</a></Link>
-                                <div className="dropdown-divider"></div>
-                                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><AreaIcon /> Áreas</a></Link>
-                                <div className="dropdown-divider"></div>
-                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><UserIncident /> Incidencias por usuario</a></Link>
+
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon/> Incidencias por usuario</a></Link>
                             </div>
                         </li>
                         <li className="nav-item">
@@ -68,7 +94,7 @@ class navigatiom extends React.Component {
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/AjustePerfil"> <a className="dropdown-item" href="#"><SettingsIcon /> Perfil</a></Link>
                             <div className="dropdown-divider"></div>
-                            <Link to="/"> <a className="dropdown-item" href="#"><ExitIcon /> Cerrar sesión</a></Link>
+                            <Link to="/"> <a className="dropdown-item" onClick={this.handleLogout} href="#"><ExitIcon /> Cerrar sesión</a></Link>
                         </div>
 
                     </form>

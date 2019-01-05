@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import './SiginIn.css';
-import { Link } from "react-router-dom";
-import Background from '../components/Background';
 import axios from 'axios';
 import Nav from '../components/NavigationToHome';
 import $ from 'jquery';
-import color from '@material-ui/core/colors/orange';
-import { isNull } from 'util';
 import { Button, Modal } from 'react-bootstrap'
 import '../components/ButtonColor.css';
+import AuthService from '../components/AuthService';
 
 
 class registroColaborador extends Component {
@@ -24,6 +21,7 @@ class registroColaborador extends Component {
             password2: '',
             optionsRadios: '',
         }
+        this.Auth = new AuthService();
         this.handleChange = this.handleChange.bind(this);
         //$(document).ready(function () {
         //    $('#valor').keyup(function () {
@@ -38,6 +36,18 @@ class registroColaborador extends Component {
         //        });
         //    });
         //});
+        $(document).ready(function () {
+            $('#btn1').click(function () {
+                $('input').each(function () {
+                    if ($(this).val().trim() === '') {
+                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
+                        return false;
+                    }
+                });
+            });
+        });
+
+
         $(document).ready(function () {
             $("#btn1").click(function () {
                 if (validatePassword() == false) {
@@ -97,26 +107,36 @@ class registroColaborador extends Component {
     }
 
     handleSubmit = event => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
         event.preventDefault();
 
         console.log(this.state.apellido);
         console.log(this.state.segundoApellido);
-        axios.post(`https://localhost:44357/api/Registro`, {
-            email: this.state.email,
-            nombre: this.state.nombre,
-            primer_apellido: this.state.apellido,
-            segundo_apellido: this.state.segundoApellido,
-            habilitado: this.state.habilitado,
-            password1: this.state.password1,
-            password2: this.state.password2,
-            optionsRadios: this.state.optionsRadios,
-            rol_usuario: this.state.rol_usuario,
-            asigna_incidencia: true
+        axios.post(`https://localhost:44331/api/Registro`,
+            {
+                email: this.state.email,
+                nombre: this.state.nombre,
+                primer_apellido: this.state.apellido,
+                segundo_apellido: this.state.segundoApellido,
+                habilitado: this.state.habilitado,
+                password1: this.state.password1,
+                password2: this.state.password2,
+                optionsRadios: this.state.optionsRadios,
+                rol_usuario: this.state.rol_usuario,
+                asigna_incidencia: true
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
+            console.log(res);
+            console.log(res.data);
         })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
     }
 
     render() {
@@ -132,24 +152,24 @@ class registroColaborador extends Component {
                             <form onSubmit={this.handleSubmit}>
                                 <div className="form-group">
                                     <div className="form-group">
-                                        <label for="nombreUsuario">Nombre</label>
-                                        <input type="text" className="form-control validar" name="nombre" id="valor" placeholder="Ingrese su nombre" value={this.state.nombre} onChange={this.handleChange}></input>
+                                        <label >Nombre</label>
+                                        <input type="text" className="form-control validar" name="nombre"  placeholder="Ingrese su nombre" value={this.state.nombre} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="apellidoUsuario">Primer apellido</label>
-                                        <input type="text" className="form-control" name="apellido" id="valor" placeholder="Primer apellido" value={this.state.apellido} onChange={this.handleChange}></input>
+                                        <label>Primer apellido</label>
+                                        <input type="text" className="form-control" name="apellido"  placeholder="Primer apellido" value={this.state.apellido} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="segundoApellidoUsuario">Segundo apellido</label>
-                                        <input type="text" className="form-control" name="segundoApellido" id="valor" placeholder="Segundo apellido" value={this.state.segundoApellido} onChange={this.handleChange}></input>
+                                        <label >Segundo apellido</label>
+                                        <input type="text" className="form-control" name="segundoApellido"  placeholder="Segundo apellido" value={this.state.segundoApellido} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="InputEmail">Correo electrónico </label>
-                                        <input type="email" className="form-control" name="email" id="valor" aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" value={this.state.email} onChange={this.handleChange}></input>
+                                        <label >Correo electrónico </label>
+                                        <input type="email" className="form-control" name="email"  aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" value={this.state.email} onChange={this.handleChange}></input>
                                         <br></br>
-                                        <label for="contraseñaRegistro">Contraseña</label>
+                                        <label >Contraseña</label>
                                         <input type="password" className="form-control" name="password1" id="contraseñaRegistro" placeholder="Contraseña" value={this.state.contraseña1} onChange={this.handleChange}></input>
                                         <span className={styleAlert()} role="alert" id="passstrength"></span>
 
                                         <br></br>
-                                        <label for="confirnContraseña">Contraseña</label>
+                                        <label>Contraseña</label>
                                         <input type="password" className="form-control" name="password2" id="confirnContraseña"  onChange={this.handleChange}  placeholder="Confirmación contraseña"></input>
                                         <br></br>
                                         <legend>Tipo usuario</legend>
@@ -162,7 +182,7 @@ class registroColaborador extends Component {
                                                 <input type="radio" className="form-check-input" name="optionsRadios" id="optionsRadios2" value="E" onChange={this.handleChange}></input>Externo</label>
                                         </div>
                                         <br></br>
-                                        <button id="btn1" className="btn btnBlue" type="submit"  value="sumit">Registrar</button>
+                                        <button id="btn1" className="btn btnBlue" type="submit" value="sumit">Registrar</button>
                                         <div id="btn_click">{validatePassword()}</div>
                                     </div>
                                 </div>

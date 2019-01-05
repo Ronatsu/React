@@ -10,6 +10,7 @@ import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap'
 import axios from 'axios';
 import SelectComponent from '../Administrator/SelectComponent';
+import AuthService from '../components/AuthService';
 
 class AdminTech extends React.Component {
 
@@ -21,16 +22,14 @@ class AdminTech extends React.Component {
             tipoTecno: [],
             nombreTecnologia: '',
             selectGeneric: '',
-            selectArea: '',
             criticoS_N: '',
             tecnologiaID: '',
             SelectTipoTecnologiaModificar: "",
             criticoS_N_Modificar: "",
-            nombreTecnologiaModificar: ""
+            nombreTecnologiaModificar: "",
         }
         this.handleChange = this.handleChange.bind(this);
-
-        
+        this.Auth = new AuthService();
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -51,20 +50,7 @@ class AdminTech extends React.Component {
                 });
             });
         });
-
-
-        $(function () {
-            $("#myTable tr td").click(function () {
-                const cell = $(this).parents("tr").find("th").eq(0).text();//$(this).index(0).text();
-                /*const row = $(this).parents('tr').index();
-                const contenido = $(this).html();
-                $("#result").html('fila= ' + row + " columna= " + cell + " Contenido= " + contenido)*/
-                $("#titleModal").html("Editando " + cell)
-
-            })
-        })
     }
-    
 
     handleChange = event => {
         const nameInput = event.target.name;
@@ -75,103 +61,140 @@ class AdminTech extends React.Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
-            nombreTecnologia: this.state.nombreTecnologia,
-            tipoTecnologiaFk: this.state.selectGeneric,
-            criticoS_N: this.state.criticoS_N
-        })
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+        event.preventDefault();
+
+        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/InsertarTecnologia`,
+            {
+                nombreTecnologia: this.state.nombreTecnologia,
+                tipoTecnologiaFk: this.state.selectGeneric,
+                criticoS_N: this.state.criticoS_N
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        )
         alert("Valor: " + this.state.criticoS_N);
-        
     }
 
     TecnologiaModificar(tecnoID) {
-
-        alert("Se selecciono el ID : " + tecnoID);
         this.setState({
             tecnologiaID: tecnoID
         });
+        this.GetTypeTechnology(tecnoID)
+    }
 
+    GetTypeTechnology(tecnoID) {
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/MethodGetTypeTech`,
+            {
+                TecnologiaId: tecnoID
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        ).then(res => {
+            const listTypeTechnology = res.data;
+            this.setState({
+                criticoS_N_Modificar: listTypeTechnology.criticoS_N,
+                nombreTecnologiaModificar: listTypeTechnology.nombreTecnologia,
+                SelectTipoTecnologiaModificar: listTypeTechnology.tipoTecnologiaNombre,
+                nombreTecnologia: listTypeTechnology.nombreTecnologia
+            });
+        })
     }
 
     borrar(tecnologiaBorrar) {
 
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
         alert("Se selecciono el ID : " + tecnologiaBorrar);
-        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/eliminarTecnologia`, {
-            TecnologiaId: tecnologiaBorrar
-        }).then(res => {
-            if (res.status == 200) {
+        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/eliminarTecnologia`,
+            {
+                TecnologiaId: tecnologiaBorrar
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
+            if (res.status === 200) {
                 alert("Se elimino exitosamente");
             }
         })
-
-
     }
 
-
     componentWillMount() {
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });
             })
 
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`)
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tipoTecno = res.data;
                 this.setState({ tipoTecno });
             })
     }
 
-
     ModificarTecnologia() {
 
         alert("Se selecciono el ID : " + this.state.tecnologiaID);
-        if (this.state.NombreAreaModificar == "") {
+        if (this.state.NombreAreaModificar === "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
-            if (this.state.SelectAreaTecnologiaModificar == "") {
+            if (this.state.SelectAreaTecnologiaModificar === "") {
                 alert("Seleccione la tecnologia del área que desea modificar.");
             }
             else {
-                if (this.state.SelectAreaPrincipalModificar == "") {
+                if (this.state.SelectAreaPrincipalModificar === "") {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
-                    alert("Llego aqui");
-                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarTecnologia`, {
-                        TecnologiaId: this.state.tecnologiaID,
-                        NombreTecnologia: this.state.nombreTecnologiaModificar,
-                        TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
-                        CriticoS_N: this.state.criticoS_N_Modificar
-                    }).then(res => {
-                        if (res.status == 200) {
+
+                    if (this.Auth.loggedIn()) {
+                        var headerOptions = "Bearer " + this.Auth.getToken()
+
+                    }
+                    axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/modificarTecnologia`,
+                        {
+                            TecnologiaId: this.state.tecnologiaID,
+                            NombreTecnologia: this.state.nombreTecnologiaModificar,
+                            TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
+                            CriticoS_N: this.state.criticoS_N_Modificar
+                        },
+                        {
+                            headers: { 'Authorization': headerOptions }
+                        }
+                    ).then(res => {
+                        if (res.status === 200) {
                             alert("Se modifico exitosamente");
                         }
                     })
                 }
             }
         }
-
-
     }
-
-
-
     render() {
-        //const areasTable = this.state.tecnologias.map((tecnologia) => {
-        //    return (
-        //        <tr >
-        //            <th scope="row">{tecnologia.nombreTecnologia}</th>
-        //            <td><button class="btn btnBlue" type="submit"  ><EditIcon />  Editar</button>
-        //                <button class="btn btnRed" type="submit"><DeleteIcon />  Eliminar</button></td>
-        //        </tr>
-        //    )
-        //})
-
-
         const listaTipoTecnologia = this.state.tipoTecno.map((tipoTecnologia) =>
             <option value={tipoTecnologia.tipO_TECNOLOGIA}>{tipoTecnologia.tipO_TECNOLOGIA}</option>
         );
@@ -259,25 +282,28 @@ class AdminTech extends React.Component {
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
-                            <Modal.Title id="titleModal" />
+                            <Modal.Title id="titleModal"> Editando {this.state.nombreTecnologia}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <label>Nombre de la tecnología</label>
-                            <FormControl className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></FormControl>
+                            <input className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></input>
                             <br />
                             <label>Tipo de Tecnología</label>
                             <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
+                                <option selected disabled>
+                                    {this.state.SelectTipoTecnologiaModificar}
+                                </option>
                                 {listaTipoTecnologia}
                             </select>
                             <br />
                             <label>tecnología critica</label>
                             <div className=" justify-content-end">
                                 <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
+                                    <option disabled selected>{ShowCritical(this.state.criticoS_N_Modificar)}</option>
                                     <option value="s">Sí</option>
                                     <option value="n">No</option>
                                 </select>
                             </div>
-
                         </Modal.Body>
 
                         <Modal.Footer>
@@ -291,26 +317,11 @@ class AdminTech extends React.Component {
         )
     }
 }
-function Select_Type_Technology() {
-    return (
-
-        <select className="form-control" id="">
-            <option disabled="true" selected="true">Tipo de Tecnología</option>
-            <option>Software</option>
-            <option>Hardware</option>
-        </select>
-    );
-}
-
-function Select_Area() {
-    return (
-
-        <select className="form-control" id="">
-            <option disabled="true" selected="true">Área</option>
-            <option>Redes</option>
-            <option>Bases de datos</option>
-            <option>Producción</option>
-        </select>
-    );
+function ShowCritical(value) {
+    if (value === 's') {
+        return 'Sí'
+    } else if (value === 'n') {
+        return 'No'
+    }
 }
 export default AdminTech;

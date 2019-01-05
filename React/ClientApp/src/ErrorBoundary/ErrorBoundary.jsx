@@ -33,11 +33,14 @@ export default class ErrorBoundary extends React.Component {
     render() {
 
         if (this.state.hasError) {
-            axios.post(`https://localhost:44357/api/JSONError`, {
-                Error: this.state.error,
-                ErrorInfo: this.state.errorInfo,
 
-            });
+            axios.post(`https://localhost:44331/api/JSONError`,
+                {
+                    Error: this.state.error,
+                    ErrorInfo: this.state.errorInfo,
+
+                }
+            );
             return (
                 <div>
                     <div className="container" id="midle">
