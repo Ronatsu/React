@@ -15,19 +15,17 @@ namespace React.Controllers
     [ApiController]
     public class ImpactoIncidenciaController : ControllerBase
     {
-        //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-        //                          "Initial Catalog=ProyectoAnderson;" +
-        //                          "Integrated security=True;";
         Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-       
+        JSON HandleError = new JSON();
 
 
 
         // GET: api/ImpactoIncidencia
         [HttpGet]
+        [Route("ImpactoIncidencia")]
         public ActionResult<List<string>> Get()
         {
             EstablecerConexion();
@@ -51,6 +49,41 @@ namespace React.Controllers
                 return NotFound();
             }
             return Ok(item);
+        }
+
+        [HttpGet]
+        [Route("ProbabilidadImpacto")]
+        public ActionResult<List<string>> ProbabilidadImpacto()
+        {
+            try
+            {
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ObtenerProbabilidadImpacto", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                List<TipoImpacto> nuevaLista = new List<TipoImpacto>();
+                while (dataReader.Read())
+                {
+                    TipoImpacto impacto = new TipoImpacto();
+                    impacto.Descripcion = dataReader["ProbabilidadImpacto"].ToString();
+                    impacto.Id = Int32.Parse(dataReader["ID"].ToString());
+
+                    nuevaLista.Add(impacto);
+
+                }
+                conexion.Close();
+                var item = nuevaLista;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return Conflict();
+            }
         }
 
         // GET: api/ImpactoIncidencia/5

@@ -18,8 +18,10 @@ class Form extends React.Component {
             descripcion: '',
             fecha: '',
             metodoDeteccion: '',
+            probabilidad: '',
             TECNO: [],
             IMPACTO: [],
+            ProbablidadImpacto: [],
             TIPO_INCIDENCIA: [],
             AREA_AFECTADA: [],
             GRADO_CONTROL: [],
@@ -27,41 +29,55 @@ class Form extends React.Component {
         };
     }
 
+    cargarAreas = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+        if (valueInput != 0 && valueInput != "Tecnología") {
+            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/ObtenerAreaTecno`, {
+                TecnologiaId: valueInput
+            }).then(res => {
+                const AREA_AFECTADA = res.data;
+                this.setState({ AREA_AFECTADA });
+            })
+        }
+    }
+
     componentWillMount() {
-        axios.get(`https://localhost:44372/api/Tecnologias`)
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado`)
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
 
-        axios.get(`https://localhost:44372/api/MetodoDeteccion/VerMetodos`)
+        axios.get(`http://localhost:44372/api/MetodoDeteccion/VerMetodos`)
             .then(res => {
                 const metodoDeteccionList = res.data;
                 this.setState({ metodoDeteccionList });
-                console.log(this.state.metodoDeteccionList)
             })
 
 
-        axios.get(`https://localhost:44372/api/ImpactoIncidencia`)
+        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ImpactoIncidencia`)
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`https://localhost:44372/api/TipoIncidencia`)
+        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ProbabilidadImpacto`)
+            .then(res => {
+                const ProbablidadImpacto = res.data;
+                this.setState({ ProbablidadImpacto });
+            })
+
+        axios.get(`http://localhost:44372/api/TipoIncidencia/GetTipos`)
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
-
-        axios.get(`https://localhost:44372/api/AreaAfectada`)
-            .then(res => {
-                const AREA_AFECTADA = res.data;
-                this.setState({ AREA_AFECTADA });
-            })
-
-        axios.get(`https://localhost:44372/api/GradoControl`)
+        axios.get(`http://localhost:44372/api/GradoControl`)
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -77,21 +93,47 @@ class Form extends React.Component {
     }
 
     handleSubmit = event => {
-
-        axios.post(`https://localhost:44372/api/Incidencia/AddIncident`, {
-            tipoIncidencia: this.state.tipoIncidencia
-            , tipoImpacto: this.state.tipoImpacto
-            , gradoControl: this.state.gradoControl
-            , tencologia: this.state.tencologia
-            , areaAfectada: this.state.areaAfectada
-            , descripcion: this.state.descripcion
-            , fechaDescubrimiento: this.state.fecha
-            , metodoDeteccion: this.state.metodoDeteccion
-        })
-       // this.handleSubmit = this.handleSubmit.bind(this);
+        if (this.state.tipoImpacto === "") {
+            alert("Seleccione el nivel de impacto");
+            event.preventDefault();
+        } else if (this.state.probabilidad === "") {
+            event.preventDefault();
+            alert("Seleccione la probabilidad de impacto");
+        } else if (this.state.tencologia === "") {
+            event.preventDefault();
+            alert("Seleccione la tecnología afectada");
+        } else if (this.state.areaAfectada === "") {
+            event.preventDefault();
+            alert("Seleccione la área afectada");
+        } else if (this.state.tipoIncidencia === "") {
+            event.preventDefault();
+            alert("Seleccione el tipo de incidencia");
+        } else if (this.state.gradoControl === "") {
+            event.preventDefault();
+            alert("Seleccione el grado de control");
+        } else if (this.state.gradoControl === "") {
+            event.preventDefault();
+            alert("Seleccione el grado de control");
+        } else if (this.state.metodoDeteccion === "") {
+            event.preventDefault();
+            alert("Seleccione el métado de detección");
+        } else if (this.state.descripcion === "") {
+            event.preventDefault();
+            alert("Ingrese la descripción");
+        } else {
+            axios.post(`http://localhost:44372/api/Incidencia/AddIncident`, {
+                tipoIncidencia: this.state.tipoIncidencia
+                , tipoImpacto: this.state.tipoImpacto
+                , probabilidaImpacto: this.state.probabilidad
+                , gradoControl: this.state.gradoControl
+                , tencologia: this.state.tencologia
+                , areaAfectada: this.state.areaAfectada
+                , descripcion: this.state.descripcion
+                , fechaDescubrimiento: this.state.fecha
+                , metodoDeteccion: this.state.metodoDeteccion
+            })
+        }
     }
-
-
 
     render() {
 
@@ -111,6 +153,10 @@ class Form extends React.Component {
 
         const listaImpacto = impIncidencias.map((impacto) =>
             <option value={impacto.id}>{impacto.descripcion}</option>
+        );
+
+        const listaProbabilidad = this.state.ProbablidadImpacto.map((probabilidad) =>
+            <option value={probabilidad.id}>{probabilidad.descripcion}</option>
         );
 
         const areaIncidencias = this.state.AREA_AFECTADA;
@@ -139,60 +185,82 @@ class Form extends React.Component {
                         <div className="row">
                             <br /><br /><br />       <br /><br /><br />
                             <div className="col-xs-4 col-md-4" >
-                                <label>Impacto *</label>
-                                <select className="form-control" name="tipoImpacto" id="lang2" onClick={this.handleChange} value={listaImpacto.descripcion}>
-                                    {listaImpacto}
-                                </select>
+                                <div className="form-group">
+                                    <label>Impacto *</label>
+                                    <select className="form-control" name="tipoImpacto" onClick={this.handleChange} value={listaImpacto.descripcion}>
+                                        <option disabled selected="selected">Impacto</option>
+                                        {listaImpacto}
+                                    </select>
+                                </div>
 
-                                <br></br>
+                                <div className="form-group">
+                                    <label>Área *</label>
+                                    <select className="form-control" name="areaAfectada" onClick={this.handleChange} value={listaAreas.nombreArea}>
+                                        <option disabled selected="selected">Área afeactada</option>
+                                        {listaAreas}
+                                    </select>
+                                </div>
 
-                                <label>Tecnología afectada *</label>
-                                <select className="form-control" id="lang4" name="tencologia" onClick={this.handleChange} value={listaTecno.nombreTecnologia}>
-                                    {listaTecno}
-                                </select>
-
-                                <br></br>
-
-                                <label>Método de detección *</label>
-                                <select className="form-control" id="lang4" name="metodoDeteccion" onClick={this.handleChange} value={metodoDeteccList.metodoDeteccionNombre}>
-                                    {metodoDeteccList}
-                                </select>
+                                <div className="form-group">
+                                    <label>Método de detección *</label>
+                                    <select className="form-control" id="lang4" name="metodoDeteccion" onClick={this.handleChange}>
+                                        <option disabled selected="selected">Método de detección</option>
+                                        {metodoDeteccList}
+                                    </select>
+                                </div>
                             </div>
 
                             <div className="col-xs-4 col-md-4">
-                                <label>Tipo *</label>
-                                <select className="form-control" id="lang" name="tipoIncidencia" onClick={this.handleChange} value={listaIncidencias.descripcion}>
-                                    {listaIncidencias}
-                                </select>
-                                <br></br>
-                                <label>Fecha de descubrimiento *</label>
-                                <input className="form-control" name="fecha" onChange={this.handleChange} type="datetime-local" id="example-date-input" />
+                                <div className="form-group">
+                                    <label>Probablididad de impacto *</label>
+                                    <select className="form-control" name="probabilidad" onClick={this.handleChange} >
+                                        <option disabled selected="selected">Probabilidad de impacto</option>
+                                        {listaProbabilidad}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Tipo *</label>
+                                    <select className="form-control" name="tipoIncidencia" onClick={this.handleChange}>
+                                        <option disabled selected="selected">Tipo de incidencia</option>
+                                        {listaIncidencias}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+
+                                    <label>Fecha de descubrimiento *</label>
+                                    <input className="form-control" name="fecha" onChange={this.handleChange} type="datetime-local" id="example-date-input" />
+                                </div>
                             </div>
 
 
                             <div className="col-xs-4 col-md-4">
-                                <label>Área *</label>
-                                <select className="form-control" id="lang3" name="areaAfectada" onClick={this.handleChange} value={listaAreas.nombreArea}>
-                                    {listaAreas}
-                                </select>
-                                <br></br>
-                                <label>Grado de control *</label>
-                                <select className="form-control" id="lang5" name="gradoControl" onClick={this.handleChange} value={gradoControl.descrpcion}>
-                                    {listaControl}
-                                </select>
-                            </div>
+                                <div className="form-group">
+                                    <label>Tecnología afectada *</label>
+                                    <select className="form-control" name="tencologia" onChange={this.cargarAreas} value={listaTecno.nombreTecnologia}>
+                                        <option disabled selected="selected">Tecnología afectada</option>
+                                        {listaTecno}
+                                    </select>
+                                </div>
 
+                                <div className="form-group">
+
+                                    <label>Grado de control *</label>
+                                    <select className="form-control" name="gradoControl" onClick={this.handleChange} value={gradoControl.descrpcion}>
+                                        <option disabled selected="selected">Grado de control</option>
+                                        {listaControl}
+                                    </select>
+
+                                </div>
+                            </div>
                         </div>
 
                         <div className="row">
                             <div className="col-xs-12 col-md-12">
-                                <div>
-                                    <div className="form-group blue-border-focus">
-                                        <br></br>
-                                        <br></br>
-                                        <label for="exampleFormControlTextarea5">Inserte la descripción de la incidencia</label>
-                                        <textarea className="form-control" name="descripcion" onChange={this.handleChange} value={this.state.descripcion} id="exampleFormControlTextarea5" rows="3" maxLength='550'></textarea>
-                                    </div>
+                                <div className="form-group blue-border-focus">
+                                    <label >Inserte la descripción de la incidencia *</label>
+                                    <textarea className="form-control" name="descripcion" onChange={this.handleChange} value={this.state.descripcion} id="exampleFormControlTextarea5" rows="3" maxLength='550'></textarea>
                                 </div>
                             </div>
                         </div>
@@ -200,11 +268,9 @@ class Form extends React.Component {
                         <div class="pagination justify-content-end">
                             <button className="btn btnRed" type="submit">Cancelar</button>
                             <button className="btn btnBlue" type="submit" onClick={this.handleSubmit}>Enviar</button>
-
                         </div>
                     </div>
                 </form>
-                <br /> <br /> <br />
             </div>
         )
     }
