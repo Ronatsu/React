@@ -16,6 +16,7 @@ class AdminTech extends React.Component {
         this.state = {
             tecnologias: [],
             nombreTecnologia: '',
+            nombre: '',
             criticoS_N: '',
             tecnologiaID: '',
             SelectTipoTecnologiaModificar: "",
@@ -54,7 +55,7 @@ class AdminTech extends React.Component {
         event.preventDefault();
         if (this.state.estadoNuevo === "Estado" || this.state.estadoNuevo === "") {
             alert("Favor seleccione un estado")
-        } else if (this.state.nombreTecnologia === "") {
+        } else if (this.state.nombre === "") {
             alert("Favor ingrese un el nombre de la tecnología que desea agregar")
         } else if (this.state.criticoS_N === "¿Es crítico?") {
             alert("Favor selecione si es crítico o no")
@@ -62,22 +63,21 @@ class AdminTech extends React.Component {
             alert("Favor selecione el tipo de tecnología")
         } else {
             axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
-                nombreTecnologia: this.state.nombreTecnologia,
+                nombre: this.state.nombreTecnologia,
                 tipoTecnologia: this.state.tipo,
                 critico: this.state.criticoS_N
                 , Estado: this.state.estadoNuevo
 
             }).then(res => {
 
-                if (res.status === 200) {
+                if (res.data === "") {
                     alert("Agregado con éxito")
                     this.setState({
                         estadoNuevo: ""
-                        , nombreNuevo: ""
+                        , nombre: ""
                     });
                 } else {
-                    alert("¡Lo sentimos! Ha ocurrido un error inesperado")
-
+                    alert("¡Lo sentimos! " + res.data + " ya existe")
                 }
             })
         }
@@ -157,7 +157,7 @@ class AdminTech extends React.Component {
             }
         }
     }
-
+  
 
     recargar() {
         axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`)
@@ -210,7 +210,7 @@ class AdminTech extends React.Component {
                                             <Modal.Body>
                                                 <div className="form-group">
                                                     <label id="txtModal">Tipo de incidencia</label>
-                                                    <FormControl className="form-control" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Tecnología"></FormControl>
+                                                    <FormControl className="form-control" name="nombre" value={this.state.nombre} onChange={this.handleChange} placeholder="Tecnología"></FormControl>
                                                 </div>
 
                                                 <div className="form-group">

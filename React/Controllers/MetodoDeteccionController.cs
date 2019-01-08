@@ -1,13 +1,10 @@
-﻿using System;
+﻿using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Mvc;
+using React.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using API_Ejemplo.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using React.Model;
 
 namespace React.Controllers
 {
@@ -20,9 +17,13 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
 
+        //manejo de errores
+        JSON HandleError = new JSON();
 
 
-        // GET: api/MetodoDeteccion/5
+
+        // GET: api/MetodoDeteccion/
+        [HttpGet]
         [Route("VerMetodos")]
         public ActionResult<List<string>> VerMetodos()
         {
@@ -37,6 +38,7 @@ namespace React.Controllers
                 MetodoDeteccion metodo = new MetodoDeteccion();
                 metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
                 metodo.Id = Int32.Parse(dataReader["ID"].ToString());
+                metodo.Estado = dataReader["MetaEstado"].ToString();
 
                 nuevaLista.Add(metodo);
 
@@ -50,22 +52,101 @@ namespace React.Controllers
             return Ok(item);
         }
 
+        [HttpPost]
+        [Route("ObtenerPorId")]
+        public ActionResult<List<string>> ObtenerPorId(MetodoDeteccion metodo)
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_ObtenerMetodoDeteccionPorId", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@ID", metodo.Id);
+            dataReader = cmd.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+                metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
+                metodo.Estado = dataReader["MetaEstado"].ToString();
+            }
+            conexion.Close();
+            var item = metodo;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpPost]
+        [Route("ModificarMetodo")]
+        public ActionResult<List<string>> ModificarMetodo(MetodoDeteccion metodo)
+        {
+            try
+            {
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ModificarMetodoDeteccion", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", metodo.Id);
+                cmd.Parameters.AddWithValue("@MetodoDeteccionNombre", metodo.MetodoDeteccionNombre);
+                cmd.Parameters.AddWithValue("@estado", metodo.Estado);
+
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
+
         // POST: api/MetodoDeteccion
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("AgregarMetodo")]
+
+        public ActionResult<List<string>> AgregarMetodo(MetodoDeteccion value)
         {
+            if (!value.MetodoDeteccionNombre.Equals(""))
+            {
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ExisteMetodoDeteccion", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@metodoDeteccion", value.MetodoDeteccionNombre);
+
+
+                dataReader = cmd.ExecuteReader();
+                int id = 0;
+                while (dataReader.Read())
+                {
+                    int.TryParse(dataReader["MetodoDeteccionId"].ToString(), out id);
+                    value.Id = id;
+                }
+                conexion.Close();
+
+                if (id == 0)
+                {
+                    EstablecerConexion();
+                    cmd = new SqlCommand("Proc_AgregarMetodoDeteccion", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@MetodoDeteccionNombre", value.MetodoDeteccionNombre);
+                    cmd.Parameters.AddWithValue("@Estado", value.Estado);
+
+                    dataReader = cmd.ExecuteReader();
+
+                    conexion.Close();
+                    return Ok();
+                }
+                return Ok(value.MetodoDeteccionNombre);
+            }
+
+            return NotFound();
+        }
+        public void EstablecerConexion()
+        {
+            conexion = new SqlConnection(conexionString.getConnection());
+            conexion.Open();
         }
 
-        // PUT: api/MetodoDeteccion/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
