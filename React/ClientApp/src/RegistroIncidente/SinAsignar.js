@@ -11,7 +11,7 @@ class SinAsignar extends Component {
     constructor(props) {
         super();
         this.state = {
-            incidents:[]
+            incidents: []
         }
 
         super(props);
@@ -27,7 +27,15 @@ class SinAsignar extends Component {
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
+        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
+    }
+
+    recargar() {
+        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
@@ -46,6 +54,8 @@ class SinAsignar extends Component {
 
             )
         })
+        this.recargar();
+
         return (
             <div >
                 <Navigation />
