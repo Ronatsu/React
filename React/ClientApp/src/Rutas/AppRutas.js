@@ -16,6 +16,7 @@ import InformacionIncidencia from '../RegistroIncidente/InformacionIncidencia';
 import MenuReportes from '../Reportes/MenuGrafico';
 import AdminArea from '../Administrator/AdminArea';
 import AdminTech from '../Administrator/AdminTech';
+import AdminMetodos from '../Administrator/AdminMetodoDeteccion';
 import AdminIncidencia from '../Administrator/AdminTipoIncidencia';
 import ForgotPass from '../WebInicio/Recovery';
 import SingIn from '../Registro/signIn';
@@ -44,6 +45,7 @@ const AppRutas = () =>
             <Route exact path="/TableUserList/:id?/:completeName?" component={TableUserList} />
             <Route exact path="/SinAsignar" component={SinAsignar} />
             <Route exact path="/TipoIncidencia" component={AdminIncidencia} />
+            <Route exact path="/MetodosDeteccion" component={AdminMetodos} />
         </Switch>
 
     </App>;

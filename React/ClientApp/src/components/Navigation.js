@@ -56,10 +56,11 @@ class navigatiom extends React.Component {
                                 <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
                                 <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
                                 <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
+                                <Link to="/MetodosDeteccion">   <a className="dropdown-item" href="#"><BuildIcon /> Métodos de detección</a></Link>
 
                                 <div className="dropdown-divider"></div>
 
-                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon/> Incidencias por usuario</a></Link>
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
                             </div>
                         </li>
                         <li className="nav-item">
