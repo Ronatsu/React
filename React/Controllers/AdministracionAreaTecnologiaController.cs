@@ -140,6 +140,42 @@ namespace React.Controllers
         }
 
         [HttpPost]
+        [Route("ObtenerAreaTecno")]
+        public ActionResult ObtenerAreaTecno(Tecnologia tecno)
+        {
+            List<Area> areas = new List<Area>();
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_ObtenerAreaPorTecnologia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@idTecno", tecno.TecnologiaId);
+                dataReader = cmd.ExecuteReader();
+                
+                while (dataReader.Read())
+                {
+                    Area area = new Area();
+                    area.NombreArea = dataReader["NombreArea"].ToString();
+                    area.AreaID = dataReader["AreaId"].ToString();
+                    areas.Add(area);
+                }
+                Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+            var item =areas;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpPost]
         [Route("GetAreaPorId")]
         public ActionResult GetAreaPorId(Area area)
         {
@@ -285,10 +321,8 @@ namespace React.Controllers
             }
             else
             {
-                return NotFound();
+                return Ok(Tecno.NombreTecnologia);
             }
-
-
         }
 
         //POST: api/AdministracionAreaTecnologia

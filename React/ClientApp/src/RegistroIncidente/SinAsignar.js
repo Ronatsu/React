@@ -12,7 +12,7 @@ class SinAsignar extends Component {
     constructor(props) {
         super();
         this.state = {
-            incidents:[]
+            incidents: []
         }
         this.Auth = new AuthService();
         super(props);
@@ -28,13 +28,15 @@ class SinAsignar extends Component {
     }
 
     componentWillMount() {
+        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
+    }
 
-        if (this.Auth.loggedIn()) {
-            var headerOptions = "Bearer " + this.Auth.getToken()
-
-        }
-
-        axios.get(`https://localhost:44357/api/Incidencia/IncidenciasSinAsignar`, { headers: { "Authorization": headerOptions } })
+    recargar() {
+        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
@@ -53,6 +55,8 @@ class SinAsignar extends Component {
 
             )
         })
+        this.recargar();
+
         return (
             <div >
                 <Navigation />

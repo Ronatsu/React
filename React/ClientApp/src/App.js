@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import AuthService from './components/AuthService';
 
 import Registro from './Registro/Registro';
-import Home from './WebInicio/Home';
+import Home from './WebInicio/Home.jsx';
 import Form from './RegistroIncidente/Form';
 import AsignacionIncidencia from './RegistroIncidente/AsignacionIncidencia';
 import Configuracion from './configuracion/Perfil';

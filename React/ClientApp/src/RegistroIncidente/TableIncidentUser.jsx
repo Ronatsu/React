@@ -21,4 +21,3 @@ export default class TableIncidentUser extends Component {
         );
     }
 }
-// <TableIncident tecno={this.state.id} />

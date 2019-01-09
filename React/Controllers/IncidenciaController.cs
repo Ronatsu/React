@@ -74,6 +74,7 @@ namespace React.Controllers
             cmd.Parameters.AddWithValue("@GradoControlFk", newIncident.GradoControl);
             cmd.Parameters.AddWithValue("@Descripcion", newIncident.Descripcion);
             cmd.Parameters.AddWithValue("@AreaAfectada", newIncident.AreaAfectada);
+            cmd.Parameters.AddWithValue("@probabilidad", newIncident.ProbabilidaImpacto);
 
             dataReader = cmd.ExecuteReader();
 

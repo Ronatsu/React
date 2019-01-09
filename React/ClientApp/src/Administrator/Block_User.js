@@ -5,6 +5,8 @@ import Navigation from '../components/Navigation';
 import { parties } from '../components/bd/party.json';
 import BlockIcon from '@material-ui/icons/Block';
 import '../components/ButtonColor.css';
+import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Footer from '../components/Footer';
 
 class navigatiom extends React.Component {
 
@@ -52,31 +54,32 @@ class navigatiom extends React.Component {
             )
         })
 
-        return (
-            <div className="container ">
-                <Navigation />
+        if (this.Auth.isAdmin()) {
+            return (
+                <div className="container ">
+                    <Navigation />
 
-                <br />
-                <br />
-              
+                    <br />
+                    <br />
 
-                <div className="w-auto p-3 mt-4">
-                <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
-                </div>
-                <div className=" container table-responsive " id="main_div">
-                    <table className="table table-hover table-condensed " id="table_id">
-                        <thead>
-                            <tr>
-                                <th className="size" scope="col">Nombre</th>
-                                <th className="size" scope="col">apellido</th>
-                                <th className="size" scope="col">Correo</th>
-                                <th className="size" scope="col">Área</th>
-                                <th className="size" scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="myTable">
-                            {partiesTable}
-                            {/*forecasts.map(forecast =>
+
+                    <div className="w-auto p-3 mt-4">
+                        <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
+                    </div>
+                    <div className=" container table-responsive " id="main_div">
+                        <table className="table table-hover table-condensed " id="table_id">
+                            <thead>
+                                <tr>
+                                    <th className="size" scope="col">Nombre</th>
+                                    <th className="size" scope="col">apellido</th>
+                                    <th className="size" scope="col">Correo</th>
+                                    <th className="size" scope="col">Área</th>
+                                    <th className="size" scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                {partiesTable}
+                                {/*forecasts.map(forecast =>
             <tr key={forecast.dateFormatted}>
               <td>{forecast.dateFormatted}</td>
               <td>{forecast.temperatureC}</td>
@@ -84,11 +87,35 @@ class navigatiom extends React.Component {
               <td>{forecast.summary}</td>
             </tr>
          )*/}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return (
+                <div>
+                    <div className="container" id="midle">
+                        <div className="row">
+                            <div className=" col-md-2 mb-3">
+                            </div>
+                            <div className="form-inline col-md-10 mb-3" >
+                                <div >
+                                    <h1 id="title"><strong >UPSSS...</strong></h1>
+                                    <h3 >Lo sentimos, no cuentas con los permisos necesarios para ingresar en esta área.</h3>
+                                </div>
+                                <div>
+                                    <ChartIcon id="icon" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer className="page-footer" id="footererror">
+                        <Footer />
+                    </footer>
+                </div>
+            )
+        }
     }
 }
 export default navigatiom;

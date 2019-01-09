@@ -9,5 +9,6 @@ namespace React.Model
     {
         public int Id { get; set; }
         public string MetodoDeteccionNombre { get; set;}
+        public string Estado { get; set; }
     }
 }

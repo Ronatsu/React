@@ -55,15 +55,9 @@ class AsignacionIncidencia extends React.Component {
         }
 
         event.preventDefault();
-        axios.post(`https://localhost:44331/api/Incidencia/AsignarIncident`,
-            {
-                asignacionArray: this.state.asignacionArray
-            },
-            {
-                headers: { 'Authorization': headerOptions }
-            }
-
-        );
+        axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
+            asignacionArray: this.state.asignacionArray
+        });
         console.log(this.state.itemChecked);
 
         this.handleSubmit = this.handleSubmit.bind(this);

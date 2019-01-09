@@ -109,6 +109,30 @@ export default class {
         }
         
     }
+
+
+    getEmailUser() {
+        const token = this.getProfile();
+        console.log(token.email);
+        if (token != null) {
+            return token.email;
+        } else {
+            return false;
+        }
+
+    }
+
+    getIDUser() {
+        const token = this.getProfile();
+        console.log(token.user);
+        if (token != null) {
+            return token.user;
+        } else {
+            return false;
+        }
+
+    }
+
 }
 
 
