@@ -47,7 +47,7 @@ class AsignacionIncidencia extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        axios.post(`https://localhost:44372/api/Incidencia/AsignarIncident`, {
+        axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
             asignacionArray: this.state.asignacionArray
         });
         console.log(this.state.itemChecked);
@@ -57,7 +57,7 @@ class AsignacionIncidencia extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`https://localhost:44372/api/User/UsuarioHabilitado`)
+        axios.get(`http://localhost:44372/api/User/UsuarioHabilitado`)
 
             .then(res => {
                 var parties = res.data;
