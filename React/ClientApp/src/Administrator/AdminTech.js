@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
-import $ from 'jquery';
+import React from 'react';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-//import { areas } from '../components/bd/area.json';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap'
 import axios from 'axios';
-import SelectComponent from '../Administrator/SelectComponent';
 import AuthService from '../components/AuthService';
+import $ from 'jquery';
 
 class AdminTech extends React.Component {
 
@@ -19,17 +16,22 @@ class AdminTech extends React.Component {
         super(props);
         this.state = {
             tecnologias: [],
-            tipoTecno: [],
             nombreTecnologia: '',
-            selectGeneric: '',
             criticoS_N: '',
             tecnologiaID: '',
             SelectTipoTecnologiaModificar: "",
             criticoS_N_Modificar: "",
-            nombreTecnologiaModificar: "",
+            nombreTecnologiaModificar: ""
+            , estadoActual: ''
+            , estadoNuevo: ''
+            , estados: []
+            , tipos: []
+            , tipo: ''
+            , tipoTecnologia: ''
         }
         this.handleChange = this.handleChange.bind(this);
         this.Auth = new AuthService();
+
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -40,16 +42,6 @@ class AdminTech extends React.Component {
             });
         });
 
-        $(document).ready(function () {
-            $(".btnBlue").click(function () {
-                $(this).each(function () {
-                    $("#modal2").show();
-                    $("#close").click(function () {
-                        $("#modal2").css("display", "none");
-                    });
-                });
-            });
-        });
     }
 
     handleChange = event => {
@@ -67,19 +59,41 @@ class AdminTech extends React.Component {
 
         }
         event.preventDefault();
+        if (this.state.estadoNuevo === "Estado" || this.state.estadoNuevo === "") {
+            alert("Favor seleccione un estado")
+        } else if (this.state.nombreTecnologia === "") {
+            alert("Favor ingrese un el nombre de la tecnología que desea agregar")
+        } else if (this.state.criticoS_N === "¿Es crítico?") {
+            alert("Favor selecione si es crítico o no")
+        } else if (this.state.tipo === "" || this.state.tipo === "Tipo tecnología") {
+            alert("Favor selecione el tipo de tecnología")
+        } else {
+            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarTecnologia`,
+                {
+                    nombreTecnologia: this.state.nombreTecnologia,
+                    tipoTecnologia: this.state.tipo,
+                    critico: this.state.criticoS_N
+                    , Estado: this.state.estadoNuevo
 
-        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/InsertarTecnologia`,
-            {
-                nombreTecnologia: this.state.nombreTecnologia,
-                tipoTecnologiaFk: this.state.selectGeneric,
-                criticoS_N: this.state.criticoS_N
-            },
-            {
-                headers: { 'Authorization': headerOptions }
-            }
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
 
-        )
-        alert("Valor: " + this.state.criticoS_N);
+            ).then(res => {
+
+                if (res.status === 200) {
+                    alert("Agregado con éxito")
+                    this.setState({
+                        estadoNuevo: ""
+                        , nombreNuevo: ""
+                    });
+                } else {
+                    alert("¡Lo sentimos! Ha ocurrido un error inesperado")
+
+                }
+            })
+        }
     }
 
     TecnologiaModificar(tecnoID) {
@@ -96,7 +110,7 @@ class AdminTech extends React.Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/MethodGetTypeTech`,
+        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/MethodGetTypeTech`,
             {
                 TecnologiaId: tecnoID
             },
@@ -104,38 +118,19 @@ class AdminTech extends React.Component {
                 headers: { 'Authorization': headerOptions }
             }
 
+
         ).then(res => {
-            const listTypeTechnology = res.data;
+            const Technology = res.data;
             this.setState({
-                criticoS_N_Modificar: listTypeTechnology.criticoS_N,
-                nombreTecnologiaModificar: listTypeTechnology.nombreTecnologia,
-                SelectTipoTecnologiaModificar: listTypeTechnology.tipoTecnologiaNombre,
-                nombreTecnologia: listTypeTechnology.nombreTecnologia
+                criticoS_N_Modificar: Technology.critico,
+                nombreTecnologiaModificar: Technology.nombreTecnologia,
+                SelectTipoTecnologiaModificar: Technology.tipoTecnologiaNombre,
+                nombreTecnologia: Technology.nombreTecnologia
+                ,estadoActual: Technology.estado
             });
         })
     }
 
-    borrar(tecnologiaBorrar) {
-
-        if (this.Auth.loggedIn()) {
-            var headerOptions = "Bearer " + this.Auth.getToken()
-
-        }
-
-        alert("Se selecciono el ID : " + tecnologiaBorrar);
-        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/eliminarTecnologia`,
-            {
-                TecnologiaId: tecnologiaBorrar
-            },
-            {
-                headers: { 'Authorization': headerOptions }
-            }
-        ).then(res => {
-            if (res.status === 200) {
-                alert("Se elimino exitosamente");
-            }
-        })
-    }
 
     componentWillMount() {
 
@@ -149,17 +144,25 @@ class AdminTech extends React.Component {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });
             })
-
-        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`, { headers: { "Authorization": headerOptions } })
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/TipoTecnologia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
-                const tipoTecno = res.data;
-                this.setState({ tipoTecno });
+                const tiposTecnologia = res.data;
+                this.setState({
+                    tipos: tiposTecnologia
+                });
+
             })
+
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
+
+
     }
 
     ModificarTecnologia() {
-
-        alert("Se selecciono el ID : " + this.state.tecnologiaID);
         if (this.state.NombreAreaModificar === "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
@@ -171,16 +174,19 @@ class AdminTech extends React.Component {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
 
+
                     if (this.Auth.loggedIn()) {
                         var headerOptions = "Bearer " + this.Auth.getToken()
 
                     }
-                    axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/modificarTecnologia`,
+
+                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`,
                         {
                             TecnologiaId: this.state.tecnologiaID,
                             NombreTecnologia: this.state.nombreTecnologiaModificar,
-                            TipoTecnologiaFk: this.state.SelectTipoTecnologiaModificar,
-                            CriticoS_N: this.state.criticoS_N_Modificar
+                            TipoTecnologia: this.state.SelectTipoTecnologiaModificar,
+                            Critico: this.state.criticoS_N_Modificar
+                            , Estado: this.state.estado
                         },
                         {
                             headers: { 'Authorization': headerOptions }
@@ -194,9 +200,33 @@ class AdminTech extends React.Component {
             }
         }
     }
+
+
+    recargar() {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`, { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const tecnologias = res.data;
+                this.setState({ tecnologias: tecnologias });
+            })
+    }
     render() {
-        const listaTipoTecnologia = this.state.tipoTecno.map((tipoTecnologia) =>
-            <option value={tipoTecnologia.tipO_TECNOLOGIA}>{tipoTecnologia.tipO_TECNOLOGIA}</option>
+
+        this.recargar();
+
+        const listaTipoTecnologia = this.state.tipos.map((tipoTecno) =>
+            <option value={tipoTecno.tipO_TECNOLOGIA_ID}>{tipoTecno.tipO_TECNOLOGIA}</option>
+        );
+
+        const listaEstados = this.state.estados;
+
+        const listaEstado = listaEstados.map((estado) =>
+            <option value={estado.id}>{estado.estado}</option>
         );
         return (
             <div>
@@ -208,36 +238,63 @@ class AdminTech extends React.Component {
                             <br /><br />
                             <div>
                                 <div className="form-row">
-                                    <div className="col-md-3 mb-3">
-                                        <label>Buscar</label>
-                                        <input type="text" className="form-control" id="myInput" placeholder="Buscar la tecnología" />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label>Agregar</label>
-                                        <input type="text" className="form-control" id="validationCustom02" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Nombre de la tecnología" />
-                                    </div>
-                                    <div className="col-md-2 mb-3">
-                                        <label>Tipo de Tecnología</label>
-                                        <SelectComponent
-                                            tecno={this.state.tipoTecno}
-                                            handleChange={this.handleChange}
-                                        />
+                                    <div className="col-md-6 mb-3">
+                                        <input type="text" className="form-control" id="myInput" placeholder="Buscar" />
                                     </div>
 
-                                    <div className="col-md-2 mb-3">
-                                        <label>Crítico</label>
-                                        <div className=" justify-content-end">
-                                            <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N" onClick={this.handleChange}>
-                                                <option value="s">Sí</option>
-                                                <option value="n">No</option>
-                                            </select>
-                                        </div>
 
-                                    </div>
-
-                                    <div className="col-md-2 mb-3">
+                                    <div className="col-md-6 mb-3 pagination justify-content-end">
                                         <br />
-                                        <button className="btn btnGrey" id="" type="submit" onClick={this.handleSubmit}><AddIcon />  Agregar</button>
+                                        <button className="btn btnGrey" id="" type="submit" data-toggle="modal" href="#modalAgregar"><AddIcon />  Agregar</button>
+                                    </div>
+                                    <div id="modalAgregar" className="modal fade in">
+                                        <Modal.Dialog>
+                                            <Modal.Header>
+                                                <Modal.Title id="titleModal">
+                                                    <h3 id="txtModal">
+                                                        Agregar una nueva tecnología
+                                                        </h3>
+                                                </Modal.Title>
+                                            </Modal.Header>
+                                            <Modal.Body>
+                                                <div className="form-group">
+                                                    <label id="txtModal">Tipo de incidencia</label>
+                                                    <FormControl className="form-control" name="nombreTecnologia" value={this.state.nombreTecnologia} onChange={this.handleChange} placeholder="Tecnología"></FormControl>
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label id="txtModal">Tipo de Tecnología</label>
+                                                    <select name="tipo" onClick={this.handleChange} className="form-control">
+                                                        <option disabled selected="selected">Tipo tecnología</option>
+                                                        {listaTipoTecnologia}
+                                                    </select>
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label id="txtModal">Crítico</label>
+                                                    <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N" onClick={this.handleChange}>
+                                                        <option disabled selected="selected">¿Es crítico?</option>
+                                                        <option value="s">Sí</option>
+                                                        <option value="n">No</option>
+                                                    </select>
+                                                </div>
+
+                                                <div id="txtModal" className="form-group">
+                                                    <label>Estado</label>
+                                                    <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
+                                                        <option disabled selected="selected">Estado</option>
+                                                        {listaEstado}
+
+                                                    </select>
+                                                </div>
+
+                                            </Modal.Body>
+
+                                            <Modal.Footer>
+                                                <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
+                                                <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitAgregar}>Agregar</Button>
+                                            </Modal.Footer>
+                                        </Modal.Dialog>
                                     </div>
 
                                 </div>
@@ -253,8 +310,11 @@ class AdminTech extends React.Component {
                     <table className="table table-hover table-condensed " id="table_id">
                         <thead>
                             <tr>
-                                <th className="size" scope="col">Tecnología ID</th>
+                                <th className="size" scope="col">Código</th>
                                 <th className="size" scope="col">Nombre</th>
+                                <th className="size" scope="col">Tipo Tecnología</th>
+                                <th className="size" scope="col">Crítico</th>
+                                <th className="size" scope="col">Estado</th>
                                 <th className="size" scope="col"></th>
                             </tr>
                         </thead>
@@ -269,8 +329,16 @@ class AdminTech extends React.Component {
                                             {elemento.nombreTecnologia}
                                         </td>
                                         <td>
+                                            {elemento.tipoTecnologia}
+                                        </td>
+                                        <td>
+                                            {elemento.critico}
+                                        </td>
+                                        <td>
+                                            {elemento.estado}
+                                        </td>
+                                        <td>
                                             <button className="btn btnBlue" type="submit" data-toggle="modal" href="#modal2" onClick={() => this.TecnologiaModificar(elemento.tecnologiaId)}><EditIcon />  Editar</button>
-                                            <button className="btn btnRed" type="submit" onClick={() => this.borrar(elemento.tecnologiaId)}><DeleteIcon />  Eliminar</button>
                                         </td>
                                     </tr>
                                 )
@@ -299,9 +367,17 @@ class AdminTech extends React.Component {
                             <label>tecnología critica</label>
                             <div className=" justify-content-end">
                                 <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
-                                    <option disabled selected>{ShowCritical(this.state.criticoS_N_Modificar)}</option>
+                                    <option disabled selected>{this.state.criticoS_N_Modificar}</option>
                                     <option value="s">Sí</option>
                                     <option value="n">No</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label id="txtModal">Estado</label>
+                                <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    {listaEstado}
+
                                 </select>
                             </div>
                         </Modal.Body>
@@ -315,13 +391,6 @@ class AdminTech extends React.Component {
             </div>
 
         )
-    }
-}
-function ShowCritical(value) {
-    if (value === 's') {
-        return 'Sí'
-    } else if (value === 'n') {
-        return 'No'
     }
 }
 export default AdminTech;

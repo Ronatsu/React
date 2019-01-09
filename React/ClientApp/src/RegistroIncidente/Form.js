@@ -57,7 +57,7 @@ class Form extends React.Component {
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`https://localhost:44357/api/TipoIncidencia`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/TipoIncidencia/GetTipos`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });

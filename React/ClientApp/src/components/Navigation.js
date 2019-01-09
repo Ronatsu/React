@@ -22,20 +22,50 @@ class navigatiom extends React.Component {
     constructor(props) {
         super(props);
         this.Auth = new AuthService();
-    } 
+    }
 
 
     handleLogout = event => {
         if (this.Auth.loggedIn) {
             this.Auth.logout();
         }
-        
+
     }
 
-    
+
 
 
     render() {
+
+        let AreaAdministrativa;
+        if (this.Auth.isAdmin()) {
+            AreaAdministrativa =
+            <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
+
+                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
+                    <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
+
+                    <div className="dropdown-divider"></div>
+
+                    <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
+                    <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
+                    <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
+
+                    <div className="dropdown-divider"></div>
+
+                    <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
+                </div>
+            </li>
+        } else {
+            AreaAdministrativa =
+            <li className="nav-item dropdown">
+            </li>
+        }
+
+
         return (
             <nav className="container-fluid navbar navbar-expand-lg navbar-light" id="nav">
                 g
@@ -60,25 +90,7 @@ class navigatiom extends React.Component {
                         <li className="nav-item">
                             <Link to="/MenuGrafico"><a className="nav-link" ><ChartIcon />Reportes<span className="sr-only">(current)</span></a></Link>
                         </li>
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
-
-                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
-                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
-
-                                <div className="dropdown-divider"></div>
-
-                                <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
-                                <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
-                                <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
-
-                                <div className="dropdown-divider"></div>
-
-                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon/> Incidencias por usuario</a></Link>
-                            </div>
-                        </li>
+                        {AreaAdministrativa}
                         <li className="nav-item">
                             <a className="nav-link" href="#"></a>
                         </li>

@@ -10,7 +10,6 @@ import BoundaryError from './ErrorBoundary';
 import App from './App';
 
 render(
-
     <BoundaryError>
         <Router>
             <App />

@@ -95,8 +95,10 @@ export default class {
 
     isAdmin() {
         const token = this.getProfile();
+        console.log("role de usuario: " + token.role);
+        console.log("id de usuario: " + token.user);
         if (token != null) {
-            if (token.role = "admin") {
+            if (token.role == "Administrador") {
                 return true;
             }
             else {

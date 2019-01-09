@@ -11,9 +11,7 @@ namespace React.Model
         public string NombreArea { get; set; }
         public string TecnologiaFk { get; set; }
         public string AreaFk { get; set; }
-        public string Habilitado { get; set; }
-        public string TecnologiaNombre { get; set; }
-        public string AreaNombre { get; set; }
+        public string Estado { get; set; }
 
         public Area()
         {

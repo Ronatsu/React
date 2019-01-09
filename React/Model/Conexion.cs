@@ -6,10 +6,11 @@ namespace API_Ejemplo.Model
     {
 
         private const string ConnectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-                                  "Initial Catalog=ProyectoAnderson;" +
+                                  "Initial Catalog=ProyectoAnderson10;" +
                                   "Integrated security=True;";
 
-        public Conexion() {
+        public Conexion()
+        {
 
         }
 

@@ -1,18 +1,14 @@
 import '../components/ButtonColor.css';
-import React, { Component } from 'react';
-import $ from 'jquery';
+import React from 'react';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import { func } from 'prop-types';
-import { Input } from '@material-ui/core';
 import axios from 'axios';
-import SelectComponentArea from '../Administrator/SelectComponentArea';
-import SelectArea from '../Administrator/SelectArea'
+import $ from 'jquery';
 import AuthService from '../components/AuthService';
+
 
 class AdminTipoIncidencia extends React.Component {
 
@@ -23,13 +19,19 @@ class AdminTipoIncidencia extends React.Component {
             tipos: []
             , estados: []
             , nombre: ''
-            ,estado:''
-          
+            , estado: ""
+            , id: ""
+            , estadoActual: ''
+            , nombreNuevo: ''
+            , estadoNuevo: ''
+
         }
+
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmitAgregar = this.handleSubmitAgregar.bind(this);
+        this.ModificarTipo = this.ModificarTipo.bind(this);
+
         this.Auth = new AuthService();
-        this.AreaModificar = this.AreaModificar.bind(this);
-        
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -39,25 +41,8 @@ class AdminTipoIncidencia extends React.Component {
             });
         });
 
-        $(document).ready(function () {
-            $(".btnBlue").click(function () {
-                $(this).each(function () {
-                    $("#modal2").show();
-                    $("#close").click(function () {
-                        $("#modal2").css("display", "none");
-                    });
-                });
-            });
-        });
-
-        $(function () {
-            $("#myTable tr td").click(function () {
-                const cell = $(this).parents("tr").find("th").eq(0).text();
-                $("#titleModal").html("Editando " + cell);
-
-            })
-        })
     }
+
 
     handleChange = event => {
         const nameInput = event.target.name;
@@ -67,28 +52,78 @@ class AdminTipoIncidencia extends React.Component {
         });
     }
 
-    handleSubmit = event => {
+    handleSubmitModificar = event => {
         event.preventDefault();
 
-        if (this.Auth.loggedIn()) {
-            var headerOptions = "Bearer " + this.Auth.getToken()
+        if (this.state.estado === "Estado" || this.state.estado === "") {
+            alert("Favor seleccione un estado")
+        } else if (this.state.nombre === "") {
+            alert("Favor ingrese un el nombre del tipo de incidencia que desea modificar")
+        } else {
 
-        }
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
 
-        axios.post(`https://localhost:44331/api/AdministracionAreaTecnologia/InsertarArea`,
-            {
-                NombreArea: this.state.NombreArea,
-                tecnologiaFk: this.state.selectGeneric,
-                AreaFk: this.state.selectArea
-
-            },
-            {
-                headers: { 'Authorization': headerOptions }
             }
-        ).then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
+
+            axios.post(`http://localhost:44372/api/TipoIncidencia/ModificarTipo`,
+                {
+                    Descripcion: this.state.nombre,
+                    Estado: this.state.estado,
+                    Id: this.state.id
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
+            ).then(res => {
+
+                if (res.status === 200) {
+                    alert("Modificado con éxito")
+                } else {
+                    alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
+
+                }
+            })
+        }
+    }
+
+    handleSubmitAgregar = event => {
+        event.preventDefault();
+
+        if (this.state.estadoNuevo === "Estado" || this.state.estadoNuevo === "") {
+            alert("Favor seleccione un estado")
+        } else if (this.state.nombreNuevo === "") {
+            alert("Favor ingrese un el nombre del tipo de incidencia que desea agregar")
+        } else {
+
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
+
+            }
+
+            axios.post(`http://localhost:44372/api/TipoIncidencia/AgregarTipo`,
+                {
+                    Descripcion: this.state.nombreNuevo,
+                    Estado: this.state.estadoNuevo
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
+
+            ).then(res => {
+
+                if (res.status === 200) {
+                    alert("Agregado con éxito")
+                    this.setState({
+                        estadoNuevo: ""
+                        , nombreNuevo: ""
+                    });
+                } else {
+                    alert("¡Lo sentimos! Ha ocurrido un error inesperado\n")
+
+                }
+            })
+        }
     }
 
     componentWillMount() {
@@ -103,65 +138,62 @@ class AdminTipoIncidencia extends React.Component {
                 const tipos = res.data;
                 this.setState({ tipos });
             })
-    }
-
-
-
-
-
-    AreaModificar(Area) {
-        alert("Se selecciono el ID : " + Area);
-        this.setState({
-            AreaIDModificar: Area
-        });
-
-
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
     }
 
 
     ModificarTipo(id) {
-        if (this.state.NombreAreaModificar == "") {
-            alert("Inserte el nombre del área que desea modificar.");
-        } else {
-            if (this.state.SelectAreaTecnologiaModificar == "") {
-                alert("Seleccione la tecnologia del área que desea modificar.");
-            }
-            else {
-                if (this.state.SelectAreaPrincipalModificar == "") {
-                    alert("Seleccione la tecnologia del área que desea modificar.");
-                } else {
 
-                    if (this.Auth.loggedIn()) {
-                        var headerOptions = "Bearer " + this.Auth.getToken()
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
 
-                    }
-                    axios.post(`https://localhost:44331/api/TipoIncidencia/ObtenerPorId`,
-                        {
-                            id: id
-                        },
-                        {
-                            headers: { 'Authorization': headerOptions }
-                        }
-
-                    ).then(res => {
-                        const tipoI = res.data;
-                        this.setState({
-                            nombre: tipoI.descripcion,
-                            estado:tipoI.estado
-                        });
-                        })
-                    axios.get('https://localhost:44331/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
-                        .then(res => {
-                            const estados = res.data;
-                            this.setState({ estados });
-                        })
-                }
-            }
         }
+
+        axios.post(`http://localhost:44372/api/TipoIncidencia/ObtenerPorId`,
+            {
+                id: id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+
+        ).then(res => {
+            const tipoI = res.data;
+            this.setState({
+                nombre: tipoI.descripcion,
+                estadoActual: tipoI.estado
+                , id: id
+            });
+        })
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const estados = res.data;
+                this.setState({ estados });
+            })
     }
 
+    recargar() {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get('http://localhost:44372/api/TipoIncidencia/GetTipos', { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const tipos = res.data;
+                this.setState({ tipos });
+            })
+    }
 
     render() {
+
+        this.recargar();
 
         const listaEstados = this.state.estados;
 
@@ -196,30 +228,30 @@ class AdminTipoIncidencia extends React.Component {
                                                 <Modal.Body>
                                                     <div className="form-group">
                                                         <label id="txtModal">Tipo de incidencia</label>
-                                                        <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
+                                                        <FormControl className="form-control" name="nombreNuevo" value={this.state.nombreNuevo} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                                                     </div>
-                                                    
+
+                                                    <div className="form-group">
+                                                        <label id="txtModal">Estado</label>
+                                                        <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
+                                                            <option disabled selected="selected">Estado</option>
+                                                            {listaEstado}
+
+                                                        </select>
+                                                    </div>
+
                                                 </Modal.Body>
 
                                                 <Modal.Footer>
                                                     <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmit}>Agregar</Button>
+                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitAgregar}>Agregar</Button>
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>
-
                                     </div>
-                                       
-
-
-                              
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
                     <div className="table-responsive " id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
@@ -227,6 +259,7 @@ class AdminTipoIncidencia extends React.Component {
                                 <tr>
                                     <th className="size" scope="col">Código</th>
                                     <th className="size" scope="col">Tipo de incidencia</th>
+                                    <th className="size" scope="col">Estado</th>
                                     <th className="size" scope="col"></th>
                                 </tr>
                             </thead>
@@ -240,7 +273,10 @@ class AdminTipoIncidencia extends React.Component {
                                             <td>
                                                 {tipo.descripcion}
                                             </td>
-                                          
+                                            <td>
+                                                {tipo.estado}
+                                            </td>
+
                                             <td className="pagination justify-content-center">
                                                 <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.ModificarTipo(tipo.id)}><EditIcon />  Editar</button>
                                             </td>
@@ -264,20 +300,19 @@ class AdminTipoIncidencia extends React.Component {
                             <label>Tipo incidencia</label>
                             <FormControl className="form-control" name="nombre" value={this.state.nombre} onChange={this.handleChange} placeholder="Tipo de incidencia"></FormControl>
                             <div className="form-group">
-                            <label>Estado</label>
-                                <select className="form-control container" id="exampleFormControlSelect1" name="estado" onClick={this.handleChange}>
-                                    <option value={this.state.estado} disabled selected="selected">{this.state.estado}</option>
-                                    <option value={this.state.estado} >this.state.estado</option>
-                                    <option value={this.state.estado} >this.state</option>
+                                <label id="txtModal">Estado</label>
+                                <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    {listaEstado}
 
-                            </select>
+                                </select>
                             </div>
-                           
+
                         </Modal.Body>
 
                         <Modal.Footer>
                             <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarArea()}>Aceptar</Button>
+                            <Button className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitModificar}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>

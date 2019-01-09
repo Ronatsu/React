@@ -31,25 +31,26 @@ class App extends Component {
     }
 
     render() {
-
+        console.log(this.Auth.loggedIn());
         return (
+            
             <Switch>
                 <div>
                     <Route exact path="/" component={Registro} />
-                    <PrivateRoute authed={true} path="/incidentes" component={Home} />
-                    <PrivateRoute authed={true} path="/InsertarIncidencia" component={Form} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/AjustePerfil" component={Configuracion} />
-                    {this.Auth.isAdmin() && <PrivateRoute authed={this.Auth.loggedIn} path="/BlockUser" component={BlockUser} />}
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/AsignacionIncidencia" component={AsignacionIncidencia} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/AdminArea" component={AdminArea} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/AdminTech" component={AdminTech} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/sidebar" component={sidebar} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/newUser" component={NewUser} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/ForgotPass" component={ForgotPass} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/InformacionIncidencia" component={InformacionIncidencia} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/SignIn" component={SingIn} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/MenuGrafico" component={MenuReportes} />
-                    <PrivateRoute authed={this.Auth.loggedIn} path="/SelectUserIncident" component={SelectUserIncident} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/incidentes" component={Home} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/InsertarIncidencia" component={Form} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/AjustePerfil" component={Configuracion} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/BlockUser" component={BlockUser} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/AsignacionIncidencia" component={AsignacionIncidencia} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/AdminArea" component={AdminArea} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/AdminTech" component={AdminTech} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/sidebar" component={sidebar} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/newUser" component={NewUser} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/ForgotPass" component={ForgotPass} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/InformacionIncidencia" component={InformacionIncidencia} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/SignIn" component={SingIn} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/MenuGrafico" component={MenuReportes} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/SelectUserIncident" component={SelectUserIncident} />
                 </div>
             </Switch>
         )

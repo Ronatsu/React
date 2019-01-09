@@ -22,6 +22,7 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<DataIncidents> ListIncidents = new List<DataIncidents>();
+        List<Correo> ListStateIncident = new List<Correo>();
         JSON HandleError = new JSON();
 
 
@@ -33,9 +34,10 @@ namespace React.Controllers
             {
                 Connection = new SqlConnection(ConnectionString);
                 Connection.Open();
-                cmd = new SqlCommand("ObtenerIncidencia", Connection);
+                cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
+                cmd.Parameters.AddWithValue("@ESTADO_ID", correo.email2);
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
@@ -46,7 +48,6 @@ namespace React.Controllers
                     incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("dd/MM/yyyy");
 
                     ListIncidents.Add(incidents);
-
                 }
                 Connection.Close();
             }
@@ -57,6 +58,41 @@ namespace React.Controllers
             }
 
             var item = ListIncidents;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpGet]
+        [Route("MethodGetStateIncident")]
+        public ActionResult<List<Correo>> GetStateIncident()
+        {
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_StateIncident", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Correo incidents = new Correo();
+                    incidents.email1 = dataReader["MetaEstado"].ToString();
+                    incidents.email2 = dataReader["MetaEstadoId"].ToString();
+
+                    ListStateIncident.Add(incidents);
+                }
+                Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+
+            var item = ListStateIncident;
             if (item == null)
             {
                 return NotFound();

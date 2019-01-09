@@ -14,13 +14,15 @@ class Home extends Component {
         super(props);
         this.state = {
             incidents: [],
-            email1: '5'
+            email1: ChooseParty(this.props.idParty),
+            stateIncident: []
         }
 
         super(props);
 
         this.Auth = new AuthService();
 
+        this.handleChange = this.handleChange.bind(this);
         $(document).ready(function () {
             $("#inputSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -30,42 +32,74 @@ class Home extends Component {
             });
         });
     }
-
     componentWillMount() {
-
-        alert("estado de logeo: " + this.Auth.loggedIn());
         if (this.Auth.loggedIn()) {
             var headerOptions = "Bearer " + this.Auth.getToken()
 
         }
 
-        const headers = {
-            'Authorization': headerOptions
+        this.ShowSelectIncidentState()
+        this.DataUpload(18)
+    }
+    DataUpload(IdTypeIncident) {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
         }
 
-
-        axios.post('https://localhost:44357/api/GetIncidents/MethodGetIncidents',
+        axios.post(`https://localhost:44357/api/GetIncidents/MethodGetIncidents`,
             {
-                "email1": this.state.email1
+                email1: this.state.email1,
+                email2: IdTypeIncident
             },
             {
                 headers: { 'Authorization': headerOptions }
             }
+
         ).then(res => {
             const incidents = res.data;
             this.setState({ incidents });
         })
     }
+    ShowSelectIncidentState() {
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
 
+        }
+
+
+        axios.get(`https://localhost:44357/api/GetIncidents/MethodGetStateIncident`, { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const stateIncident = res.data;
+                this.setState({ stateIncident });
+            })
+    }
+    handleChange = (event) => {
+        this.DataUpload(event.target.value)
+    };
     render() {
         return (
             <div >
                 <Navigation />
+                <br /><br /><br />
                 <div className="container">
-                    <br /><br />
-                    <div className="w-auto p-3">
-                        <input className="form-control " type="text" id="inputSearch" placeholder="Buscar"></input>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <input className="form-control" type="text" id="inputSearch" placeholder="Buscar"></input>
+                        </div>
+                        <div className="col-md-4">
+                            <select className="form-control" onChange={this.handleChange}>
+                                <option selected disabled>Asignada</option>
+                                {this.state.stateIncident.map(elemento => {
+                                    return (
+                                        <option value={elemento.email2}>{elemento.email1}</option>
+                                    )
+                                })}
+                            </select>
+                        </div>
                     </div>
+                    <br />
                     <div className="container table-responsive " id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
@@ -99,5 +133,11 @@ class Home extends Component {
     }
 
 }
-
+function ChooseParty(partyID) {
+    if (partyID == undefined || partyID == null || partyID == 0) {
+        return 5;
+    } else {
+        return partyID;
+    }
+}
 export default Home;

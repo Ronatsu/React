@@ -78,8 +78,20 @@ namespace React.Controllers
                 
                 if (dataReader.Read())
                 {
-                    conexion.Close();
-                    return BuildToken(userInfo);
+                    Usuario usuarioAuntenticado = new Usuario();
+                    usuarioAuntenticado.PARTYID = dataReader["PARTYID"].ToString();
+                    usuarioAuntenticado.email = dataReader["EMAIL"].ToString();
+                    usuarioAuntenticado.ROL_USUARIO = dataReader["ROL"].ToString();
+                    if(dataReader["ESTADO_PARTY"].ToString().Equals("Habilitado"))
+                    {
+                        conexion.Close();
+                        return BuildToken(usuarioAuntenticado);
+                    }else
+                    {
+                        conexion.Close();
+                        return Ok(dataReader["ESTADO_PARTY"].ToString());
+                    }
+                    
                 }
                 else
                 {
@@ -100,7 +112,8 @@ namespace React.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("role", "user")
+                new Claim("role", userInfo.ROL_USUARIO),
+                new Claim("user", userInfo.PARTYID)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApiAuth:SecretKey"]));

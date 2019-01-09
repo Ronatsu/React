@@ -6,6 +6,7 @@ import Navigation from '../components/Navigation';
 import Search from '@material-ui/icons/Search';
 import '../components/ButtonColor.css';
 import axios from 'axios';
+import { element } from 'prop-types';
 import AuthService from '../components/AuthService';
 
 class SelectUserIncident extends React.Component {
@@ -29,13 +30,13 @@ class SelectUserIncident extends React.Component {
         });
     }
     componentWillMount() {
-        alert("estado de logeo: " + this.Auth.loggedIn());
         if (this.Auth.loggedIn()) {
             var headerOptions = "Bearer " + this.Auth.getToken()
 
         }
 
-        axios.get(`https://localhost:44357/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
+
+        axios.get(`http://localhost:44372/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });
@@ -74,7 +75,7 @@ class SelectUserIncident extends React.Component {
                                         <td>{elemento.segundO_APELLIDO}</td>
                                         <td name="emial">{elemento.correoElectronico}</td>
                                         <td>{elemento.roL_USUARIO}</td>
-                                        <td><Link to="/TableUserList"><button className="btn btnBlue  " type="submit"><Search /> Ver Incidencias</button></Link></td>
+                                        <td><Link to={'/TableUserList/' + elemento.partyid + '/' + (elemento.nombre + " " + elemento.primeR_APELLIDO + " " + elemento.segundO_APELLIDO)}><button className="btn btnBlue  " type="submit"><Search /> Ver Incidencias</button></Link></td>
                                     </tr>
                                 )
                             })}

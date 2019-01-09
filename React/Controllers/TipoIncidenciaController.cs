@@ -9,17 +9,22 @@ using React.Model;
 
 namespace React.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class TipoIncidenciaController : ControllerBase
     {
-        
+
         Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        
+
+        //manejo de errores
+        JSON HandleError = new JSON();
+
 
         // GET: api/TipoIncidencia
         [HttpGet]
@@ -34,9 +39,10 @@ namespace React.Controllers
             List<TipoIncidencia> nuevaLista = new List<TipoIncidencia>();
             while (dataReader.Read())
             {
-                TipoIncidencia tipoIncidencia=new TipoIncidencia();
+                TipoIncidencia tipoIncidencia = new TipoIncidencia();
                 tipoIncidencia.Descripcion = dataReader["DESCRIPCION_INCIDENCIA"].ToString();
                 tipoIncidencia.Id = Int32.Parse(dataReader["ID"].ToString());
+                tipoIncidencia.Estado = dataReader["Estado"].ToString();
 
                 nuevaLista.Add(tipoIncidencia);
 
@@ -78,7 +84,7 @@ namespace React.Controllers
             return Ok(item);
         }
 
-        
+
 
         // POST: api/TipoIncidencia
         [HttpPost]
@@ -105,16 +111,70 @@ namespace React.Controllers
             return Ok(item);
         }
 
-        // PUT: api/TipoIncidencia/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost]
+        [Route("AgregarTipo")]
+        public ActionResult<List<string>> AgregarTipo(TipoIncidencia tipoIncidencia)
         {
+            if (!tipoIncidencia.Descripcion.Equals(""))
+            {
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ExisteTipoInicidencia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@tipoIncidencia", tipoIncidencia.Descripcion);
+
+
+                dataReader = cmd.ExecuteReader();
+                int id = 0;
+                while (dataReader.Read())
+                {
+                    int.TryParse(dataReader["ID"].ToString(), out id);
+                    tipoIncidencia.Id = id;
+                }
+                conexion.Close();
+
+                if (id == 0)
+                {
+                    EstablecerConexion();
+                    cmd = new SqlCommand("Proc_AgregarTipoInicidencia", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@tipoIncidencia", tipoIncidencia.Descripcion);
+                    cmd.Parameters.AddWithValue("@estado", tipoIncidencia.Estado);
+
+                    dataReader = cmd.ExecuteReader();
+
+                    conexion.Close();
+                    return Ok();
+                }
+                return NotFound();
+            }
+
+            return NotFound();
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        [HttpPost]
+        [Route("ModificarTipo")]
+        public ActionResult<List<string>> ModificarTipo(TipoIncidencia tipoIncidencia)
         {
+            try
+            {
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ModificarTipoIncidencia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", tipoIncidencia.Id);
+                cmd.Parameters.AddWithValue("@tipo", tipoIncidencia.Descripcion);
+                cmd.Parameters.AddWithValue("@estado", tipoIncidencia.Estado);
+
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         public void EstablecerConexion()

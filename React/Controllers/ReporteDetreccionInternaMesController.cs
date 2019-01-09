@@ -19,9 +19,6 @@ namespace React.Controllers
     {
 
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-OR6ATOD\\SQLSERVER2017DEV;" +
-                                  "Initial Catalog=ProyectoAnderson;" +
-                                  "Integrated security=True;";
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
