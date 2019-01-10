@@ -405,8 +405,31 @@ namespace React.Controllers
 
                 cmd.Parameters.AddWithValue("@TecnologiaID", value.TecnologiaId);
                 cmd.Parameters.AddWithValue("@NombreTecnologia", value.NombreTecnologia);
+                if (value.TipoTecnologia.Equals("PaaS"))
+                {
+                    value.TipoTecnologia="1";
+                }
+                else if (value.TipoTecnologia.Equals("IaaS"))
+                {
+                    value.TipoTecnologia="2";
+                }
+
                 cmd.Parameters.AddWithValue("@TipoTecnologia", value.TipoTecnologia);
+                if (value.Critico.Equals("Sí"))
+                {
+                    value.Critico = "s";
+                }else if (value.Critico.Equals("No")){
+                    value.Critico = "n";
+                }
                 cmd.Parameters.AddWithValue("@CriticoS_N", value.Critico);
+                if (value.Estado.Equals("Habilitado"))
+                {
+                    value.Estado = "28";
+                }
+                else if (value.Estado.Equals("Deshabilitado"))
+                {
+                    value.Estado = "29";
+                }
                 cmd.Parameters.AddWithValue("@Estado", value.Estado);
 
                 dataReader = cmd.ExecuteReader();

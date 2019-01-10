@@ -54,6 +54,9 @@ class Home extends Component {
     }
     DataUpload(IdTypeIncident) {
         axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
+             //email1: this.state.email1,
+           // email2: IdTypeIncident
+
             email1: this.state.email1,
             email2: IdTypeIncident
         }).then(res => {
