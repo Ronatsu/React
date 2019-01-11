@@ -100,7 +100,8 @@ class AdminTech extends React.Component {
                 nombreTecnologiaModificar: Technology.nombreTecnologia,
                 SelectTipoTecnologiaModificar: Technology.tipoTecnologiaNombre,
                 nombreTecnologia: Technology.nombreTecnologia
-                ,estadoActual: Technology.estado
+                , estadoActual: Technology.estado
+                , estado: Technology.estado
             });
         })
     }
@@ -141,7 +142,7 @@ class AdminTech extends React.Component {
                 if (this.state.SelectAreaPrincipalModificar === "") {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
-                
+                  
                     axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`, {
                         TecnologiaId: this.state.tecnologiaID,
                         NombreTecnologia: this.state.nombreTecnologiaModificar,
@@ -317,7 +318,7 @@ class AdminTech extends React.Component {
                             <br />
                             <label>tecnología critica</label>
                             <div className=" justify-content-end">
-                                <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
+                                <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onChange={this.handleChange}>
                                     <option disabled selected>{this.state.criticoS_N_Modificar}</option>
                                     <option value="s">Sí</option>
                                     <option value="n">No</option>
@@ -325,7 +326,7 @@ class AdminTech extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label id="txtModal">Estado</label>
-                                <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                <select className="form-control container" name="estado" onChange={this.handleChange}>
                                     <option disabled selected="selected">{this.state.estadoActual}</option>
                                     {listaEstado}
 

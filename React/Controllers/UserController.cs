@@ -89,7 +89,7 @@ namespace React.Controllers
             var item = userList;
             if (item == null)
             {
-                return NotFound();
+                return Ok("No hay datos que mostrar");
             }
             return Ok(item);
         }

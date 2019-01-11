@@ -55,6 +55,8 @@ namespace React.Controllers
             }
             return Ok(item);
         }
+
+
         // POST: api/Incidencia
         [HttpPost]
         [Route("AddIncident")]
@@ -107,11 +109,13 @@ namespace React.Controllers
 
 
                     dataReader = cmd.ExecuteReader();
+                    conexion.Close();
 
+                    conexion.Open();
                     cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
-
+                    cmd.Parameters.AddWithValue("@id", item.Partyid);
+                    dataReader = cmd.ExecuteReader();
                     while (dataReader.Read())
                     {
 
@@ -121,22 +125,9 @@ namespace React.Controllers
 
                     conexion.Close();
 
-                    conexion.Open();
-                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", item.Partyid);
-                    dataReader = cmd.ExecuteReader();
-
-                    while (dataReader.Read())
-                    {
-
-                        mailRecovery = dataReader["Correo"].ToString();
-                        mailList.Add(mailRecovery);
-                    }
-
-                    conexion.Close();
                 }
             }
+
             if (mailList.Count != 0)
             {
                 string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
