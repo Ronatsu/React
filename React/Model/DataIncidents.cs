@@ -12,5 +12,6 @@ namespace React.Model
         public string DateIncident { get; set; }
         public string ImpactType { get; set; }
         public int IdIncidencia { get; set; }
+        public int Estado { get; set; }
     }
 }

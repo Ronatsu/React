@@ -190,7 +190,7 @@ class AjustesPerfil extends Component {
 
                                                 <Modal.Footer>
                                                     <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                                                    <button class="btn btnBlue" type="submit" value="sumit" onClick={() => this.handleSubmitPass()}>Guardar</button>
+                                                    <button className="btn btnBlue" type="submit" value="sumit" onClick={() => this.handleSubmitPass()}>Guardar</button>
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>

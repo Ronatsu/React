@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using API_Ejemplo.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 
@@ -52,6 +49,7 @@ namespace React.Controllers
                     incidents.ImpactType = dataReader["TipoImpacto"].ToString();
                     incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
                     incidents.IdIncidencia = Int32.Parse(dataReader["IncidenciaId"].ToString());
+                    incidents.Estado = Int32.Parse(dataReader["EstadoFk"].ToString()); 
 
                     ListIncidents.Add(incidents);
                 }
@@ -104,6 +102,87 @@ namespace React.Controllers
                 return NotFound();
             }
             return Ok(item);
+        }
+        [HttpPost]
+        [Route("MethodInsertStep")]
+        public ActionResult InsertSteps(DataIncidents stepData)
+        {
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_InsertarPasos", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Descripcion", stepData.Description);
+                cmd.Parameters.AddWithValue("@IncidenciaFk", stepData.IdIncidencia);
+                dataReader = cmd.ExecuteReader();
+                Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+                throw;
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("GetInformationIncident")]
+        public ActionResult InformationIncident(IncidentInformation incidentInfo)
+        {
+            try
+            {
+                Connection = new SqlConnection(ConnectionString);
+                Connection.Open();
+                cmd = new SqlCommand("Proc_InformacionIncidencia", Connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@INCIDENCIA_ID", incidentInfo.IncidenciaID);
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    incidentInfo.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
+                    incidentInfo.MetaEstado = dataReader["MetaEstado"].ToString();
+                    incidentInfo.FechaInicidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidentInfo.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                    incidentInfo.NombreTecnologia = dataReader["NombreTecnologia"].ToString();
+                    incidentInfo.GradoControl = dataReader["GradoControl"].ToString();
+
+                }
+                Connection.Close();
+                incidentInfo.AreaData = GetAreaData(incidentInfo.IncidenciaID);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                throw;
+            }
+            var item = incidentInfo;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        private List<string> GetAreaData(int idIncident)
+        {
+            List<string> areaData = new List<string>();
+
+            Connection = new SqlConnection(ConnectionString);
+            Connection.Open();
+            cmd = new SqlCommand("Proc_InformacionAreaPorId", Connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@INCIDENCIA_ID", idIncident);
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                string gg = dataReader["NombreArea"].ToString();
+                areaData.Add(gg);
+
+            }
+            Connection.Close();
+            return areaData;
         }
     }
 }

@@ -42,20 +42,6 @@ class SinAsignar extends Component {
             })
     }
     render() {
-        const incidentCard = this.state.incidents.map((incident) => {
-            return (
-                <tr>
-                    <td> <Link to="/AsignacionIncidencia"><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
-                    <th scope="row">{incident.probabilidaImpacto}</th>
-                    <td>{incident.tipoImpacto}</td>
-                    <td>{incident.descripcion}</td>
-                    <td>{incident.fechaIncidencia}</td>
-                </tr>
-
-            )
-        })
-        this.recargar();
-
         return (
             <div >
                 <Navigation />
@@ -76,7 +62,18 @@ class SinAsignar extends Component {
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                {incidentCard}
+                                {this.state.incidents.map(elemento => {
+                                    return (
+                                        <tr>
+                                            <td> <Link to="/AsignacionIncidencia"><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
+                                            <th scope="row">{elemento.probabilidaImpacto}</th>
+                                            <td>{elemento.tipoImpacto}</td>
+                                            <td>{elemento.descripcion}</td>
+                                            <td>{elemento.fechaIncidencia}</td>
+                                        </tr>
+
+                                    )
+                                })};
                             </tbody>
                         </table>
                     </div>

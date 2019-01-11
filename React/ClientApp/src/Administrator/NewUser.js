@@ -10,12 +10,10 @@ import '../components/ButtonColor.css';
 class newUser extends React.Component {
 
     constructor(props) {
-        super();
-        this.state = {
-            parties: [],
-            partyId: ""
-        }
         super(props);
+        this.state = {
+            parties: []
+        }
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -27,37 +25,35 @@ class newUser extends React.Component {
         });
     }
 
-    handleChange = event => {
-        const nameInput = event.target.name;
-        const valueInput = event.target.value;
-        this.setState({
-            [nameInput]: valueInput
-        });
-        this.handleChange = this.handleChange.bind(this);
-    }
-
     getData() {
-        axios.get(`https://localhost:44372/api/User/userList`)
+        axios.get(`http://localhost:44372/api/User/userList`)
 
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties: parties });
             })
     }
-
+    componentWillMount() {
+        this.getData();
+    } 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.parties !== this.state.parties) {
+            this.getData();
+        }
+    }
     DisableUser(id) {
-        axios.post(`https://localhost:44372/api/User/Deshabilitar`, {
+        axios.post(`http://localhost:44372/api/User/Deshabilitar`, {
             partyId: id,
-        })
+        });
     }
 
     AcceptUser(id) {
-        axios.post(`https://localhost:44372/api/User/Habilitar`, {
+        axios.post(`http://localhost:44372/api/User/Habilitar`, {
             partyId: id,
-        })
+        });
     }
     render() {
-        this.getData()
+       
         return (
             <div className="container ">
                 <Navigation />

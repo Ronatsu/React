@@ -250,8 +250,6 @@ class AdminArea extends React.Component {
                                                             {listaAreaTecno}
                                                         </select>
                                                     </div>
-
-
                                                     <div className="form-group">
                                                         <label id="txtModal">Estado</label>
                                                         <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
@@ -293,35 +291,21 @@ class AdminArea extends React.Component {
                                 {this.state.areas.map(elemento => {
                                     return (
                                         <tr key={elemento.areaID}>
-                                            <td>
-                                                {elemento.areaID}
-                                            </td>
-                                            <td>
-                                                {elemento.nombreArea}
-                                            </td>
-                                            <td>
-                                                {elemento.areaFk}
-                                            </td>
-                                            <td>
-                                                {elemento.tecnologiaFk}
-                                            </td>
-                                            <td>
-                                                {elemento.estado}
-                                            </td>
+                                            <td>{elemento.areaID} </td>
+                                            <td> {elemento.nombreArea}</td>
+                                            <td> {elemento.areaFk}</td>
+                                            <td> {elemento.tecnologiaFk} </td>
+                                            <td>{elemento.estado} </td>
                                             <td>
                                                 <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.AreaModificar(elemento.areaID)}><EditIcon />  Editar</button>
                                             </td>
                                         </tr>
                                     )
                                 })}
-
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-
-
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
@@ -351,11 +335,9 @@ class AdminArea extends React.Component {
                                 <select className="form-control container" name="estado" onClick={this.handleChange}>
                                     <option disabled selected="selected">{this.state.estadoActual}</option>
                                     {listaEstado}
-
                                 </select>
                             </div>
                         </Modal.Body>
-
                         <Modal.Footer>
                             <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
                             <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarArea()}>Aceptar</Button>
