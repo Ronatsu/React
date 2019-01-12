@@ -145,13 +145,15 @@ namespace React.Controllers
                     incidentInfo.MetaEstado = dataReader["MetaEstado"].ToString();
                     incidentInfo.FechaInicidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
                     incidentInfo.TipoImpacto = dataReader["TipoImpacto"].ToString();
-                    incidentInfo.NombreTecnologia = dataReader["NombreTecnologia"].ToString();
+                    incidentInfo.NombreCompleto = dataReader["NombreCompleto"].ToString();
                     incidentInfo.GradoControl = dataReader["GradoControl"].ToString();
+                    incidentInfo.Descripcion = dataReader["Descripcion"].ToString();
 
                 }
                 Connection.Close();
                 incidentInfo.AreaData = GetAreaData(incidentInfo.IncidenciaID);
                 incidentInfo.StepsData = GetStepsById(incidentInfo.IncidenciaID);
+                incidentInfo.TecnologiaData = GetTecnologiaData(incidentInfo.IncidenciaID);
             }
             catch (Exception ex)
             {
@@ -178,14 +180,29 @@ namespace React.Controllers
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                string gg = dataReader["NombreArea"].ToString();
-                areaData.Add(gg);
-
+                areaData.Add(dataReader["NombreArea"].ToString());
             }
             Connection.Close();
             return areaData;
         }
 
+        private List<string> GetTecnologiaData(int idIncident)
+        {
+            List<string> areaData = new List<string>();
+
+            Connection = new SqlConnection(ConnectionString);
+            Connection.Open();
+            cmd = new SqlCommand("Proc_InformacionTecnologiaPorId", Connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@INCIDENCIA_ID", idIncident);
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                areaData.Add(dataReader["NombreTecnologia"].ToString());
+            }
+            Connection.Close();
+            return areaData;
+        }
 
         private List<TipoIncidencia> GetStepsById(int idIncident)
         {

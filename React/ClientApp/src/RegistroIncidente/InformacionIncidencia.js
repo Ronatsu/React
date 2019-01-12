@@ -11,8 +11,10 @@ class InformacionIncidencia extends React.Component {
             MetaEstado: '',
             FechaInicidencia: '',
             TipoImpacto: '',
-            NombreTecnologia: '',
             GradoControl: '',
+            Descripcion: '',
+            NombreCompleto: '',
+            TecnologiaData: [],
             AreaData: [],
             StepData: [],
             Step: ''
@@ -33,10 +35,12 @@ class InformacionIncidencia extends React.Component {
                 MetaEstado: incidentInfo.metaEstado,
                 FechaInicidencia: incidentInfo.fechaInicidencia,
                 TipoImpacto: incidentInfo.tipoImpacto,
-                NombreTecnologia: incidentInfo.nombreTecnologia,
+                TecnologiaData: incidentInfo.tecnologiaData,
                 GradoControl: incidentInfo.gradoControl,
                 AreaData: incidentInfo.areaData,
-                StepData: incidentInfo.stepsData
+                StepData: incidentInfo.stepsData,
+                Descripcion: incidentInfo.descripcion,
+                NombreCompleto: incidentInfo.nombreCompleto
             });
         })
     }
@@ -65,55 +69,105 @@ class InformacionIncidencia extends React.Component {
                     </fieldset>
                 </form>
                 <div className="container table-responsive" id="main_div">
-                    <table className="table table-hover table-condensed " id="table_id">
-                        <tr>
-                            <th className="size" scope="col"></th>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Impacto</th>
-                            <td>{this.state.TipoImpacto} </td>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Tecnología</th>
-                            <td>{this.state.NombreTecnologia} </td>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Tipo</th>
-                            <td>{this.state.TipoIncidencia} </td>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Fecha</th>
-                            <td>{this.state.FechaInicidencia} </td>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Estado</th>
-                            <td>{this.state.MetaEstado} </td>
-                        </tr>
-                        <tr>
-                            <th className="size" scope="col">Grado</th>
-                            <td>{this.state.GradoControl} </td>
-                        </tr>
-                        <tr>
-                            <th rowSpan="2" className="size" scope="col">Área afectada</th>
-                            {this.state.AreaData.map(elemento => {
-                                return (
-                                    <tr>
-                                        <td>- {elemento}</td>
-                                    </tr>
-                                )
-                            })}
-                        </tr>
-                        <details>
-                            <summary>Pasos Registrados</summary>
-                            {this.state.StepData.map(elemento => {
-                                return (
-                                    <tr>
-                                        <td>- {elemento.descripcion}</td>
-                                        <td>- {elemento.estado}</td>
-                                    </tr>
-                                )
-                            })}
-                            </details>
+                    <table className="table table-hover table-bordered " id="table_id">
+                        <thead>
+                            <tr>
+                                <th className="size" scope="col">Información</th>
+                                <th className="size" scope="col">Datos</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th className="size" scope="row">Dueño de Asignación</th>
+                                <td>{this.state.NombreCompleto} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Impacto</th>
+                                <td>{this.state.TipoImpacto} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Descipción</th>
+                                <td>{this.state.Descripcion} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Tipo</th>
+                                <td>{this.state.TipoIncidencia} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Fecha</th>
+                                <td>{this.state.FechaInicidencia} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Estado</th>
+                                <td>{this.state.MetaEstado} </td>
+                            </tr>
+                            <tr>
+                                <th className="size" scope="row">Grado</th>
+                                <td>{this.state.GradoControl} </td>
+                            </tr>
+                            <tr>
+                                <details>
+                                    <summary>Pasos Registrados</summary>
+                                    <table className="table table-hover" id="table_id">
+                                        <thead>
+                                            <tr>
+                                                <th className="size" scope="col">Paso</th>
+                                                <th className="size" scope="col">Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.StepData.map(elemento => {
+                                                return (
+                                                    <tr>
+                                                        <td>- {elemento.descripcion}</td>
+                                                        <td>- {elemento.estado}</td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </details>
+                            </tr>
+                            <tr>
+                                <th rowSpan="2" className="size" scope="row">Área afectada</th>
+                                <table className="table table-hover" id="table_id">
+                                    <thead>
+                                        <tr>
+                                            <th className="size" scope="row">Área</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.AreaData.map(elemento => {
+                                            return (
+                                                <tr>
+                                                    <td>- {elemento}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </tr>
+                            <tr>
+                                <th rowSpan="2" className="size" scope="row">Tecnologias afectadas</th>
+                                <table className="table table-hover" id="table_id">
+                                    <thead>
+                                        <tr>
+                                            <th className="size" scope="row">Tecnologia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.TecnologiaData.map(elemento => {
+                                            return (
+                                                <tr>
+                                                    <td>- {elemento}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
