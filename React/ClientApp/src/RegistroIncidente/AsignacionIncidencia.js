@@ -7,20 +7,14 @@ import axios from 'axios';
 
 class AsignacionIncidencia extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             parties: [],
             party: [],
-            asignacionArray: []
-            , partyId: "",
+            asignacionArray: [],
+            partyId: "",
             itemChecked: []
-
-
         }
-        super(props);
-
-
-
         $(document).ready(function () {
 
             $('#divCheck input').click(function () {
@@ -48,7 +42,8 @@ class AsignacionIncidencia extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
-            asignacionArray: this.state.asignacionArray
+            asignacionArray: this.state.asignacionArray,
+            email: this.props.match.params.id
         })
 
         this.handleSubmit = this.handleSubmit.bind(this);

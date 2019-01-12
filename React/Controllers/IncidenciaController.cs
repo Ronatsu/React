@@ -96,58 +96,56 @@ namespace React.Controllers
             string mailRecovery;
 
             List<string> mailList = new List<string>();
-
-            foreach (var item in usuarios.AsignacionArray)
+            try
             {
-                if (item.Add)
+                foreach (var item in usuarios.AsignacionArray)
                 {
-                    conexion.Open();
-                    cmd = new SqlCommand("Proc_AsignarIncidencia", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
-                    cmd.Parameters.AddWithValue("@incidenciaId", 2901);
 
-
-                    dataReader = cmd.ExecuteReader();
-                    conexion.Close();
-
-                    conexion.Open();
-                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", item.Partyid);
-                    dataReader = cmd.ExecuteReader();
-                    while (dataReader.Read())
+                    if (item.Add)
                     {
+                        conexion.Open();
+                        cmd = new SqlCommand("Proc_AsignarIncidencia", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
+                        cmd.Parameters.AddWithValue("@incidenciaId", usuarios.email);
+                        cmd.Parameters.AddWithValue("@DueñoAsignacionID", 2);
 
-                        mailRecovery = dataReader["ValorMecanismo"].ToString();
-                        mailList.Add(mailRecovery);
+
+                        dataReader = cmd.ExecuteReader();
+                        conexion.Close();
+
+                        conexion.Open();
+                        cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", item.Partyid);
+                        dataReader = cmd.ExecuteReader();
+                        while (dataReader.Read())
+                        {
+
+                            mailRecovery = dataReader["ValorMecanismo"].ToString();
+                            mailList.Add(mailRecovery);
+                        }
+
+                        conexion.Close();
+
                     }
+                }
 
-                    conexion.Close();
-
+                if (mailList.Count != 0)
+                {
+                    string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
+                   "\nPara darle seguimiento diríjase al sitio web: http://localhost:44372/";
+                    string subject = "Nueva asignación";
+                    new EnviarCorreo().enviarCorreo(mailList, subject, body);
                 }
             }
-
-            if (mailList.Count != 0)
+            catch (Exception)
             {
-                string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
-               "\nPara darle seguimiento diríjase al sitio web: http://localhost:44372/";
-                string subject = "Nueva asignación";
-                new EnviarCorreo().enviarCorreo(mailList, subject, body);
+
+                throw;
             }
+
             //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
-        }
-
-        // PUT: api/Incidencia/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

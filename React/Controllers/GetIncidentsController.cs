@@ -49,7 +49,7 @@ namespace React.Controllers
                     incidents.ImpactType = dataReader["TipoImpacto"].ToString();
                     incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
                     incidents.IdIncidencia = Int32.Parse(dataReader["IncidenciaId"].ToString());
-                    incidents.Estado = Int32.Parse(dataReader["EstadoFk"].ToString()); 
+                    incidents.Estado = Int32.Parse(dataReader["EstadoFk"].ToString());
 
                     ListIncidents.Add(incidents);
                 }
@@ -151,6 +151,7 @@ namespace React.Controllers
                 }
                 Connection.Close();
                 incidentInfo.AreaData = GetAreaData(incidentInfo.IncidenciaID);
+                incidentInfo.StepsData = GetStepsById(incidentInfo.IncidenciaID);
             }
             catch (Exception ex)
             {
@@ -183,6 +184,28 @@ namespace React.Controllers
             }
             Connection.Close();
             return areaData;
+        }
+
+
+        private List<TipoIncidencia> GetStepsById(int idIncident)
+        {
+            List<TipoIncidencia> ListStepData = new List<TipoIncidencia>();
+
+            Connection = new SqlConnection(ConnectionString);
+            Connection.Open();
+            cmd = new SqlCommand("Proc_ObtenerPasosPorId", Connection);
+            cmd.Parameters.AddWithValue("@IncidenciaFk", idIncident);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            TipoIncidencia stepData = new TipoIncidencia();
+            while (dataReader.Read())
+            {
+                stepData.Descripcion = dataReader["Descripcion"].ToString();
+                stepData.Estado = dataReader["MetaEstado"].ToString();
+                ListStepData.Add(stepData);
+            }
+            Connection.Close();
+            return ListStepData;
         }
     }
 }

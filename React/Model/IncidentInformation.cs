@@ -15,5 +15,6 @@ namespace React.Model
         public string GradoControl { get; set; }
         public int IncidenciaID { get; set; }
         public List<string> AreaData { get; set; }
+        public List<TipoIncidencia> StepsData { get; set; }
     }
 }

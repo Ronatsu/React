@@ -65,7 +65,7 @@ class SinAsignar extends Component {
                                 {this.state.incidents.map(elemento => {
                                     return (
                                         <tr>
-                                            <td> <Link to="/AsignacionIncidencia"><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
+                                            <td> <Link to={'/AsignacionIncidencia/' + elemento.id}><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
                                             <th scope="row">{elemento.probabilidaImpacto}</th>
                                             <td>{elemento.tipoImpacto}</td>
                                             <td>{elemento.descripcion}</td>
