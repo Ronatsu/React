@@ -7,7 +7,7 @@ namespace React.Model
 {
     public class MetaEstado
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Estado { get; set; }
     }
 }

@@ -2,20 +2,26 @@ import React from 'react';
 import $ from 'jquery';
 import './Block_User.css';
 import Navigation from '../components/Navigation';
-import { parties } from '../components/bd/party.json';
 import EditIcon from '@material-ui/icons/Edit';
 import '../components/ButtonColor.css';
 import axios from 'axios';
-import { Button, Modal, FormControl } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 
 
 
-class navigatiom extends React.Component {
+class AdminUser extends React.Component {
 
     constructor(props) {
         super();
         this.state = {
-            parties
+            parties: []
+            , estados: []
+            , nombre: ""
+            , estado: ""
+            , estadoActual: ""
+            , rol: ""
+            , rolActual: ""
+            , partyId: ""
         }
 
 
@@ -30,32 +36,63 @@ class navigatiom extends React.Component {
             });
         });
     }
+
+    ModificarUsuario() {
+        axios.post(`http://localhost:44372/api/User/ModificarUsuario`, {
+            partyId: this.state.partyId,
+            roL_USUARIO: this.state.rol,
+            Estado: this.state.estado
+        }).then(res => {
+            if (res.status == 200) {
+                alert("Se modifico exitosamente");
+
+            } else {
+                alert("¡Lo sentimos! Ha ocurrido un error inesperado")
+
+            }
+        })
+    }
+
+    handleChange = event => {
+        const nameInput = event.target.name;
+        const valueInput = event.target.value;
+        this.setState({
+            [nameInput]: valueInput
+        });
+    }
+
+    PartyModificar(id) {
+        axios.post(`http://localhost:44372/api/User/GetUsuarioPorId`, {
+            partyId: id
+        }).then(res => {
+            const party = res.data;
+            console.log(party)
+
+            this.setState({
+                partyId: id
+                , estadoActual: party.estado
+                , estado: party.estadoId
+                , rolActual: party.roL_USUARIO
+                , rol: party.rolId
+                , nombre: party.nombre
+            });
+
+
+
+        })
+    }
+
     getData() {
         axios.get(`http://localhost:44372/api/User/GetAllUsers`)
-
             .then(res => {
                 var parties = res.data;
-                this.setState({ parties: parties });
+                this.setState({ parties });
             })
     }
     render() {
         this.getData();
-        //const partiesTable = {
-        //    this.state.parties.map(elemento => {
-        //        return (
-        //            <tr>
-        //                <tr key={elemento.partyid}>
-        //                    <td scope="row">{elemento.nombre}</td>
-        //                    <td>{elemento.primeR_APELLIDO}</td>
-        //                    <td>{elemento.segundO_APELLIDO}</td>
-        //                    <td name="emial">{elemento.correoElectronico}</td>
-        //                    <td>{elemento.roL_USUARIO}</td>
-        //                    <td><button className={showStatusBlock(party.block)} type="submit"><BlockIcon />{showTextStatusBlock(party.block)}</button></td>
-        //                </tr>
 
-        //                )
-        //            })
-        //                        }}
+
         return (
             <div className="container ">
                 <Navigation />
@@ -71,11 +108,10 @@ class navigatiom extends React.Component {
                     <table className="table table-hover table-condensed " id="table_id">
                         <thead>
                             <tr>
-                                <th className="size" scope="col">Nombre</th>
-                                <th className="size" scope="col">Primer Apellido</th>
-                                <th className="size" scope="col">Segundo Apellido</th>
+                                <th >Nombre</th>
                                 <th className="size" scope="col">Correo Electrónico</th>
                                 <th className="size" scope="col">Rol</th>
+                                <th className="size" scope="col">Estado</th>
                                 <th className="size" scope="col"></th>
                             </tr>
                         </thead>
@@ -83,12 +119,11 @@ class navigatiom extends React.Component {
                             {this.state.parties.map(elemento => {
                                 return (
                                     <tr key={elemento.partyid}>
-                                        <td scope="row">{elemento.nombre}</td>
-                                        <td>{elemento.primeR_APELLIDO}</td>
-                                        <td>{elemento.segundO_APELLIDO}</td>
-                                        <td name="emial">{elemento.correoElectronico}</td>
+                                        <td>{elemento.nombre} {elemento.primeR_APELLIDO} {elemento.segundO_APELLIDO}</td>
+                                        <td>{elemento.correoElectronico}</td>
                                         <td>{elemento.roL_USUARIO}</td>
-                                        <td><button type="submit" className="btn btnBlue" data-toggle="modal" href="#modal2"><EditIcon />Editar</button></td>
+                                        <td>{elemento.estado}</td>
+                                        <td><button type="submit" className="btn btnBlue" data-toggle="modal" href="#modal2" onClick={() => this.PartyModificar(elemento.partyid)}><EditIcon />Editar</button></td>
                                     </tr>
                                 )
                             })}
@@ -98,32 +133,26 @@ class navigatiom extends React.Component {
                 <div className="container" id="modal2">
                     <Modal.Dialog>
                         <Modal.Header>
-                            <Modal.Title id="titleModal"> Editando {this.state.nombreTecnologia}</Modal.Title>
+                            <Modal.Title id="titleModal"> Editando {this.state.nombre}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <label>Nombre de la tecnología</label>
-                            <input className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></input>
-                            <br />
-                            <label>Tipo de Tecnología</label>
-                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
-                                <option selected disabled>
-                                    {this.state.SelectTipoTecnologiaModificar}
-                                </option>
-                                
-                            </select>
-                            <br />
-                            <label>Rol</label>
-                            <div className=" justify-content-end">
-                                <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onChange={this.handleChange}>
-                                    <option disabled selected>{this.state.criticoS_N_Modificar}</option>
-                                    <option value="2">Usuario</option>
-                                    <option value="1" >Administrador</option>
-                                </select>
+                            <div className="form-group">
+                                <label>Rol</label>
+                                <div className=" justify-content-end">
+                                    <select className="form-control" id="exampleFormControlSelect1" name="rol" onChange={this.handleChange}>
+                                        <option disabled selected>{this.state.rolActual}</option>
+                                        <option value="2">Usuario</option>
+                                        <option value="1" >Administrador</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label id="txtModal">Estado</label>
                                 <select className="form-control container" name="estado" onChange={this.handleChange}>
                                     <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    <option value="6">Habilitado</option>
+                                    <option value="7">Deshabilitado</option>
+
 
                                 </select>
                             </div>
@@ -131,7 +160,7 @@ class navigatiom extends React.Component {
 
                         <Modal.Footer>
                             <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarTecnologia()}>Aceptar</Button>
+                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarUsuario()}>Aceptar</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>
@@ -140,21 +169,4 @@ class navigatiom extends React.Component {
         );
     }
 }
-export default navigatiom;
-
-function showStatusBlock(status) {
-    if (status === true) {
-        $("#textButton").html("Desbloquear");
-        return "btn btnGreen"
-    } else if (status === false) {
-        $("#textButton").html("Bloquear");
-        return "btn btnRed"
-    }
-}
-function showTextStatusBlock(status) {
-    if (status === true) {
-        return "Desbloquear"
-    } else if (status === false) {
-        return "Bloquear"
-    }
-}
+export default AdminUser;

@@ -4,16 +4,14 @@ import { Link } from "react-router-dom";
 import PersonIcon from '@material-ui/icons/Person';
 import ExitIcon from '@material-ui/icons/Input';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SupervisorIcon from '@material-ui/icons/SupervisorAccount';
 import BuildIcon from '@material-ui/icons/Build';
-import BlockIcon from '@material-ui/icons/Block';
+import PeopleIcon from '@material-ui/icons/People';
 import AddUserIcon from '@material-ui/icons/GroupAdd';
 import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
-import UserIncident from '@material-ui/icons/FolderShared';
 import '../components/ButtonColor.css';
 
 
@@ -49,7 +47,7 @@ class navigatiom extends React.Component {
 
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
-                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
+                                <Link to="/BlockUser">  <a className="dropdown-item" href="#"><PeopleIcon />Usuarios</a></Link>
 
                                 <div className="dropdown-divider"></div>
 
