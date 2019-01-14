@@ -21,6 +21,9 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
 
+        //manejo de errores
+        JSON HandleError = new JSON();
+
         // GET: api/User
         [HttpGet]
         [Route("UsuarioHabilitado")]
@@ -137,56 +140,72 @@ namespace React.Controllers
         [Route("GetNombre")]
         public ActionResult GetNombre(Usuario usuario)
         {
-            conexion = new SqlConnection(conexionString.getConnection());
-            conexion.Open();
-            cmd = new SqlCommand("Proc_ObtenerNombre", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id",usuario.PARTYID);
-
-            dataReader = cmd.ExecuteReader();
-           // List<Usuario> userList = new List<Usuario>();
-            Usuario newUser=new Usuario();
-            while (dataReader.Read())
+            try
             {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerNombre", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", usuario.PARTYID);
 
-                newUser.NOMBRE = dataReader["Nombre"].ToString();
-                newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
-                newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
-                
-               // userList.Add(newUser);
+                dataReader = cmd.ExecuteReader();
+                // List<Usuario> userList = new List<Usuario>();
+                Usuario newUser = new Usuario();
+                while (dataReader.Read())
+                {
+
+                    newUser.NOMBRE = dataReader["Nombre"].ToString();
+                    newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
+                    newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
+
+                    // userList.Add(newUser);
+                }
+                conexion.Close();
+                var item = newUser;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
             }
-            conexion.Close();
-            var item = newUser;
-            if (item == null)
+            catch (Exception ex)
             {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
             }
-            return Ok(item);
         }
 
         [HttpPost]
         [Route("CambiarContraseña")]
         public ActionResult CambiarContraseña(Usuario party)
         {
-            Password password = new Password();
-            if (password.ValidarContrasena(party.password2, party.password1))
+            try
             {
-                conexion = new SqlConnection(conexionString.getConnection());
-                conexion.Open();
-                string s = password.GetMD5(party.passwordActual);
+                Password password = new Password();
+                if (password.ValidarContrasena(party.password2, party.password1))
+                {
+                    conexion = new SqlConnection(conexionString.getConnection());
+                    conexion.Open();
+                    string s = password.GetMD5(party.passwordActual);
 
-                cmd = new SqlCommand("Proc_CambiarContrasena", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", party.PARTYID);
-                cmd.Parameters.AddWithValue("@constrasenaNueva", password.GetMD5(party.password1));
-                cmd.Parameters.AddWithValue("@constrasenaActual", s);
-                dataReader = cmd.ExecuteReader();
+                    cmd = new SqlCommand("Proc_CambiarContrasena", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                    cmd.Parameters.AddWithValue("@constrasenaNueva", password.GetMD5(party.password1));
+                    cmd.Parameters.AddWithValue("@constrasenaActual", s);
+                    dataReader = cmd.ExecuteReader();
 
-                conexion.Close();
+                    conexion.Close();
+                }
+
+
+                return Ok();
             }
-
-
-            return Ok();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -213,20 +232,27 @@ namespace React.Controllers
         [Route("CambiarNombre")]
         public ActionResult CambiarNombre(Usuario party)
         {
+            try
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
 
-            conexion = new SqlConnection(conexionString.getConnection());
-            conexion.Open();
+                cmd = new SqlCommand("Proc_CambiarNombre", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                cmd.Parameters.AddWithValue("@nombre", party.NOMBRE);
+                cmd.Parameters.AddWithValue("@primerApellido", party.PRIMER_APELLIDO);
+                cmd.Parameters.AddWithValue("@segundoApellido", party.SEGUNDO_APELLIDO);
+                dataReader = cmd.ExecuteReader();
 
-            cmd = new SqlCommand("Proc_CambiarNombre", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id", party.PARTYID);
-            cmd.Parameters.AddWithValue("@nombre", party.NOMBRE);
-            cmd.Parameters.AddWithValue("@primerApellido", party.PRIMER_APELLIDO);
-            cmd.Parameters.AddWithValue("@segundoApellido", party.SEGUNDO_APELLIDO);
-            dataReader = cmd.ExecuteReader();
-
-            conexion.Close();
-            return Ok();
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         // POST: api/User
@@ -234,28 +260,25 @@ namespace React.Controllers
         [Route("Habilitar")]
         public ActionResult PostHabilitar(Usuario partyId)
         {
+            try
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
 
-            conexion = new SqlConnection(conexionString.getConnection());
-            conexion.Open();
-            //cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
-            //cmd.CommandType = CommandType.StoredProcedure;
-            //cmd.Parameters.AddWithValue("@correo", email2);
-            //dataReader = cmd.ExecuteReader();
-            //int partyId = 0;
-            //while (dataReader.Read())
-            //{
+                cmd = new SqlCommand("Proc_HabilitarParty", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+                cmd.Parameters.AddWithValue("@rol", partyId.ROL_USUARIO);
+                dataReader = cmd.ExecuteReader();
 
-            //    int.TryParse(dataReader["PartyFk"].ToString(), out partyId);
-            //}
-
-
-            cmd = new SqlCommand("Proc_HabilitarParty", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
-            dataReader = cmd.ExecuteReader();
-
-            conexion.Close();
-            return Ok();
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         // POST: api/User
@@ -263,30 +286,24 @@ namespace React.Controllers
         [Route("Deshabilitar")]
         public ActionResult PostDeshabilitar(Usuario partyId)
         {
+            try
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
 
-            conexion = new SqlConnection(conexionString.getConnection());
-            conexion.Open();
-            //cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
-            //cmd.CommandType = CommandType.StoredProcedure;
-            //cmd.Parameters.AddWithValue("@correo", email);
-            //dataReader = cmd.ExecuteReader();
-            //int partyId = 0;
-            //while (dataReader.Read())
-            //{
+                cmd = new SqlCommand("Proc_DeshabilitarParty", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+                dataReader = cmd.ExecuteReader();
 
-            //    int.TryParse(dataReader["PartyFk"].ToString(), out partyId);
-            //}
-
-            cmd = new SqlCommand("Proc_DeshabilitarParty", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
-            dataReader = cmd.ExecuteReader();
-
-            conexion.Close();
-            return Ok();
-
-
-
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
     }
 }
