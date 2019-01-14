@@ -32,7 +32,7 @@ const AppRutas = () =>
             <Route exact path="/InsertarIncidencia" component={Form} />
             <Route exact path="/AjustePerfil" component={Configuracion} />
             <Route exact path="/BlockUser" component={BlockUser} />
-            <Route exact path="/AsignacionIncidencia" component={AsignacionIncidencia} />
+            <Route exact path="/AsignacionIncidencia/:id?" component={AsignacionIncidencia} />
             <Route exact path="/AdminArea" component={AdminArea} />
             <Route exact path="/AdminTech" component={AdminTech} />
             <Route exact path="/sidebar" component={sidebar} />

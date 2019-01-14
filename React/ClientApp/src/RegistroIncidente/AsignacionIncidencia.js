@@ -7,20 +7,14 @@ import axios from 'axios';
 
 class AsignacionIncidencia extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             parties: [],
             party: [],
-            asignacionArray: []
-            , partyId: "",
+            asignacionArray: [],
+            partyId: "",
             itemChecked: []
-
-
         }
-        super(props);
-
-
-
         $(document).ready(function () {
 
             $('#divCheck input').click(function () {
@@ -48,9 +42,12 @@ class AsignacionIncidencia extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
-            asignacionArray: this.state.asignacionArray
-        });
-        
+            asignacionArray: this.state.asignacionArray,
+            email: this.props.match.params.id
+        })
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
     componentWillMount() {
@@ -59,6 +56,7 @@ class AsignacionIncidencia extends React.Component {
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });
+                console.log(parties);
             })
     }
 
@@ -155,7 +153,7 @@ class AsignacionIncidencia extends React.Component {
 
                         <div class="pagination justify-content-end">
                             <Link to="/SinAsignar">  <button class="btn btnRed  " type="submit">Cancelar</button></Link>
-                            <Link to="/SinAsignar"> <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button></Link>
+                            <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button>
                         </div>
 
                     </fieldset>

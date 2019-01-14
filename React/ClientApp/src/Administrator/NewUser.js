@@ -12,7 +12,7 @@ import { Button, Modal, FormControl } from 'react-bootstrap';
 class newUser extends React.Component {
 
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             parties: [],
             nombre: "",
@@ -20,7 +20,6 @@ class newUser extends React.Component {
             partyId: ""
             , rol: ""
         }
-        super(props);
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -53,7 +52,6 @@ class newUser extends React.Component {
         this.setState({
             [nameInput]: valueInput
         });
-        this.handleChange = this.handleChange.bind(this);
     }
 
     getData() {
@@ -64,7 +62,14 @@ class newUser extends React.Component {
                 this.setState({ parties: parties });
             })
     }
-
+    componentWillMount() {
+        this.getData();
+    } 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.parties !== this.state.parties) {
+            this.getData();
+        }
+    }
     DisableUser(id) {
         axios.post(`http://localhost:44372/api/User/Deshabilitar`, {
             partyId: id
@@ -86,7 +91,7 @@ class newUser extends React.Component {
         })
     }
     render() {
-        this.getData()
+       
         return (
             <div className="container ">
                 <Navigation />

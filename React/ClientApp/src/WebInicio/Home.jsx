@@ -4,15 +4,9 @@ import SearchkIcon from '@material-ui/icons/Search';
 import './Home.css';
 import { Link } from "react-router-dom";
 import '../components/ButtonColor.css';
-import axios from 'axios'
+import axios from 'axios';
 import '../Administrator/Block_User.css';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
-/*const options = {
-    onRowClick: function (row) {
-        return (`${row.id}`);
-    }
-};*/
+import $ from 'jquery';
 
 class Home extends Component {
     constructor(props) {
@@ -20,34 +14,19 @@ class Home extends Component {
         this.state = {
             incidents: [],
             email1: ChooseParty(this.props.idParty),
-            stateIncident: [],
-            row: ''
+            stateIncident: []
         }
         this.handleChange = this.handleChange.bind(this);
-        this.hh = this.hh.bind(this);
+
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
     }
-    hh = (event) => {
-        const options = {
-            onRowClick: function (row) {
-                alert(`${row.idIncidencia}`);
-                this.setState({ row: `${row.idIncidencia}` });
-            }
-        };
-        return options;
-    }
-    //GetRow() {
-    //    return {
-    //        mode: 'radio',
-    //        clickToSelect: true,
-    //        hideSelectColumn: true,
-    //        onSelect: this.onSelectRow.bind(this)
-    //    };
-    //}
-    //onSelectRow(row, isSelected, e) {
-    //    if (isSelected) {
-    //        this.setState({ row: `${row['idIncidencia']}` });
-    //    }
-    //}
     componentWillMount() {
         this.DataUpload(0)
         this.ShowSelectIncidentState()
@@ -74,13 +53,13 @@ class Home extends Component {
     handleChange = (event) => {
         this.DataUpload(event.target.value)
     };
-
-    cellButton() {
-        return (
-            < Link to={'/InformacionIncidencia/' + this.state.row}><button className="btn btnBlue btn-md" type="submit" ><SearchkIcon />Dar seguimiento</button></Link>
-        )
+    DisableButton(state) {
+        if (state == 2) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
     render() {
         return (
             <div >
@@ -119,7 +98,7 @@ class Home extends Component {
                                     return (
                                         <tr key={elemento.idIncidencia}>
                                             <td>
-                                                < Link to={'/InformacionIncidencia/' + elemento.idIncidencia}><button className="btn btnBlue btn-md" type="submit" ><SearchkIcon />Dar seguimiento</button></Link>
+                                                < Link to={'/InformacionIncidencia/' + elemento.idIncidencia}><button disabled={this.DisableButton(elemento.estado)} className="btn btnBlue btn-md" type="submit" ><SearchkIcon />Dar seguimiento</button></Link>
                                             </td>
                                             <td>
                                                 {elemento.impactProbability}
@@ -149,19 +128,11 @@ class Home extends Component {
     }
 
 }
-
 function ChooseParty(partyID) {
     if (partyID == undefined || partyID == null || partyID == 0) {
-        return 5;
+        return 3;
     } else {
         return partyID;
     }
 }
 export default Home;
-/* <BootstrapTable options={this.hh()} data={this.state.incidents} search hover striped version='4' pagination id="myTable" className="table table-borderless" >
-                            <TableHeaderColumn dataField='button' dataFormat={this.cellButton.bind(this)} />
-                            <TableHeaderColumn dataField='impactProbability'>Impacto</TableHeaderColumn>
-                            <TableHeaderColumn dataField='impactType'>Probabilidad de Impacto</TableHeaderColumn>
-                            <TableHeaderColumn dataField='description'>Descripción</TableHeaderColumn>
-                            <TableHeaderColumn dataField='dateIncident' isKey>Fecha de Incidencia</TableHeaderColumn>
-                        </BootstrapTable>*/

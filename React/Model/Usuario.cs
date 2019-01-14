@@ -9,11 +9,6 @@ namespace API_Ejemplo.Model
 {
     public class Usuario
     {
-        public Usuario()
-        {
-
-        }
-
         public string PARTYID { get; set; }
         public string email { get; set; }
         public string NOMBRE { get; set; }
