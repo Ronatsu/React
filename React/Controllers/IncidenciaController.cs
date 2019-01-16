@@ -139,7 +139,7 @@ namespace React.Controllers
                     new EnviarCorreo().enviarCorreo(mailList, subject, body);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
