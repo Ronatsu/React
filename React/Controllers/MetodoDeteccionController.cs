@@ -27,23 +27,29 @@ namespace React.Controllers
         [Route("VerMetodos")]
         public ActionResult<List<string>> VerMetodos()
         {
-            conexion = new SqlConnection(conexionString.getConnection());
-            conexion.Open();
-            cmd = new SqlCommand("Proc_ObtenerMetodoDeteccion", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
             List<MetodoDeteccion> nuevaLista = new List<MetodoDeteccion>();
-            while (dataReader.Read())
+            try
             {
-                MetodoDeteccion metodo = new MetodoDeteccion();
-                metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
-                metodo.Id = Int32.Parse(dataReader["ID"].ToString());
-                metodo.Estado = dataReader["MetaEstado"].ToString();
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerMetodoDeteccion", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    MetodoDeteccion metodo = new MetodoDeteccion();
+                    metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
+                    metodo.Id = Int32.Parse(dataReader["ID"].ToString());
+                    metodo.Estado = dataReader["MetaEstado"].ToString();
 
-                nuevaLista.Add(metodo);
-
+                    nuevaLista.Add(metodo);
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = nuevaLista;
             if (item == null)
             {
@@ -56,18 +62,25 @@ namespace React.Controllers
         [Route("ObtenerPorId")]
         public ActionResult<List<string>> ObtenerPorId(MetodoDeteccion metodo)
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_ObtenerMetodoDeteccionPorId", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", metodo.Id);
-            dataReader = cmd.ExecuteReader();
-
-            while (dataReader.Read())
+            try
             {
-                metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
-                metodo.Estado = dataReader["MetaEstado"].ToString();
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ObtenerMetodoDeteccionPorId", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ID", metodo.Id);
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
+                    metodo.Estado = dataReader["MetaEstado"].ToString();
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
             var item = metodo;
             if (item == null)
             {
@@ -90,7 +103,6 @@ namespace React.Controllers
                 cmd.Parameters.AddWithValue("@estado", metodo.Estado);
 
                 dataReader = cmd.ExecuteReader();
-
                 conexion.Close();
                 return Ok();
             }
@@ -107,39 +119,45 @@ namespace React.Controllers
 
         public ActionResult<List<string>> AgregarMetodo(MetodoDeteccion value)
         {
-            if (!value.MetodoDeteccionNombre.Equals(""))
+            try
             {
-                EstablecerConexion();
-                cmd = new SqlCommand("Proc_ExisteMetodoDeteccion", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@metodoDeteccion", value.MetodoDeteccionNombre);
-
-
-                dataReader = cmd.ExecuteReader();
-                int id = 0;
-                while (dataReader.Read())
-                {
-                    int.TryParse(dataReader["MetodoDeteccionId"].ToString(), out id);
-                    value.Id = id;
-                }
-                conexion.Close();
-
-                if (id == 0)
+                if (!value.MetodoDeteccionNombre.Equals(""))
                 {
                     EstablecerConexion();
-                    cmd = new SqlCommand("Proc_AgregarMetodoDeteccion", conexion);
+                    cmd = new SqlCommand("Proc_ExisteMetodoDeteccion", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@MetodoDeteccionNombre", value.MetodoDeteccionNombre);
-                    cmd.Parameters.AddWithValue("@Estado", value.Estado);
+                    cmd.Parameters.AddWithValue("@metodoDeteccion", value.MetodoDeteccionNombre);
+
 
                     dataReader = cmd.ExecuteReader();
-
+                    int id = 0;
+                    while (dataReader.Read())
+                    {
+                        int.TryParse(dataReader["MetodoDeteccionId"].ToString(), out id);
+                        value.Id = id;
+                    }
                     conexion.Close();
-                    return Ok();
-                }
-                return Ok(value.MetodoDeteccionNombre);
-            }
 
+                    if (id == 0)
+                    {
+                        EstablecerConexion();
+                        cmd = new SqlCommand("Proc_AgregarMetodoDeteccion", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@MetodoDeteccionNombre", value.MetodoDeteccionNombre);
+                        cmd.Parameters.AddWithValue("@Estado", value.Estado);
+
+                        dataReader = cmd.ExecuteReader();
+
+                        conexion.Close();
+                        return Ok();
+                    }
+                    return Ok(value.MetodoDeteccionNombre);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             return NotFound();
         }
         public void EstablecerConexion()

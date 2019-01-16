@@ -15,37 +15,40 @@ namespace React.Controllers
     [ApiController]
     public class GradoControlController : ControllerBase
     {
-        //String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-        //                          "Initial Catalog=ProyectoAnderson;" +
-        //                          "Integrated security=True;";
 
         Conexion conexionString = new Conexion();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-      
+
+        //manejo de errores
+        JSON HandleError = new JSON();
 
         // GET: api/GradoControl
         [HttpGet]
         public ActionResult<List<string>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_ObtenerGradoControl", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-
             List<GradoControl> nuevaLista = new List<GradoControl>();
-
-            while (dataReader.Read())
+            try
             {
-                GradoControl gradoControl = new GradoControl();
-                gradoControl.Descrpcion = dataReader["GRADO_CONTROL"].ToString();
-                gradoControl.Id = Int32.Parse( dataReader["ID"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ObtenerGradoControl", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    GradoControl gradoControl = new GradoControl();
+                    gradoControl.Descrpcion = dataReader["GRADO_CONTROL"].ToString();
+                    gradoControl.Id = Int32.Parse(dataReader["ID"].ToString());
 
-                nuevaLista.Add(gradoControl);
-
+                    nuevaLista.Add(gradoControl);
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = nuevaLista;
             if (item == null)
             {
@@ -53,32 +56,6 @@ namespace React.Controllers
             }
             return Ok(item);
         }
-
-        // GET: api/GradoControl/5
-        [HttpGet("{id}", Name = "GetGradoControl")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/GradoControl
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/GradoControl/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
         public void EstablecerConexion()
         {
             conexion = new SqlConnection(conexionString.getConnection());
