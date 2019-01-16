@@ -15,7 +15,7 @@ export default class TableIncidentUser extends Component {
                 <br />
                 <br />
                 <br />
-                <h1 className="container">Incidencias de {this.state.completeName}</h1>
+                <h3 className="container">Incidencias de {this.state.completeName}</h3>
                 <TableIncident idParty={this.state.id} />
             </div>
         );
