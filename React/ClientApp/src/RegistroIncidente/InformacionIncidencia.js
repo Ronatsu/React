@@ -27,7 +27,6 @@ class InformacionIncidencia extends React.Component {
     }
     componentWillMount() {
         this.DataUpload();
-        //this.SaveIncidentStep();
     }
     DataUpload() {
         axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`, {
@@ -77,10 +76,13 @@ class InformacionIncidencia extends React.Component {
             })
         }
     }
-
-
-
-
+    DisableButton(state) {
+        if (state == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     render() {
         return (
             <div className="container">

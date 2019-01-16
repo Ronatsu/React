@@ -64,6 +64,7 @@ namespace API_Ejemplo.Controllers
 
         // POST: api/Registro
         [HttpPost]
+        [Route("MethodUserRegister")]
         public IActionResult CrearUsuario(Usuario newUser)
         {
             try
@@ -149,6 +150,7 @@ namespace API_Ejemplo.Controllers
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return null;
             }
+            return null;
         }
     }
 }
