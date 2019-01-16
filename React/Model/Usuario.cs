@@ -15,11 +15,14 @@ namespace API_Ejemplo.Model
         public string PRIMER_APELLIDO { get; set; }
         public string SEGUNDO_APELLIDO { get; set; }
         public Boolean HABILITADO { get; set; }
+        public string Estado { get; set; }
+        public string EstadoId { get; set; }
         public string password1 { get; set; }
         public string password2 { get; set; }
         public string passwordActual { get; set; }
         public char TIPO_COLABORADOR { get; set; }
         public string ROL_USUARIO { get; set; }
+        public string RolId { get; set; }
         public string ASIGNA_INCIDENCIA { get; set; }
         public string correoElectronico { get; set; }
         public List<Asignacion> AsignacionArray { get; set; }

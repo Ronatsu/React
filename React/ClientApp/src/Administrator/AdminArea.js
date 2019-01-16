@@ -187,10 +187,6 @@ class AdminArea extends React.Component {
             <option value={tecnologia.tecnologiaId}>{tecnologia.nombreTecnologia}</option>
         );
 
-        //const listaArea = this.state.areas.map((area) =>
-        //    <option value={area.areaID}>{area.nombreArea}</option>
-        //);
-
 
         const listaAreaTecno = this.state.areaTecno.map((area) =>
             <option value={area.areaID}>{area.nombreArea}</option>

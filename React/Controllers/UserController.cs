@@ -20,8 +20,9 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
+
+        //manejo de errores
         JSON HandleError = new JSON();
-        List<Usuario> userList = new List<Usuario>();
 
         // GET: api/User
         [HttpGet]
@@ -34,7 +35,9 @@ namespace React.Controllers
                 conexion.Open();
                 cmd = new SqlCommand("Proc_ObtenerUsuariosHabilitados", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
+
                 dataReader = cmd.ExecuteReader();
+                List<Usuario> userList = new List<Usuario>();
                 while (dataReader.Read())
                 {
 
@@ -51,19 +54,58 @@ namespace React.Controllers
                     userList.Add(newUser);
                 }
                 conexion.Close();
+                var item = userList;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-            }
-           
-            var item = userList;
-            if (item == null)
-            {
                 return NotFound();
             }
-            return Ok(item);
+        }
 
+        [HttpGet]
+        [Route("GetEstados")]
+        public ActionResult GetEstados()
+        {
+            try
+            {
+
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerEstadoParty", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                dataReader = cmd.ExecuteReader();
+                List<MetaEstado> estados = new List<MetaEstado>();
+                while (dataReader.Read())
+                {
+
+                    MetaEstado estado = new MetaEstado
+                    {
+                        Estado = dataReader["ESTADO"].ToString(),
+                        Id = dataReader["ID"].ToString()
+                    };
+
+                    estados.Add(estado);
+                }
+                conexion.Close();
+                var item = estados;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         [HttpGet]
@@ -76,7 +118,9 @@ namespace React.Controllers
                 conexion.Open();
                 cmd = new SqlCommand("Proc_GetAllUsers", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
+
                 dataReader = cmd.ExecuteReader();
+                List<Usuario> userList = new List<Usuario>();
                 while (dataReader.Read())
                 {
 
@@ -88,23 +132,24 @@ namespace React.Controllers
                         SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString(),
                         ROL_USUARIO = dataReader["RolUsuario"].ToString(),
                         correoElectronico = dataReader["ValorMecanismo"].ToString()
+                        ,Estado = dataReader["estado"].ToString()
                     };
 
                     userList.Add(newUser);
                 }
                 conexion.Close();
+                var item = userList;
+                if (item == null)
+                {
+                    return Ok("No hay datos que mostrar");
+                }
+                return Ok(item);
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
             }
-            
-            var item = userList;
-            if (item == null)
-            {
-                return Ok("No hay datos que mostrar");
-            }
-            return Ok(item);
         }
 
 
@@ -119,7 +164,9 @@ namespace React.Controllers
                 conexion.Open();
                 cmd = new SqlCommand("Proc_ObtenerNewParties", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
+
                 dataReader = cmd.ExecuteReader();
+                List<Usuario> userList = new List<Usuario>();
                 while (dataReader.Read())
                 {
 
@@ -136,17 +183,19 @@ namespace React.Controllers
                     userList.Add(newUser);
                 }
                 conexion.Close();
+                var item = userList;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
+
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-            }
-            var item = userList;
-            if (item == null)
-            {
                 return NotFound();
             }
-            return Ok(item);
         }
 
 
@@ -155,7 +204,6 @@ namespace React.Controllers
         [Route("GetNombre")]
         public ActionResult GetNombre(Usuario usuario)
         {
-            Usuario newUser = new Usuario();
             try
             {
                 conexion = new SqlConnection(conexionString.getConnection());
@@ -163,7 +211,9 @@ namespace React.Controllers
                 cmd = new SqlCommand("Proc_ObtenerNombre", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id", usuario.PARTYID);
+
                 dataReader = cmd.ExecuteReader();
+                Usuario newUser = new Usuario();
                 while (dataReader.Read())
                 {
 
@@ -171,21 +221,24 @@ namespace React.Controllers
                     newUser.PRIMER_APELLIDO = dataReader["PrimerApellido"].ToString();
                     newUser.SEGUNDO_APELLIDO = dataReader["SegundoApellido"].ToString();
 
-                    // userList.Add(newUser);
+
                 }
                 conexion.Close();
+                var item = newUser;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-            }
-            var item = newUser;
-            if (item == null)
-            {
                 return NotFound();
             }
-            return Ok(item);
         }
+
+
 
         [HttpPost]
         [Route("CambiarContraseña")]
@@ -209,13 +262,15 @@ namespace React.Controllers
 
                     conexion.Close();
                 }
+
+
+                return Ok();
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
             }
-            return Ok();
         }
 
         [HttpPost]
@@ -232,13 +287,15 @@ namespace React.Controllers
                 cmd.Parameters.AddWithValue("@id", party.PARTYID);
                 dataReader = cmd.ExecuteReader();
 
-                conexion.Close();               
+                conexion.Close();
+
+                return Ok();
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
             }
-            return Ok();
         }
 
         [HttpPost]
@@ -259,12 +316,76 @@ namespace React.Controllers
                 dataReader = cmd.ExecuteReader();
 
                 conexion.Close();
+                return Ok();
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
             }
-            return Ok();
+        }
+        [HttpPost]
+        [Route("ModificarUsuario")]
+        public ActionResult ModificarUsuario(Usuario party)
+        {
+            try
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+
+                cmd = new SqlCommand("Proc_ModificarUsuario", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                cmd.Parameters.AddWithValue("@rol", party.ROL_USUARIO);
+                cmd.Parameters.AddWithValue("@estado", party.Estado);
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [Route("GetUsuarioPorId")]
+        public ActionResult GetUsuarioPorId(Usuario party)
+        {
+            try
+            {
+                conexion = new SqlConnection(conexionString.getConnection());
+                conexion.Open();
+
+                cmd = new SqlCommand("Proc_ObtenerPartyPorId", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", party.PARTYID);
+                dataReader = cmd.ExecuteReader();
+
+                Usuario newUser = new Usuario();
+                while (dataReader.Read())
+                {
+                    newUser.NOMBRE = dataReader["Nombre"].ToString();
+                    newUser.ROL_USUARIO = dataReader["ROL"].ToString();
+                    newUser.RolId = dataReader["ROLid"].ToString();
+                    newUser.Estado = dataReader["ESTADO"].ToString();
+                    newUser.EstadoId = dataReader["ESTADOid"].ToString();
+                }
+                conexion.Close();
+                var item = newUser;
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
         }
 
         // POST: api/User
@@ -280,16 +401,17 @@ namespace React.Controllers
                 cmd = new SqlCommand("Proc_HabilitarParty", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+                cmd.Parameters.AddWithValue("@rol", partyId.ROL_USUARIO);
                 dataReader = cmd.ExecuteReader();
 
                 conexion.Close();
+                return Ok();
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
             }
-            
-            return Ok();
         }
 
         // POST: api/User
@@ -301,18 +423,20 @@ namespace React.Controllers
             {
                 conexion = new SqlConnection(conexionString.getConnection());
                 conexion.Open();
+
                 cmd = new SqlCommand("Proc_DeshabilitarParty", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
                 dataReader = cmd.ExecuteReader();
 
                 conexion.Close();
+                return Ok();
             }
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-            }           
-            return Ok();
+                return NotFound();
+            }
         }
     }
 }
