@@ -27,7 +27,6 @@ class InformacionIncidencia extends React.Component {
     }
     componentWillMount() {
         this.DataUpload();
-        //this.SaveIncidentStep();
     }
     DataUpload() {
         axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`, {
@@ -77,10 +76,13 @@ class InformacionIncidencia extends React.Component {
             } )
         }
     }
-
-
-
-
+    DisableButton(state) {
+        if (state == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     render() {
         return (
             <div className="container">
@@ -184,7 +186,7 @@ class InformacionIncidencia extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
+                <button disabled={this.DisableButton(this.props.match.params.estadoId)} data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
                 <div className="pagination justify-content-end">
                     <div id="myModal" className="modal fade in">
                         <div className="modal-dialog">
