@@ -73,13 +73,6 @@ class Home extends Component {
     handleChange = (event) => {
         this.DataUpload(event.target.value)
     };
-    DisableButton(state) {
-        if (state == 2) {
-            return true;
-        } else {
-            return false;
-        }
-    }
     render() {
         return (
             <div >
@@ -118,7 +111,7 @@ class Home extends Component {
                                     return (
                                         <tr key={elemento.idIncidencia}>
                                             <td>
-                                                < Link to={'/InformacionIncidencia/' + elemento.idIncidencia}><button disabled={this.DisableButton(elemento.estado)} className="btn btnBlue btn-md" type="submit" ><SearchkIcon />Dar seguimiento</button></Link>
+                                                < Link to={'/InformacionIncidencia/' + elemento.idIncidencia + '/' + elemento.estado}><button className="btn btnBlue btn-md" type="submit" ><SearchkIcon />Dar seguimiento</button></Link>
                                             </td>
                                             <td>
                                                 {elemento.impactProbability}

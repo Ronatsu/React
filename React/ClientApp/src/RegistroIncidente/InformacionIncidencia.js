@@ -27,7 +27,6 @@ class InformacionIncidencia extends React.Component {
     }
     componentWillMount() {
         this.DataUpload();
-        //this.SaveIncidentStep();
     }
     DataUpload() {
 
@@ -96,13 +95,16 @@ class InformacionIncidencia extends React.Component {
                 } else {
                     alert("¡Lo sentimos! Ha ocurrido un error inesperado")
                 }
-            } )
+            })
         }
     }
-
-
-
-
+    DisableButton(state) {
+        if (state == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     render() {
         return (
             <div className="container">
@@ -191,14 +193,19 @@ class InformacionIncidencia extends React.Component {
                             </tr>
                             <tr>
 
-                                <th className="">Pasos Registrados</th>
+                                <th className="">Pasos Registrados
+                                     <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
+                                    </th>
                                 <td> {this.state.StepData.map(elemento => {
                                     return (
                                         <tr>
                                             - {elemento.descripcion}
                                         </tr>
-                                    )
-                                })}</td>
+                                     )
+                                })}
+
+                                </td>
+
 
                             </tr>
 
@@ -206,7 +213,6 @@ class InformacionIncidencia extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
                 <div className="pagination justify-content-end">
                     <div id="myModal" className="modal fade in">
                         <div className="modal-dialog">
