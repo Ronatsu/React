@@ -7,6 +7,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import '../components/ButtonColor.css';
 import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import Footer from '../components/Footer';
+import AuthService from '../components/AuthService';
 
 class navigatiom extends React.Component {
 
@@ -15,6 +16,7 @@ class navigatiom extends React.Component {
         this.state = {
             parties
         }
+        this.Auth = new AuthService();
 
         super(props);
 

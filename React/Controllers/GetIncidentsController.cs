@@ -34,10 +34,17 @@ namespace React.Controllers
             {
                 Connection = new SqlConnection(ConnectionString);
                 Connection.Open();
-                cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
+                if (Int32.Parse(correo.email2) == 0)
+                {
+                    cmd = new SqlCommand("Proc_ObtenerIncidenciadSinEstado", Connection);
+                }
+                else
+                {
+                    cmd = new SqlCommand("Proc_ObtenerIncidencia", Connection);
+                    cmd.Parameters.AddWithValue("@ESTADO_ID", correo.email2);
+                }
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
-                cmd.Parameters.AddWithValue("@ESTADO_ID", correo.email2);
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
@@ -45,7 +52,8 @@ namespace React.Controllers
                     incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
                     incidents.Description = dataReader["Descripcion"].ToString();
                     incidents.ImpactType = dataReader["TipoImpacto"].ToString();
-                    incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("dd/MM/yyyy");
+                    incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("yyyy/MM/dd");
+                    incidents.IdIncidencia = Int32.Parse(dataReader["IncidenciaId"].ToString());
 
                     ListIncidents.Add(incidents);
                 }

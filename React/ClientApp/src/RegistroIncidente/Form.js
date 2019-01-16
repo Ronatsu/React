@@ -45,7 +45,7 @@ class Form extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
                 {
                     TecnologiaId: valueInput
                 },
@@ -66,7 +66,7 @@ class Form extends React.Component {
 
         }
 
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
@@ -79,25 +79,25 @@ class Form extends React.Component {
             })
 
 
-        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ImpactoIncidencia`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/ImpactoIncidencia/ImpactoIncidencia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ProbabilidadImpacto`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/ImpactoIncidencia/ProbabilidadImpacto`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const ProbablidadImpacto = res.data;
                 this.setState({ ProbablidadImpacto });
             })
 
-        axios.get(`http://localhost:44372/api/TipoIncidencia/GetTipos`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/TipoIncidencia/GetTipos`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
-        axios.get(`http://localhost:44372/api/GradoControl`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/GradoControl`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -147,7 +147,7 @@ class Form extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/Incidencia/AddIncident`, {
+            axios.post(`https://localhost:44357/api/Incidencia/AddIncident`, {
                 tipoIncidencia: this.state.tipoIncidencia
                 , tipoImpacto: this.state.tipoImpacto
                 , probabilidaImpacto: this.state.probabilidad

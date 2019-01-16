@@ -46,7 +46,7 @@ class newUser extends React.Component {
 
         }
 
-        axios.get(`https://localhost:44331/api/User/userList`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/User/userList`, { headers: { "Authorization": headerOptions } })
 
             .then(res => {
                 var parties = res.data;
@@ -61,7 +61,7 @@ class newUser extends React.Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/Deshabilitar`,
+        axios.post(`https://localhost:44357/api/User/Deshabilitar`,
             {
                 partyId: id,
             },
@@ -78,7 +78,7 @@ class newUser extends React.Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/Habilitar`,
+        axios.post(`https://localhost:44357/api/User/Habilitar`,
             {
                 partyId: id,
             },

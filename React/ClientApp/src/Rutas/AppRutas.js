@@ -38,7 +38,7 @@ const AppRutas = () =>
             <Route exact path="/sidebar" component={sidebar} />
             <Route exact path="/newUser" component={NewUser} />
             <Route exact path="/ForgotPass" component={ForgotPass} />
-            <Route exact path="/InformacionIncidencia" component={InformacionIncidencia} />
+            <Route exact path="/InformacionIncidencia/:id?" component={InformacionIncidencia} />
             <Route exact path="/SignIn" component={SingIn} />
             <Route exact path="/MenuGrafico" component={MenuReportes} />
             <Route exact path="/SelectUserIncident" component={SelectUserIncident} />

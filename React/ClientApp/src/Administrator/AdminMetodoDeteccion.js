@@ -63,7 +63,7 @@ class AdminMetodoDeteccion extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/MetodoDeteccion/ModificarMetodo`,
+            axios.post(`https://localhost:44357/api/MetodoDeteccion/ModificarMetodo`,
                 {
                     MetodoDeteccionNombre: this.state.nombre,
                     Estado: this.state.estado,
@@ -101,7 +101,7 @@ class AdminMetodoDeteccion extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/MetodoDeteccion/AgregarMetodo`,
+            axios.post(`https://localhost:44357/api/MetodoDeteccion/AgregarMetodo`,
                 {
                     MetodoDeteccionNombre: this.state.nombreNuevo,
                     Estado: this.state.estadoNuevo
@@ -135,12 +135,12 @@ class AdminMetodoDeteccion extends React.Component {
 
         }
 
-        axios.get('http://localhost:44372/api/MetodoDeteccion/VerMetodos', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/MetodoDeteccion/VerMetodos', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const metodos = res.data;
                 this.setState({ metodos });
             })
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const estados = res.data;
                 this.setState({ estados });
@@ -155,7 +155,7 @@ class AdminMetodoDeteccion extends React.Component {
 
         }
 
-        axios.post(`http://localhost:44372/api/MetodoDeteccion/ObtenerPorId`,
+        axios.post(`https://localhost:44357/api/MetodoDeteccion/ObtenerPorId`,
             {
                 id: id
             },
@@ -180,7 +180,7 @@ class AdminMetodoDeteccion extends React.Component {
 
         }
 
-        axios.get('http://localhost:44372/api/MetodoDeteccion/VerMetodos', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/MetodoDeteccion/VerMetodos', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const metodos = res.data;
                 this.setState({ metodos });

@@ -44,9 +44,9 @@ class AjustesPerfil extends Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/CambiarNombre`,
+        axios.post(`https://localhost:44357/api/User/CambiarNombre`,
             {
-                partyId: 3,
+                partyId: this.Auth.getIDUser(),
                 nombre: this.state.nombreNuevo,
                 primer_apellido: this.state.primerApellidoNuevo,
                 segundo_apellido: this.state.segundoApellidoNuevo
@@ -71,9 +71,9 @@ class AjustesPerfil extends Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/CambiarContraseña`,
+        axios.post(`https://localhost:44357/api/User/CambiarContraseña`,
             {
-                partyId: 3,
+                partyId: this.Auth.getIDUser(),
                 password1: this.state.password1,
                 password2: this.state.password2,
                 passwordActual: this.state.passwordActual
@@ -91,9 +91,9 @@ class AjustesPerfil extends Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/DarseDeBaja`,
+        axios.post(`https://localhost:44357/api/User/DarseDeBaja`,
             {
-                partyId: 3
+                partyId: this.Auth.getIDUser()
             },
             {
                 headers: { 'Authorization': headerOptions }
@@ -109,9 +109,9 @@ class AjustesPerfil extends Component {
 
         }
 
-        axios.post(`https://localhost:44331/api/User/GetNombre`,
+        axios.post(`https://localhost:44357/api/User/GetNombre`,
             {
-                partyId: 3
+                partyId: this.Auth.getIDUser()
             },
             {
                 headers: { 'Authorization': headerOptions }

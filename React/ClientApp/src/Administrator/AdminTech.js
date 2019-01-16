@@ -71,7 +71,7 @@ class AdminTech extends React.Component {
         } else if (this.state.tipo === "" || this.state.tipo === "Tipo tecnología") {
             alert("Favor selecione el tipo de tecnología")
         } else {
-            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
                 nombre: this.state.nombreTecnologia,
                 tipoTecnologia: this.state.tipo,
                 critico: this.state.criticoS_N
@@ -109,7 +109,7 @@ class AdminTech extends React.Component {
 
         }
 
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/MethodGetTypeTech`,
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/MethodGetTypeTech`,
             {
                 TecnologiaId: tecnoID
             },
@@ -143,7 +143,7 @@ class AdminTech extends React.Component {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });
             })
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/TipoTecnologia`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/TipoTecnologia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tiposTecnologia = res.data;
                 this.setState({
@@ -152,7 +152,7 @@ class AdminTech extends React.Component {
 
             })
 
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const estados = res.data;
                 this.setState({ estados });
@@ -179,7 +179,7 @@ class AdminTech extends React.Component {
 
                     }
 
-                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`,
+                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarTecnologia`,
                         {
                             TecnologiaId: this.state.tecnologiaID,
                             NombreTecnologia: this.state.nombreTecnologiaModificar,
@@ -208,7 +208,7 @@ class AdminTech extends React.Component {
 
         }
 
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Tecnologia`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Tecnologia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tecnologias = res.data;
                 this.setState({ tecnologias: tecnologias });

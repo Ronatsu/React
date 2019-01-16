@@ -113,7 +113,8 @@ namespace React.Controllers
                 new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("role", userInfo.ROL_USUARIO),
-                new Claim("user", userInfo.PARTYID)
+                new Claim("user", userInfo.PARTYID),
+                new Claim("email", userInfo.email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApiAuth:SecretKey"]));

@@ -88,9 +88,6 @@ class registroColaborador extends Component {
 
                                 </div>
                                 <button className="btn btnBlue" onClick={this.handleFormSubmit}>Ingresar</button>
-
-                                
-                                <Link to="/incidentes"><button className="btn btnBlue">Ingresar</button></Link>
                             </form>
                         </div>
                         <div className="col-xs-4 col-sm-4 col-lg-4">

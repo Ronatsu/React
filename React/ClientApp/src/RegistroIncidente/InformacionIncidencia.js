@@ -5,7 +5,10 @@ import '../components/ButtonColor.css';
 
 class InformacionIncidencia extends React.Component {
     constructor(props) {
-        super();
+        super(props);
+        this.state = {
+            id: this.props.match.params.id
+        }
     }
     render() {
         return (

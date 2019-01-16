@@ -37,7 +37,14 @@ class navigatiom extends React.Component {
 
     render() {
 
+        let usuarioLogin;
+        usuarioLogin = this.Auth.getEmailUser();
+
         let AreaAdministrativa;
+        let AdministracionReporte;
+        let AdministracionIncidencia;
+
+
         if (this.Auth.isAdmin()) {
             AreaAdministrativa =
             <li className="nav-item dropdown">
@@ -59,6 +66,28 @@ class navigatiom extends React.Component {
                     <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
                 </div>
             </li>
+
+            if (this.Auth.isAdmin()) {
+                AdministracionIncidencia =
+                    <li className="nav-item">
+                        <Link to="/SinAsignar"><a className="nav-link" ><AssignmentIcon /> Asignar Incidencia<span className="sr-only">(current)</span></a></Link>
+                    </li>
+
+                if (this.Auth.isAdmin()) {
+                    AdministracionReporte =
+                        <li className="nav-item">
+                            <Link to="/MenuGrafico"><a className="nav-link" ><ChartIcon />Reportes<span className="sr-only">(current)</span></a></Link>
+                        </li>
+                } else {
+                    AdministracionReporte = 
+                        <li className="nav-item dropdown">
+                        </li>
+                }
+            } else {
+                AdministracionIncidencia = 
+                    <li className="nav-item dropdown">
+                    </li>
+            }
         } else {
             AreaAdministrativa =
             <li className="nav-item dropdown">
@@ -82,14 +111,8 @@ class navigatiom extends React.Component {
                         <li className="nav-item">
                             <Link to="/InsertarIncidencia"><a className="nav-link" ><NewIncidentIcon /> Crear Incidencia<span className="sr-only">(current)</span></a></Link>
                         </li>
-
-                        <li className="nav-item">
-                            <Link to="/SinAsignar"><a className="nav-link" ><AssignmentIcon /> Asignar Incidencia<span className="sr-only">(current)</span></a></Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link to="/MenuGrafico"><a className="nav-link" ><ChartIcon />Reportes<span className="sr-only">(current)</span></a></Link>
-                        </li>
+                        {AdministracionIncidencia}
+                        {AdministracionReporte}
                         {AreaAdministrativa}
                         <li className="nav-item">
                             <a className="nav-link" href="#"></a>
@@ -101,7 +124,7 @@ class navigatiom extends React.Component {
 
 
                         <button className="btn btnBlueOutline my-2 my-sm-0 dropdown-toggle" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><PersonIcon /> Maria Jose Brenes</button>
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><PersonIcon /> {usuarioLogin}</button>
 
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/AjustePerfil"> <a className="dropdown-item" href="#"><SettingsIcon /> Perfil</a></Link>

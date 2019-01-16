@@ -55,7 +55,7 @@ class AsignacionIncidencia extends React.Component {
         }
 
         event.preventDefault();
-        axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
+        axios.post(`https://localhost:44357/api/Incidencia/AsignarIncident`, {
             asignacionArray: this.state.asignacionArray
         });
         console.log(this.state.itemChecked);

@@ -40,7 +40,6 @@ namespace React.Controllers
                 MetodoDeteccion metodo = new MetodoDeteccion();
                 metodo.MetodoDeteccionNombre = dataReader["MetodoDeteccion"].ToString();
                 metodo.Id = Int32.Parse(dataReader["ID"].ToString());
-                metodo.Estado = dataReader["MetaEstado"].ToString();
 
                 nuevaLista.Add(metodo);
 

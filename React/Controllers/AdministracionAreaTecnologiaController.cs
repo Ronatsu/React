@@ -258,7 +258,7 @@ namespace React.Controllers
                 while (dataReader.Read())
                 {
                     Area area = new Area();
-                    area.AreaID = dataReader["ID_AREA"].ToString();
+                    area.AreaID = dataReader["AREA_ID"].ToString();
                     area.NombreArea = dataReader["NOMBRE_AREA"].ToString();
                     area.TecnologiaFk = dataReader["TECNOLOGIA_AREA"].ToString();
                     area.AreaFk = dataReader["AREA_PADRE"].ToString();

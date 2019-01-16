@@ -36,7 +36,7 @@ class SelectUserIncident extends React.Component {
         }
 
 
-        axios.get(`http://localhost:44372/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });

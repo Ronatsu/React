@@ -20,7 +20,8 @@ import ForgotPass from './WebInicio/Recovery';
 import SingIn from './Registro/signIn';
 import SelectUserIncident from './RegistroIncidente/SelectUserIncidents';
 import PrivateRoute from './PrivateRoute';
-
+import SinAsignar from './RegistroIncidente/SinAsignar';
+import TipoIncidencia from './Administrator/AdminTipoIncidencia';
 class App extends Component {
     constructor(props) {
         super(props);
@@ -51,6 +52,8 @@ class App extends Component {
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/SignIn" component={SingIn} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/MenuGrafico" component={MenuReportes} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/SelectUserIncident" component={SelectUserIncident} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/SinAsignar" component={SinAsignar} />
+                    <PrivateRoute authed={this.Auth.loggedIn()} path="/TipoIncidencia" component={TipoIncidencia} />
                 </div>
             </Switch>
         )

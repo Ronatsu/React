@@ -68,7 +68,7 @@ class AdminTipoIncidencia extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/TipoIncidencia/ModificarTipo`,
+            axios.post(`https://localhost:44357/api/TipoIncidencia/ModificarTipo`,
                 {
                     Descripcion: this.state.nombre,
                     Estado: this.state.estado,
@@ -103,7 +103,7 @@ class AdminTipoIncidencia extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/TipoIncidencia/AgregarTipo`,
+            axios.post(`https://localhost:44357/api/TipoIncidencia/AgregarTipo`,
                 {
                     Descripcion: this.state.nombreNuevo,
                     Estado: this.state.estadoNuevo
@@ -135,12 +135,12 @@ class AdminTipoIncidencia extends React.Component {
 
         }
 
-        axios.get('https://localhost:44331/api/TipoIncidencia/GetTipos', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetTipos', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tipos = res.data;
                 this.setState({ tipos });
             })
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const estados = res.data;
                 this.setState({ estados });
@@ -155,7 +155,7 @@ class AdminTipoIncidencia extends React.Component {
 
         }
 
-        axios.post(`http://localhost:44372/api/TipoIncidencia/ObtenerPorId`,
+        axios.post(`https://localhost:44357/api/TipoIncidencia/ObtenerPorId`,
             {
                 id: id
             },
@@ -172,7 +172,7 @@ class AdminTipoIncidencia extends React.Component {
                 , id: id
             });
         })
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const estados = res.data;
                 this.setState({ estados });
@@ -186,7 +186,7 @@ class AdminTipoIncidencia extends React.Component {
 
         }
 
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetTipos', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetTipos', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const tipos = res.data;
                 this.setState({ tipos });

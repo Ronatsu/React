@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import Highcharts from "highcharts";
 import applyDrilldown from "highcharts/modules/drilldown";
 import axios from 'axios';
@@ -16,21 +16,19 @@ import {
 } from "react-jsx-highcharts";
 
 
-class App1 extends Component {
+class App13 extends Component {
 
     state = {
         incidents: [],
     }
 
     componentDidMount() {
-        axios.get(`https://localhost:44357/api/Reporte/ObtenerIncidente`)
+        axios.get(`https://localhost:44357/api/Reporte/ObtenerIncidenteContTrim`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
             })
     }
-
-    
 
 
     render() {
@@ -48,13 +46,13 @@ class App1 extends Component {
                 <ul>
                     <HighchartsChart plotOptions={plotOptions}>
                         <Chart type="column" />
-                        <Title>Total incidentes mensuales</Title>
-                        <Subtitle>En Cantidad</Subtitle>
+                        <Title>Promedio de tiempo en continencia de las incidencias desde el descubrimiento trimestral</Title>
+                        <Subtitle>En Horas</Subtitle>
                         <XAxis id="categories" type="category" />
                         <YAxis id="number">
-                            <YAxis.Title>Cantidad</YAxis.Title>
-                            {this.state.incidents.map(incident => <ColumnSeries name={incident.mes} data={[ { name: incident.mes , y: incident.cantidadIncidentes },]}
-                            />)} 
+                            <YAxis.Title>Horas</YAxis.Title>
+                            {this.state.incidents.map(incident => <ColumnSeries name={incident.mes} data={[{ name: incident.mes, y: incident.cantidadIncidentes },]}
+                            />)}
                         </YAxis>
                     </HighchartsChart>
                 </ul>
@@ -63,4 +61,4 @@ class App1 extends Component {
     }
 }
 
-export default withHighcharts(App1, Highcharts);
+export default withHighcharts(App13, Highcharts);

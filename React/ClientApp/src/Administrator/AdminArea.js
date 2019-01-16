@@ -71,7 +71,7 @@ class AdminArea extends React.Component {
         else if (this.state.selectArea === "") {
             alert("Seleccione la tecnologia del área que desea modificar.");
         } else {
-            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/InsertarArea`,
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarArea`,
                 {
                     NombreArea: this.state.NombreArea,
                     tecnologiaFk: this.state.selectGeneric,
@@ -111,7 +111,7 @@ class AdminArea extends React.Component {
         const headers = {
             'Authorization': headerOptions
         }
-        console.log("el puto token: " + headers.Authorization)
+        
 
 
         axios.get('https://localhost:44357/api/AdministracionAreaTecnologia/Area', { headers: { "Authorization": headerOptions } })
@@ -125,7 +125,7 @@ class AdminArea extends React.Component {
                 const tecno = res.data;
                 this.setState({ tecno });
             })
-        axios.get('http://localhost:44372/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
+        axios.get('https://localhost:44357/api/TipoIncidencia/GetEstados', { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const estados = res.data;
                 this.setState({ estados });
@@ -140,7 +140,7 @@ class AdminArea extends React.Component {
         }
 
 
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/GetAreaPorId`,
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/GetAreaPorId`,
             {
                 AreaID: Area
             },
@@ -161,7 +161,7 @@ class AdminArea extends React.Component {
 
 
 
-        axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
+        axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
             {
                 TecnologiaId: this.state.SelectAreaTecnologiaModificar
             },
@@ -190,7 +190,7 @@ class AdminArea extends React.Component {
 
             }
 
-            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
                 {
                     TecnologiaId: valueInput
                 },
@@ -222,7 +222,7 @@ class AdminArea extends React.Component {
 
                     }
 
-                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarArea`,
+                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarArea`,
                         {
                             AreaID: this.state.AreaIDModificar,
                             NombreArea: this.state.NombreAreaModificar,
@@ -253,7 +253,7 @@ class AdminArea extends React.Component {
             var headerOptions = "Bearer " + this.Auth.getToken()
 
         }
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/Area`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/Area`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const areas = res.data;
                 this.setState({ areas });

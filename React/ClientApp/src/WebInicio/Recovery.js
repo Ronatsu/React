@@ -58,7 +58,7 @@ class recover extends React.Component {
         }
 
         event.preventDefault();
-        axios.post(`https://localhost:44331/api/RecuperarContraseña`, 
+        axios.post(`https://localhost:44357/api/RecuperarContraseña`, 
             {
                 email1: this.state.email1,
                 email2: this.state.email2,
