@@ -18,6 +18,8 @@ namespace React.Controllers
         SqlDataReader dataReader;
         List<DataIncidents> ListIncidents = new List<DataIncidents>();
         List<Correo> ListStateIncident = new List<Correo>();
+
+        //manejo de errores
         JSON HandleError = new JSON();
 
 
@@ -58,7 +60,6 @@ namespace React.Controllers
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-                throw;
             }
 
             var item = ListIncidents;
@@ -93,7 +94,6 @@ namespace React.Controllers
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-                throw;
             }
 
             var item = ListStateIncident;
@@ -122,7 +122,6 @@ namespace React.Controllers
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
                 return NotFound();
-                throw;
             }
             return Ok();
         }
@@ -158,7 +157,6 @@ namespace React.Controllers
             catch (Exception ex)
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
-                throw;
             }
             var item = incidentInfo;
             if (item == null)

@@ -21,7 +21,7 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
-
+        JSON HandleError = new JSON();
 
 
         // GET: api/ReporteDetreccionInternaMes
@@ -29,20 +29,27 @@ namespace React.Controllers
         [Route("ObtenerIncidenteInternoMes")]
         public ActionResult<List<IncidenciaMes>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_IncidentesDetectadosInternos", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
-                nuevaIncidencia.Mes = dataReader["Mes"].ToString();
-                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["DeteccionInterna"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_IncidentesDetectadosInternos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                    nuevaIncidencia.Mes = dataReader["Mes"].ToString();
+                    nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["DeteccionInterna"].ToString());
 
-                incidencias.Add(nuevaIncidencia);
+                    incidencias.Add(nuevaIncidencia);
 
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = incidencias;
             if (item == null)
             {

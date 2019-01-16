@@ -24,26 +24,33 @@ namespace React.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
+        JSON HandleError = new JSON();
 
         // GET: api/PromedioTiempoContineciaDescubrimientoMes
         [HttpGet]
         [Route("ObtenerPromTiempoContiDesc")]
         public ActionResult<List<IncidenciaMes>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_PromedioTiempoContinenciaDescubrimiento", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
-                nuevaIncidencia.Mes = dataReader["MesIncidencia"].ToString();
-                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["HorasMes"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_PromedioTiempoContinenciaDescubrimiento", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                    nuevaIncidencia.Mes = dataReader["MesIncidencia"].ToString();
+                    nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["HorasMes"].ToString());
 
-                incidencias.Add(nuevaIncidencia);
-
+                    incidencias.Add(nuevaIncidencia);
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = incidencias;
             if (item == null)
             {
@@ -62,7 +69,5 @@ namespace React.Controllers
         {
             conexion.Close();
         }
-
-
     }
 }

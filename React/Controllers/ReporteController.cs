@@ -26,27 +26,34 @@ namespace React.Controllers
         SqlDataReader dataReader;
         List<IncidenciaMes> incidencias = new List<IncidenciaMes>();
         List<CsvFile> csvList = new List<CsvFile>();
-
+        JSON HandleError = new JSON();
 
         // GET: api/Reporte
         [HttpGet]
         [Route("ObtenerIncidente")]
         public ActionResult<List<IncidenciaMes>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_IncidentesMes", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
-                nuevaIncidencia.Mes = dataReader["Mes"].ToString();
-                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_IncidentesMes", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                    nuevaIncidencia.Mes = dataReader["Mes"].ToString();
+                    nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
 
-                incidencias.Add(nuevaIncidencia);
+                    incidencias.Add(nuevaIncidencia);
 
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = incidencias;
             if (item == null)
             {
@@ -62,29 +69,36 @@ namespace React.Controllers
         [Route("ObtenerCsv")]
         public ActionResult<List<CsvFile>> GetCsv()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_CsvDownload", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                CsvFile file = new CsvFile();
-                file.Asignado = dataReader["Asignado"].ToString();
-                file.FechaDescubrimiento = dataReader["FechaDescubrimiento"].ToString();
-                file.FechaIncidencia = dataReader["FechaIncidencia"].ToString();
-                file.FechaResuelto = dataReader["FechaResuelto"].ToString();
-                file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
-                file.MetaEstado = dataReader["MetaEstado"].ToString();
-                file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
-                file.TipoImpacto = dataReader["TipoImpacto"].ToString();
-                file.Descripcion = dataReader["Descripcion"].ToString();
-                file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_CsvDownload", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    CsvFile file = new CsvFile();
+                    file.Asignado = dataReader["Asignado"].ToString();
+                    file.FechaDescubrimiento = dataReader["FechaDescubrimiento"].ToString();
+                    file.FechaIncidencia = dataReader["FechaIncidencia"].ToString();
+                    file.FechaResuelto = dataReader["FechaResuelto"].ToString();
+                    file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
+                    file.MetaEstado = dataReader["MetaEstado"].ToString();
+                    file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
+                    file.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                    file.Descripcion = dataReader["Descripcion"].ToString();
+                    file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();
 
 
-                csvList.Add(file);
+                    csvList.Add(file);
 
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = csvList;
             if (item == null)
             {

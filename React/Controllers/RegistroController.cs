@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using API_Ejemplo.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace API_Ejemplo.Controllers
 {
@@ -20,35 +18,42 @@ namespace API_Ejemplo.Controllers
         SqlCommand cmd;
         SqlDataReader dataReader;
         List<Usuario> USUARIOS = new List<Usuario>();
-
+        JSON HandleError = new JSON();
 
         // GET: api/Registro
         [HttpGet]
         public ActionResult<List<Usuario>> Get()
         {
-
-            EstablecerConexion();
-            cmd = new SqlCommand("STORED_PROD_OBTENER_COLABORADORES", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
+            try
             {
-                Usuario nuevoUsuario = new Usuario();
-                nuevoUsuario.PARTYID = dataReader["PARTYID"].ToString();
-                nuevoUsuario.email = dataReader["NOMBRE"].ToString();
-                nuevoUsuario.NOMBRE = dataReader["SEGUNDO_NOMBRE"].ToString();
-                nuevoUsuario.PRIMER_APELLIDO = dataReader["PRIMER_APELLIDO"].ToString();
-                nuevoUsuario.SEGUNDO_APELLIDO = dataReader["SEGUNDO_APELLIDO"].ToString();
-                nuevoUsuario.HABILITADO = bool.Parse(dataReader["HABILITADO"].ToString());
-                nuevoUsuario.password1 = dataReader["CONTRASEÑA"].ToString();
-                nuevoUsuario.TIPO_COLABORADOR = char.Parse(dataReader["TIPO_COLABORADOR"].ToString());
-                nuevoUsuario.ROL_USUARIO = dataReader["ROL"].ToString();
-                nuevoUsuario.ASIGNA_INCIDENCIA = dataReader["ROL"].ToString();//REVISAR
+                EstablecerConexion();
+                cmd = new SqlCommand("STORED_PROD_OBTENER_COLABORADORES", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Usuario nuevoUsuario = new Usuario();
+                    nuevoUsuario.PARTYID = dataReader["PARTYID"].ToString();
+                    nuevoUsuario.email = dataReader["NOMBRE"].ToString();
+                    nuevoUsuario.NOMBRE = dataReader["SEGUNDO_NOMBRE"].ToString();
+                    nuevoUsuario.PRIMER_APELLIDO = dataReader["PRIMER_APELLIDO"].ToString();
+                    nuevoUsuario.SEGUNDO_APELLIDO = dataReader["SEGUNDO_APELLIDO"].ToString();
+                    nuevoUsuario.HABILITADO = bool.Parse(dataReader["HABILITADO"].ToString());
+                    nuevoUsuario.password1 = dataReader["CONTRASEÑA"].ToString();
+                    nuevoUsuario.TIPO_COLABORADOR = char.Parse(dataReader["TIPO_COLABORADOR"].ToString());
+                    nuevoUsuario.ROL_USUARIO = dataReader["ROL"].ToString();
+                    nuevoUsuario.ASIGNA_INCIDENCIA = dataReader["ROL"].ToString();//REVISAR
 
-                USUARIOS.Add(nuevoUsuario);
+                    USUARIOS.Add(nuevoUsuario);
 
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
             var item = USUARIOS;
             if (item == null)
             {
@@ -61,42 +66,46 @@ namespace API_Ejemplo.Controllers
         [HttpPost]
         public IActionResult CrearUsuario(Usuario newUser)
         {
-            Password password = new Password();
-            if (password.ValidarContrasena(newUser.password2,newUser.password1))
+            try
             {
-                conexion = new SqlConnection(connectionString);
-                conexion.Open();
-                cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@correo", newUser.email);
-                dataReader = cmd.ExecuteReader();
-                string email = "";
-                while (dataReader.Read())
+                Password password = new Password();
+                if (password.ValidarContrasena(newUser.password2, newUser.password1))
                 {
-
-                    email = dataReader["PartyFk"].ToString();
-                }
-                conexion.Close();
-               
-                if (email.Equals(""))
-                {
-                    string passwordEncry = password.GetMD5(newUser.password1);
-
+                    conexion = new SqlConnection(connectionString);
                     conexion.Open();
-                    cmd = new SqlCommand("Proc_AgregarUsuario", conexion);
+                    cmd = new SqlCommand("Proc_ObtenerIdPorCorreo", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@Nombre", newUser.NOMBRE);
-                    cmd.Parameters.AddWithValue("@PrimerApellido", newUser.PRIMER_APELLIDO);
-                    cmd.Parameters.AddWithValue("@SegundoApellido", newUser.SEGUNDO_APELLIDO);
-                    cmd.Parameters.AddWithValue("@CORREO", newUser.email);
-                    cmd.Parameters.AddWithValue("@contrasena", passwordEncry);
-
+                    cmd.Parameters.AddWithValue("@correo", newUser.email);
                     dataReader = cmd.ExecuteReader();
-                    CerrarConexion();
+                    string email = "";
+                    while (dataReader.Read())
+                    {
+                        email = dataReader["PartyFk"].ToString();
+                    }
+                    conexion.Close();
+
+                    if (email.Equals(""))
+                    {
+                        string passwordEncry = password.GetMD5(newUser.password1);
+
+                        conexion.Open();
+                        cmd = new SqlCommand("Proc_AgregarUsuario", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@Nombre", newUser.NOMBRE);
+                        cmd.Parameters.AddWithValue("@PrimerApellido", newUser.PRIMER_APELLIDO);
+                        cmd.Parameters.AddWithValue("@SegundoApellido", newUser.SEGUNDO_APELLIDO);
+                        cmd.Parameters.AddWithValue("@CORREO", newUser.email);
+                        cmd.Parameters.AddWithValue("@contrasena", passwordEncry);
+
+                        dataReader = cmd.ExecuteReader();
+                        CerrarConexion();
+                    }
                 }
-               
-              
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
 
             return CreatedAtRoute("Get", new { id = newUser.PARTYID }, newUser);
@@ -115,24 +124,29 @@ namespace API_Ejemplo.Controllers
 
         public String RolUsuario(String rol)
         {
-            SqlConnection conexionRol = new SqlConnection(connectionString);
-            conexionRol.Open();
-            SqlCommand cmdRol = new SqlCommand("STORED_OBTENER_ROL_USUARIO", conexionRol);
-            cmdRol.CommandType = CommandType.StoredProcedure;
-            cmdRol.Parameters.AddWithValue("@ROL_USUARIO", rol);
-            SqlDataReader dataReaderRol = cmdRol.ExecuteReader();
-            String ResultadoTemporal;
-            if (dataReaderRol.Read())
+            try
             {
-                ResultadoTemporal = dataReaderRol["ROL"].ToString();
-                return ResultadoTemporal;
+                SqlConnection conexionRol = new SqlConnection(connectionString);
+                conexionRol.Open();
+                SqlCommand cmdRol = new SqlCommand("STORED_OBTENER_ROL_USUARIO", conexionRol);
+                cmdRol.CommandType = CommandType.StoredProcedure;
+                cmdRol.Parameters.AddWithValue("@ROL_USUARIO", rol);
+                SqlDataReader dataReaderRol = cmdRol.ExecuteReader();
+                String ResultadoTemporal;
+                if (dataReaderRol.Read())
+                {
+                    ResultadoTemporal = dataReaderRol["ROL"].ToString();
+                    return ResultadoTemporal;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception)
             {
-                return null;
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
-            
-            
         }
     }
 }
