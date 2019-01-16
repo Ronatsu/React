@@ -143,9 +143,11 @@ namespace API_Ejemplo.Controllers
                     return null;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return null;
             }
         }
     }
