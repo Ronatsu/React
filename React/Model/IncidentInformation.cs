@@ -8,9 +8,14 @@ namespace React.Model
     public class IncidentInformation
     {
         public string TipoIncidencia { get; set; }
-        public string NombreCompleto { get; set; }
+        public string AsignadaA { get; set; }
+        public string AsignadaPor { get; set; }
+
+        public string ProbabilidadImpacto { get; set; }
         public string MetaEstado { get; set; }
         public string FechaInicidencia { get; set; }
+        public string FechaDescubrimiento { get; set; }
+        public string FechaVerificacion { get; set; }
         public string TipoImpacto { get; set; }
         public string GradoControl { get; set; }
         public int IncidenciaID { get; set; }

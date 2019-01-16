@@ -82,7 +82,7 @@ class Home extends Component {
                         </div>
                     </div>
                     <br />
-                    <div className="container table-responsive" id="main_div">
+                    <div className="table-responsive" id="main_div">
                         <table className="table table-hover table-condensed " id="table_id">
                             <thead>
                                 <tr>

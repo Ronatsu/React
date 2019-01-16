@@ -56,6 +56,8 @@ class AdminUser extends React.Component {
     handleChange = event => {
         const nameInput = event.target.name;
         const valueInput = event.target.value;
+        console.log("name " + nameInput)
+        console.log("value " + valueInput)
         this.setState({
             [nameInput]: valueInput
         });

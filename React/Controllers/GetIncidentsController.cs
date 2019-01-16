@@ -144,8 +144,13 @@ namespace React.Controllers
                     incidentInfo.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
                     incidentInfo.MetaEstado = dataReader["MetaEstado"].ToString();
                     incidentInfo.FechaInicidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidentInfo.FechaDescubrimiento = DateTime.Parse(dataReader["FechaDescubrimiento"].ToString()).ToString("G");
+                    incidentInfo.FechaVerificacion = DateTime.Parse(dataReader["FechaVerificacion"].ToString()).ToString("G");
+
                     incidentInfo.TipoImpacto = dataReader["TipoImpacto"].ToString();
-                    incidentInfo.NombreCompleto = dataReader["NombreCompleto"].ToString();
+                    incidentInfo.ProbabilidadImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                    incidentInfo.AsignadaA = dataReader["AsignadaA"].ToString();
+                    incidentInfo.AsignadaPor = dataReader["AsignadaPor"].ToString();
                     incidentInfo.GradoControl = dataReader["GradoControl"].ToString();
                     incidentInfo.Descripcion = dataReader["Descripcion"].ToString();
 
@@ -214,9 +219,10 @@ namespace React.Controllers
             cmd.Parameters.AddWithValue("@IncidenciaFk", idIncident);
             cmd.CommandType = CommandType.StoredProcedure;
             dataReader = cmd.ExecuteReader();
-            TipoIncidencia stepData = new TipoIncidencia();
+          
             while (dataReader.Read())
             {
+                TipoIncidencia stepData = new TipoIncidencia();
                 stepData.Descripcion = dataReader["Descripcion"].ToString();
                 stepData.Estado = dataReader["MetaEstado"].ToString();
                 ListStepData.Add(stepData);
