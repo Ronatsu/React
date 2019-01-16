@@ -57,7 +57,6 @@ class AdminMetodoDeteccion extends React.Component {
         } else if (this.state.nombre === "") {
             alert("Favor ingrese un el nombre del método de detección que desea modificar")
         } else {
-
             if (this.Auth.loggedIn()) {
                 var headerOptions = "Bearer " + this.Auth.getToken()
 
@@ -83,6 +82,7 @@ class AdminMetodoDeteccion extends React.Component {
 
                 }
             })
+
         }
     }
 

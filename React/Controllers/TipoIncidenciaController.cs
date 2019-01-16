@@ -70,7 +70,7 @@ namespace React.Controllers
             {
                 MetaEstado estado = new MetaEstado();
                 estado.Estado = dataReader["estado"].ToString();
-                estado.Id = Int32.Parse(dataReader["ID"].ToString());
+                estado.Id = dataReader["ID"].ToString();
 
                 nuevaLista.Add(estado);
 

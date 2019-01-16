@@ -71,16 +71,18 @@ class AdminTech extends React.Component {
         } else if (this.state.tipo === "" || this.state.tipo === "Tipo tecnología") {
             alert("Favor selecione el tipo de tecnología")
         } else {
-            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarTecnologia`, {
-                nombre: this.state.nombreTecnologia,
-                tipoTecnologia: this.state.tipo,
-                critico: this.state.criticoS_N
-                , Estado: this.state.estadoNuevo
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/InsertarTecnologia`, 
+                {
+                    nombre: this.state.nombreTecnologia,
+                    tipoTecnologia: this.state.tipo,
+                    critico: this.state.criticoS_N
+                    , Estado: this.state.estadoNuevo
 
-            },
+                },
                 {
                     headers: { 'Authorization': headerOptions }
                 }
+                
             ).then(res => {
                 if (res.data === "") {
                     alert("Agregado con éxito")
@@ -126,6 +128,7 @@ class AdminTech extends React.Component {
                 SelectTipoTecnologiaModificar: Technology.tipoTecnologiaNombre,
                 nombreTecnologia: Technology.nombreTecnologia
                 , estadoActual: Technology.estado
+                , estado: Technology.estado
             });
         })
     }
@@ -173,13 +176,12 @@ class AdminTech extends React.Component {
                     alert("Seleccione la tecnologia del área que desea modificar.");
                 } else {
 
-
                     if (this.Auth.loggedIn()) {
                         var headerOptions = "Bearer " + this.Auth.getToken()
 
                     }
-
-                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarTecnologia`,
+                  
+                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`, 
                         {
                             TecnologiaId: this.state.tecnologiaID,
                             NombreTecnologia: this.state.nombreTecnologiaModificar,
@@ -345,39 +347,39 @@ class AdminTech extends React.Component {
                                     )
                                 })}
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="container" id="modal2">
-                        <Modal.Dialog>
-                            <Modal.Header>
-                                <Modal.Title id="titleModal"> Editando {this.state.nombreTecnologia}</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <label>Nombre de la tecnología</label>
-                                <input className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></input>
-                                <br />
-                                <label>Tipo de Tecnología</label>
-                                <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
-                                    <option selected disabled>
-                                        {this.state.SelectTipoTecnologiaModificar}
-                                    </option>
-                                    {listaTipoTecnologia}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="container" id="modal2">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Title id="titleModal"> Editando {this.state.nombreTecnologia}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <label>Nombre de la tecnología</label>
+                            <input className="form-control" placeholder="Nombre de la tecnología" name="nombreTecnologiaModificar" value={this.state.nombreTecnologiaModificar} onChange={this.handleChange}></input>
+                            <br />
+                            <label>Tipo de Tecnología</label>
+                            <select className="form-control container" id="exampleFormControlSelect1" name="SelectTipoTecnologiaModificar" onClick={this.handleChange}>
+                                <option selected disabled>
+                                    {this.state.SelectTipoTecnologiaModificar}
+                                </option>
+                                {listaTipoTecnologia}
+                            </select>
+                            <br />
+                            <label>tecnología critica</label>
+                            <div className=" justify-content-end">
+                                <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onChange={this.handleChange}>
+                                    <option disabled selected>{this.state.criticoS_N_Modificar}</option>
+                                    <option value="s">Sí</option>
+                                    <option value="n">No</option>
                                 </select>
-                                <br />
-                                <label>tecnología critica</label>
-                                <div className=" justify-content-end">
-                                    <select className="form-control" id="exampleFormControlSelect1" name="criticoS_N_Modificar" onClick={this.handleChange}>
-                                        <option disabled selected>{this.state.criticoS_N_Modificar}</option>
-                                        <option value="s">Sí</option>
-                                        <option value="n">No</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label id="txtModal">Estado</label>
-                                    <select className="form-control container" name="estado" onClick={this.handleChange}>
-                                        <option disabled selected="selected">{this.state.estadoActual}</option>
-                                        {listaEstado}
+                            </div>
+                            <div className="form-group">
+                                <label id="txtModal">Estado</label>
+                                <select className="form-control container" name="estado" onChange={this.handleChange}>
+                                    <option disabled selected="selected">{this.state.estadoActual}</option>
+                                    {listaEstado}
 
                                     </select>
                                 </div>

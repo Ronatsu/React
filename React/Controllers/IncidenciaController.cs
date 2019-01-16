@@ -14,42 +14,44 @@ namespace React.Controllers
     [Authorize]
     public class IncidenciaController : ControllerBase
     {
-
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-
-
-
-        // GET: api/Incidencia/5
+        JSON HandleError = new JSON();
 
         [HttpGet]
         [Route("IncidenciasSinAsignar")]
         public ActionResult<List<DataIncidents>> Get()
         {
-            conexion = new SqlConnection(new Conexion().getConnection());
-            conexion.Open();
-            cmd = new SqlCommand("Proc_ObtenerIncidenciaSinAsignar", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-
             List<Incident> ListIncidents = new List<Incident>();
-
-            while (dataReader.Read())
+            try
             {
-                Incident incident = new Incident();
-                incident.Id = Int32.Parse(dataReader["id"].ToString());
-                incident.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
-                incident.Descripcion = dataReader["Descripcion"].ToString();
-                incident.TipoImpacto = dataReader["TipoImpacto"].ToString();
-                incident.FechaIncidencia = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("G");
+                conexion = new SqlConnection(new Conexion().getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerIncidenciaSinAsignar", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Incident incident = new Incident();
+                    incident.Id = Int32.Parse(dataReader["id"].ToString());
+                    incident.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                    incident.Descripcion = dataReader["Descripcion"].ToString();
+                    incident.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                    incident.FechaIncidencia = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("G");
 
 
-                ListIncidents.Add(incident);
+                    ListIncidents.Add(incident);
 
+                }
+
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
 
-            conexion.Close();
             var item = ListIncidents;
             if (item == null)
             {
@@ -57,33 +59,36 @@ namespace React.Controllers
             }
             return Ok(item);
         }
+
+
         // POST: api/Incidencia
         [HttpPost]
         [Route("AddIncident")]
         public void AddIncident(Incident newIncident)
         {
+            try
+            {
+                conexion = new SqlConnection(new Conexion().getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_AgregarIncidencia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaDescubrimiento", newIncident.FechaDescubrimiento);
+                cmd.Parameters.AddWithValue("@TipoIncidenciaFk", newIncident.TipoIncidencia);
+                cmd.Parameters.AddWithValue("@TipoImpactoFk", newIncident.TipoImpacto);
+                cmd.Parameters.AddWithValue("@MetodoDeteccionFk", newIncident.MetodoDeteccion);
+                cmd.Parameters.AddWithValue("@GradoControlFk", newIncident.GradoControl);
+                cmd.Parameters.AddWithValue("@Descripcion", newIncident.Descripcion);
+                cmd.Parameters.AddWithValue("@AreaAfectada", newIncident.AreaAfectada);
+                cmd.Parameters.AddWithValue("@probabilidad", newIncident.ProbabilidaImpacto);
 
-            conexion = new SqlConnection(new Conexion().getConnection());
-            conexion.Open();
-            cmd = new SqlCommand("Proc_AgregarIncidencia", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@FechaDescubrimiento", newIncident.FechaDescubrimiento);
-            cmd.Parameters.AddWithValue("@TipoIncidenciaFk", newIncident.TipoIncidencia);
-            cmd.Parameters.AddWithValue("@TipoImpactoFk", newIncident.TipoImpacto);
-            cmd.Parameters.AddWithValue("@MetodoDeteccionFk", newIncident.MetodoDeteccion);
-            cmd.Parameters.AddWithValue("@GradoControlFk", newIncident.GradoControl);
-            cmd.Parameters.AddWithValue("@Descripcion", newIncident.Descripcion);
-            cmd.Parameters.AddWithValue("@AreaAfectada", newIncident.AreaAfectada);
-            cmd.Parameters.AddWithValue("@probabilidad", newIncident.ProbabilidaImpacto);
+                dataReader = cmd.ExecuteReader();
 
-            dataReader = cmd.ExecuteReader();
-
-            conexion.Close();
-
-
-
-
-            //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
         }
 
         [HttpPost]
@@ -96,69 +101,50 @@ namespace React.Controllers
             string mailRecovery;
 
             List<string> mailList = new List<string>();
-
-            foreach (var item in usuarios.AsignacionArray)
+            try
             {
-                if (item.Add)
+                foreach (var item in usuarios.AsignacionArray)
                 {
-                    conexion.Open();
-                    cmd = new SqlCommand("Proc_AsignarIncidencia", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
-                    cmd.Parameters.AddWithValue("@incidenciaId", 2901);
-
-
-                    dataReader = cmd.ExecuteReader();
-
-                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
-
-                    while (dataReader.Read())
+                    if (item.Add)
                     {
+                        conexion.Open();
+                        cmd = new SqlCommand("Proc_AsignarIncidencia", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@partyiD", item.Partyid);
+                        cmd.Parameters.AddWithValue("@incidenciaId", usuarios.email);
+                        cmd.Parameters.AddWithValue("@DueñoAsignacionID", 2);   
+                        dataReader = cmd.ExecuteReader();
+                        conexion.Close();
 
-                        mailRecovery = dataReader["ValorMecanismo"].ToString();
-                        mailList.Add(mailRecovery);
+                        conexion.Open();
+                        cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", item.Partyid);
+                        dataReader = cmd.ExecuteReader();
+                        while (dataReader.Read())
+                        {
+
+                            mailRecovery = dataReader["ValorMecanismo"].ToString();
+                            mailList.Add(mailRecovery);
+                        }
+
+                        conexion.Close();
+
                     }
+                }
 
-                    conexion.Close();
-
-                    conexion.Open();
-                    cmd = new SqlCommand("Proc_ObtenerCorreoPorId", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", item.Partyid);
-                    dataReader = cmd.ExecuteReader();
-
-                    while (dataReader.Read())
-                    {
-
-                        mailRecovery = dataReader["Correo"].ToString();
-                        mailList.Add(mailRecovery);
-                    }
-
-                    conexion.Close();
+                if (mailList.Count != 0)
+                {
+                    string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
+                   "\nPara darle seguimiento diríjase al sitio web: http://localhost:44372/";
+                    string subject = "Nueva asignación";
+                    new EnviarCorreo().enviarCorreo(mailList, subject, body);
                 }
             }
-            if (mailList.Count != 0)
+            catch (Exception ex)
             {
-                string body = "Se ha registrado una nueva incidencia y ha sido asignada a su persona." +
-               "\nPara darle seguimiento diríjase al sitio web: http://localhost:44372/";
-                string subject = "Nueva asignación";
-                new EnviarCorreo().enviarCorreo(mailList, subject, body);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
-            //return CreatedAtRoute("Get", new { id = newIncident.PARTYID }, newIncident);
-        }
-
-        // PUT: api/Incidencia/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

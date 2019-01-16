@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
+using API_Ejemplo.Model;
 
 namespace React.Controllers
 {
@@ -17,9 +18,7 @@ namespace React.Controllers
 
 
         // Variables de conexión
-        String connectionString = "Data Source=DESKTOP-22D0PS6\\SQL2017_BELCEBU;" +
-                                  "Initial Catalog=ProyectoAnderson10;" +
-                                  "Integrated security=True;";
+        String connectionString = new Conexion().getConnection();
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
@@ -317,42 +316,267 @@ namespace React.Controllers
             return item;
         }
 
-        //// GET: api/Reporte
-        //[HttpGet]
-        //[Route("ObtenerCsv")]
-        //public ActionResult<List<CsvFile>> GetCsv()
-        //{
-        //    EstablecerConexion();
-        //    cmd = new SqlCommand("Proc_CsvDownload", conexion);
-        //    cmd.CommandType = CommandType.StoredProcedure;
-        //    dataReader = cmd.ExecuteReader();
-        //    while (dataReader.Read())
-        //    {
-        //        CsvFile file = new CsvFile();
-        //        file.Asignado = dataReader["Asignado"].ToString();
-        //        file.FechaDescubrimiento = dataReader["FechaDescubrimiento"].ToString();
-        //        file.FechaIncidencia = dataReader["FechaIncidencia"].ToString();
-        //        file.FechaResuelto = dataReader["FechaResuelto"].ToString();
-        //        file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
-        //        file.MetaEstado = dataReader["MetaEstado"].ToString();
-        //        file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
-        //        file.TipoImpacto = dataReader["TipoImpacto"].ToString();
-        //        file.Descripcion = dataReader["Descripcion"].ToString();
-        //        file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerCsv")]
+        public ActionResult<List<CsvFile>> GetCsv()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_CsvDownload", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                CsvFile file = new CsvFile();
+                file.Asignado = dataReader["Asignado"].ToString();
+                file.FechaDescubrimiento = dataReader["FechaDescubrimiento"].ToString();
+                file.FechaIncidencia = dataReader["FechaIncidencia"].ToString();
+                file.FechaResuelto = dataReader["FechaResuelto"].ToString();
+                file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
+                file.MetaEstado = dataReader["MetaEstado"].ToString();
+                file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
+                file.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                file.Descripcion = dataReader["Descripcion"].ToString();
+                file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();
 
 
-        //        csvList.Add(file);
+                csvList.Add(file);
 
-        //    }
-        //    conexion.Close();
-        //    var item = csvList;
-        //    if (item == null)
-        //    {
-        //        return NotFound();
-        //    }
+            }
+            conexion.Close();
+            var item = csvList;
+            if (item == null)
+            {
+                return NotFound();
+            }
 
-        //    return item;
-        //}
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteHorSem")]
+        public ActionResult<List<IncidenciaMes>> GetHorSem()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_HorasIncidentesSemana", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["semanaIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["horasMes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteInterSem")]
+        public ActionResult<List<IncidenciaMes>> GetInterSem()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_IncidentesDetectadosInternosSemana", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["semanaIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["DeteccionInterna"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteSem")]
+        public ActionResult<List<IncidenciaMes>> GetIncidentSem()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_IncidentesSemana", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["Semana"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteContinenSem")]
+        public ActionResult<List<IncidenciaMes>> GetContSem()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_PromedioTiempoContinenciaDescubrimientoSemana", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["semanaIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["HorasMes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteHorTrim")]
+        public ActionResult<List<IncidenciaMes>> GetHorTrim()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_HorasIncidentesTrimestre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["trimestreIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["horasMes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteInterTrim")]
+        public ActionResult<List<IncidenciaMes>> GetInterTrim()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_IncidentesDetectadosInternosTrimestre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["trimestreIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["DeteccionInterna"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteTrim")]
+        public ActionResult<List<IncidenciaMes>> GetInciTrim()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_IncidentesTrimestre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["Trimestre"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["CantidadIncidentes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        // GET: api/Reporte
+        [HttpGet]
+        [Route("ObtenerIncidenteContTrim")]
+        public ActionResult<List<IncidenciaMes>> GetContTrim()
+        {
+            EstablecerConexion();
+            cmd = new SqlCommand("Proc_PromedioTiempoContinenciaDescubrimientoTrimestre", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+            dataReader = cmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                IncidenciaMes nuevaIncidencia = new IncidenciaMes();
+                nuevaIncidencia.Mes = dataReader["trimestreIncidencia"].ToString();
+                nuevaIncidencia.CantidadIncidentes = Convert.ToInt32(dataReader["HorasMes"].ToString());
+
+                incidencias.Add(nuevaIncidencia);
+
+            }
+            conexion.Close();
+            var item = incidencias;
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
 
         public void EstablecerConexion()
         {

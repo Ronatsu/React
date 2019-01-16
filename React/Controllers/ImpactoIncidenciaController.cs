@@ -23,28 +23,32 @@ namespace React.Controllers
         SqlDataReader dataReader;
         JSON HandleError = new JSON();
 
-
-
         // GET: api/ImpactoIncidencia
         [HttpGet]
         [Route("ImpactoIncidencia")]
         public ActionResult<List<string>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_ImpactoIncidencia", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
             List<TipoImpacto> nuevaLista = new List<TipoImpacto>();
-            while (dataReader.Read())
+            try
             {
-                TipoImpacto impacto = new TipoImpacto();
-                impacto.Descripcion = dataReader["TIPO_IMPACTO"].ToString();
-                impacto.Id = Int32.Parse(dataReader["ID"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_ImpactoIncidencia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    TipoImpacto impacto = new TipoImpacto();
+                    impacto.Descripcion = dataReader["TIPO_IMPACTO"].ToString();
+                    impacto.Id = Int32.Parse(dataReader["ID"].ToString());
 
-                nuevaLista.Add(impacto);
-
+                    nuevaLista.Add(impacto);
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
             var item = nuevaLista;
             if (item == null)
             {
@@ -87,33 +91,6 @@ namespace React.Controllers
                 return Conflict();
             }
         }
-
-        // GET: api/ImpactoIncidencia/5
-        [HttpGet("{id}", Name = "GetImpacto")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/ImpactoIncidencia
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/ImpactoIncidencia/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
-
         public void EstablecerConexion()
         {
             conexion = new SqlConnection(conexionString.getConnection());

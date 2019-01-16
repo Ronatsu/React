@@ -12,10 +12,5 @@ namespace React.Model
         public string TecnologiaFk { get; set; }
         public string AreaFk { get; set; }
         public string Estado { get; set; }
-
-        public Area()
-        {
-
-        }
     }
 }

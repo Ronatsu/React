@@ -13,12 +13,20 @@ namespace React.Controllers
     [ApiController]
     public class JSONErrorController : ControllerBase
     {
-
+        JSON HandleError = new JSON();
         [HttpPost]
         public void AddJSON(JSONData data)
         {
-            JSON saveJASON = new JSON();
-            saveJASON.SaveDataError(data.Error, data.ErrorInfo);
+            try
+            {
+                JSON saveJASON = new JSON();
+                saveJASON.SaveDataError(data.Error, data.ErrorInfo);
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
         }
 
     }

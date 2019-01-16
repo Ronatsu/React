@@ -288,41 +288,50 @@ namespace React.Controllers
         [Route("InsertarTecnologia")]
         public ActionResult Post(Tecnologia Tecno)
         {
-            //Verificación de la existencia de la tecnologia entrante
-            SqlConnection ConnectionTecno = new SqlConnection(ConnectionString);
-            ConnectionTecno.Open();
-            cmd = new SqlCommand("Proc_VerificarNuevaTecnologia", ConnectionTecno);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@NUEVA_TECNOLOGIA", Tecno.NombreTecnologia);
-            dataReader = cmd.ExecuteReader();
-            String validacionTecnologia = "";
-            while (dataReader.Read())
+            try
             {
-                validacionTecnologia = dataReader["NOMBRE_TECNOLOGIA"].ToString();
-            }
-
-            ConnectionTecno.Close();
-            //valida que la tecnologia venga vacia.
-            if (validacionTecnologia.Equals(""))
-            {
-                Connection = new SqlConnection(ConnectionString);
-                Connection.Open();
-                cmd = new SqlCommand("Proc_insetarNuevaTecnologia", Connection);
+                SqlConnection ConnectionTecno = new SqlConnection(ConnectionString);
+                ConnectionTecno.Open();
+                cmd = new SqlCommand("Proc_VerificarNuevaTecnologia", ConnectionTecno);
                 cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@NombreTecnologia", Tecno.NombreTecnologia);
-                cmd.Parameters.AddWithValue("@TipoTecnologia", Tecno.TipoTecnologia);
-                cmd.Parameters.AddWithValue("@CriticoS_N", Tecno.Critico);
-                cmd.Parameters.AddWithValue("@Estado", Tecno.Estado);
-
+                cmd.Parameters.AddWithValue("@NUEVA_TECNOLOGIA", Tecno.NombreTecnologia);
                 dataReader = cmd.ExecuteReader();
-                Connection.Close();
-                return Ok();
+                String validacionTecnologia = "";
+                while (dataReader.Read())
+                {
+                    validacionTecnologia = dataReader["NOMBRE_TECNOLOGIA"].ToString();
+                }
+
+                ConnectionTecno.Close();
+                //valida que la tecnologia venga vacia.
+                if (validacionTecnologia.Equals(""))
+                {
+                    Connection = new SqlConnection(ConnectionString);
+                    Connection.Open();
+                    cmd = new SqlCommand("Proc_insetarNuevaTecnologia", Connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@NombreTecnologia", Tecno.NombreTecnologia);
+                    cmd.Parameters.AddWithValue("@TipoTecnologia", Tecno.TipoTecnologia);
+                    cmd.Parameters.AddWithValue("@CriticoS_N", Tecno.Critico);
+                    cmd.Parameters.AddWithValue("@Estado", Tecno.Estado);
+
+                    dataReader = cmd.ExecuteReader();
+                    Connection.Close();
+                    return Ok();
+                }
+                else
+                {
+                    return Ok(Tecno.NombreTecnologia);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(Tecno.NombreTecnologia);
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
             }
+            //Verificación de la existencia de la tecnologia entrante
+           
         }
 
         //POST: api/AdministracionAreaTecnologia
@@ -406,8 +415,31 @@ namespace React.Controllers
 
                 cmd.Parameters.AddWithValue("@TecnologiaID", value.TecnologiaId);
                 cmd.Parameters.AddWithValue("@NombreTecnologia", value.NombreTecnologia);
+                if (value.TipoTecnologia.Equals("PaaS"))
+                {
+                    value.TipoTecnologia="1";
+                }
+                else if (value.TipoTecnologia.Equals("IaaS"))
+                {
+                    value.TipoTecnologia="2";
+                }
+
                 cmd.Parameters.AddWithValue("@TipoTecnologia", value.TipoTecnologia);
+                if (value.Critico.Equals("Sí"))
+                {
+                    value.Critico = "s";
+                }else if (value.Critico.Equals("No")){
+                    value.Critico = "n";
+                }
                 cmd.Parameters.AddWithValue("@CriticoS_N", value.Critico);
+                if (value.Estado.Equals("Habilitado"))
+                {
+                    value.Estado = "28";
+                }
+                else if (value.Estado.Equals("Deshabilitado"))
+                {
+                    value.Estado = "29";
+                }
                 cmd.Parameters.AddWithValue("@Estado", value.Estado);
 
                 dataReader = cmd.ExecuteReader();

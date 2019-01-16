@@ -8,6 +8,7 @@ using API_Ejemplo.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using React.Model;
 
 namespace API_Ejemplo.Controllers
 {
@@ -26,28 +27,35 @@ namespace API_Ejemplo.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        
+        JSON HandleError = new JSON();
 
         // GET: api/Tecnologias
         [HttpGet]
         public ActionResult<List<string>> Get()
         {
-            EstablecerConexion();
-            cmd = new SqlCommand("Proc_NombreTecnologia", conexion);
-            cmd.CommandType = CommandType.StoredProcedure;
-            dataReader = cmd.ExecuteReader();
-
             List<TecnologiaModelo> nuevaLista = new List<TecnologiaModelo>();
-            while (dataReader.Read())
+            try
             {
-                TecnologiaModelo NuevaTecnologia = new TecnologiaModelo();
-                NuevaTecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
-                NuevaTecnologia.TecnologiaId = Int32.Parse(dataReader["id"].ToString());
+                EstablecerConexion();
+                cmd = new SqlCommand("Proc_NombreTecnologia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    TecnologiaModelo NuevaTecnologia = new TecnologiaModelo();
+                    NuevaTecnologia.NombreTecnologia = dataReader["NOMBRE_TEC"].ToString();
+                    NuevaTecnologia.TecnologiaId = Int32.Parse(dataReader["id"].ToString());
 
-                nuevaLista.Add(NuevaTecnologia);
+                    nuevaLista.Add(NuevaTecnologia);
 
+                }
+                conexion.Close();
             }
-            conexion.Close();
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+            
             var item = nuevaLista;
             if (item == null)
             {
@@ -55,32 +63,6 @@ namespace API_Ejemplo.Controllers
             }
             return Ok(item);
         }
-
-        // GET: api/Tecnologias/5
-        [HttpGet("{id}", Name = "GetTecno")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Tecnologias
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Tecnologias/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
         public void EstablecerConexion()
         {
             conexion = new SqlConnection(conexionString.getConnection());

@@ -4,16 +4,14 @@ import { Link } from "react-router-dom";
 import PersonIcon from '@material-ui/icons/Person';
 import ExitIcon from '@material-ui/icons/Input';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SupervisorIcon from '@material-ui/icons/SupervisorAccount';
 import BuildIcon from '@material-ui/icons/Build';
-import BlockIcon from '@material-ui/icons/Block';
+import PeopleIcon from '@material-ui/icons/People';
 import AddUserIcon from '@material-ui/icons/GroupAdd';
 import SettingIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ChartIcon from '@material-ui/icons/Assessment';
 import NewIncidentIcon from '@material-ui/icons/AddCircleOutline';
-import UserIncident from '@material-ui/icons/FolderShared';
 import '../components/ButtonColor.css';
 import AuthService from './AuthService';
 
@@ -37,35 +35,33 @@ class navigatiom extends React.Component {
 
     render() {
 
-        let usuarioLogin;
-        usuarioLogin = this.Auth.getEmailUser();
+        let usuarioLogin = this.Auth.getEmailUser();
 
         let AreaAdministrativa;
         let AdministracionReporte;
         let AdministracionIncidencia;
 
-
         if (this.Auth.isAdmin()) {
             AreaAdministrativa =
-            <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
+                <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><SettingIcon /> Administrar</a>
 
-                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
-                    <Link to="/BlockUser">  <a className="dropdown-item" href="#"><BlockIcon /> Bloquear Usuarios</a></Link>
+                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <Link to="/newUser">  <a className="dropdown-item" href="#"><AddUserIcon /> Nuevas Solicitudes</a></Link>
+                        <Link to="/BlockUser">  <a className="dropdown-item" href="#"><PeopleIcon />Usuarios</a></Link>
 
-                    <div className="dropdown-divider"></div>
+                        <div className="dropdown-divider"></div>
 
-                    <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
-                    <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
-                    <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
+                        <Link to="/AdminTech">   <a className="dropdown-item" href="#"><BuildIcon /> Tecnologías</a></Link>
+                        <Link to="/AdminArea">   <a className="dropdown-item" href="#"><BuildIcon /> Áreas</a></Link>
+                        <Link to="/TipoIncidencia">   <a className="dropdown-item" href="#"><BuildIcon /> Tipos de incidencia</a></Link>
 
-                    <div className="dropdown-divider"></div>
+                        <div className="dropdown-divider"></div>
 
-                    <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
-                </div>
-            </li>
+                        <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
+                    </div>
+                </li>
 
             if (this.Auth.isAdmin()) {
                 AdministracionIncidencia =
@@ -79,22 +75,21 @@ class navigatiom extends React.Component {
                             <Link to="/MenuGrafico"><a className="nav-link" ><ChartIcon />Reportes<span className="sr-only">(current)</span></a></Link>
                         </li>
                 } else {
-                    AdministracionReporte = 
+                    AdministracionReporte =
                         <li className="nav-item dropdown">
                         </li>
                 }
             } else {
-                AdministracionIncidencia = 
+                AdministracionIncidencia =
                     <li className="nav-item dropdown">
                     </li>
             }
         } else {
             AreaAdministrativa =
-            <li className="nav-item dropdown">
-            </li>
+                <li className="nav-item dropdown">
+                </li>
         }
-
-
+ 
         return (
             <nav className="container-fluid navbar navbar-expand-lg navbar-light" id="nav">
                 g

@@ -270,14 +270,10 @@ class AdminArea extends React.Component {
                 <option value={tecnologia.tecnologiaId}>{tecnologia.nombreTecnologia}</option>
             );
 
-        //const listaArea = this.state.areas.map((area) =>
-        //    <option value={area.areaID}>{area.nombreArea}</option>
-        //);
 
-
-        const listaAreaTecno = this.state.areaTecno.map((area) =>
-            <option value={area.areaID}>{area.nombreArea}</option>
-        );
+            const listaAreaTecno = this.state.areaTecno.map((area) =>
+                <option value={area.areaID}>{area.nombreArea}</option>
+            );
 
             var result = this.state.areas.filter(elem => elem.areaID === this.state.AreaIDModificar)
 
@@ -287,7 +283,7 @@ class AdminArea extends React.Component {
 
 
 
-        const listaEstados = this.state.estados;
+            const listaEstados = this.state.estados;
 
             const listaEstado = listaEstados.map((estado) =>
                 <option value={estado.id}>{estado.estado}</option>
@@ -316,38 +312,36 @@ class AdminArea extends React.Component {
                                                             <h3 id="txtModal">
                                                                 Agregar una nueva área
                                                         </h3>
-                                                    </Modal.Title>
-                                                </Modal.Header>
-                                                <Modal.Body>
-                                                    <div className="form-group">
-                                                        <label id="txtModal">Nombre del área</label>
-                                                        <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label id="txtModal">Seleccione la tecnología</label>
-                                                        <select className="form-control container" id="exampleFormControlSelect1" name="selectGeneric" onChange={this.cargarAreas} >
-                                                            <option disabled selected="selected">Tecnología</option>
-                                                            {listaTecnologia}
-                                                        </select>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label id="txtModal">Seleccione el área principal</label>
-                                                        <select className="form-control container" id="exampleFormControlSelect1" name="selectArea" onChange={this.handleChange}>
-                                                            <option disabled selected="selected">Área</option>
-                                                            <option value="0">Ninguna</option>
-                                                            {listaAreaTecno}
-                                                        </select>
-                                                    </div>
-
-
-                                                    <div className="form-group">
-                                                        <label id="txtModal">Estado</label>
-                                                        <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
-                                                            <option disabled selected="selected">Estado</option>
-                                                            {listaEstado}
-                                                        </select>
-                                                    </div>
-                                                </Modal.Body>
+                                                        </Modal.Title>
+                                                    </Modal.Header>
+                                                    <Modal.Body>
+                                                        <div className="form-group">
+                                                            <label id="txtModal">Nombre del área</label>
+                                                            <FormControl className="form-control" name="NombreArea" value={this.state.NombreArea} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label id="txtModal">Seleccione la tecnología</label>
+                                                            <select className="form-control container" id="exampleFormControlSelect1" name="selectGeneric" onChange={this.cargarAreas} >
+                                                                <option disabled selected="selected">Tecnología</option>
+                                                                {listaTecnologia}
+                                                            </select>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label id="txtModal">Seleccione el área principal</label>
+                                                            <select className="form-control container" id="exampleFormControlSelect1" name="selectArea" onChange={this.handleChange}>
+                                                                <option disabled selected="selected">Área</option>
+                                                                <option value="0">Ninguna</option>
+                                                                {listaAreaTecno}
+                                                            </select>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label id="txtModal">Estado</label>
+                                                            <select className="form-control container" id="exampleFormControlSelect1" name="estadoNuevo" onClick={this.handleChange}>
+                                                                <option disabled selected="selected">Estado</option>
+                                                                {listaEstado}
+                                                            </select>
+                                                        </div>
+                                                    </Modal.Body>
 
                                                     <Modal.Footer>
                                                         <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
@@ -381,69 +375,53 @@ class AdminArea extends React.Component {
                                     {this.state.areas.map(elemento => {
                                         return (
                                             <tr key={elemento.areaID}>
-                                                <td>
-                                                    {elemento.areaID}
-                                                </td>
-                                                <td>
-                                                    {elemento.nombreArea}
-                                                </td>
-                                                <td>
-                                                    {elemento.areaFk}
-                                                </td>
-                                                <td>
-                                                    {elemento.tecnologiaFk}
-                                                </td>
-                                                <td>
-                                                    {elemento.estado}
-                                                </td>
+                                                <td>{elemento.areaID} </td>
+                                                <td> {elemento.nombreArea}</td>
+                                                <td> {elemento.areaFk}</td>
+                                                <td> {elemento.tecnologiaFk} </td>
+                                                <td>{elemento.estado} </td>
                                                 <td>
                                                     <button className="btn btnBlue" data-toggle="modal" href="#modal2" type="submit" onClick={() => this.AreaModificar(elemento.areaID)}><EditIcon />  Editar</button>
                                                 </td>
                                             </tr>
                                         )
                                     })}
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-
-
-                <div className="container" id="modal2">
-                    <Modal.Dialog>
-                        <Modal.Header>
-                            <Modal.Title id="titleModal">Modificación de área</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="form-group">
-                                <label>Nombre del área</label>
-                                <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
-                            </div>
-                            <div className="form-group">
-                                <label>Seleccione la tecnología</label>
-                                <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onChange={this.cargarAreas}>
-                                    <option disabled selected="selected">{this.state.SelectAreaTecnologiaModificar}</option>
-                                    {listaTecnologia}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Seleccione el área principal</label>
-                                <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaPrincipalModificar" onClick={this.handleChange}>
-                                    <option disabled selected="selected">{this.state.SelectAreaPrincipalModificar}</option>
-                                    {listaAreaTecno}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label id="txtModal">Estado</label>
-                                <select className="form-control container" name="estado" onClick={this.handleChange}>
-                                    <option disabled selected="selected">{this.state.estadoActual}</option>
-                                    {listaEstado}
-
+                    <div className="container" id="modal2">
+                        <Modal.Dialog>
+                            <Modal.Header>
+                                <Modal.Title id="titleModal">Modificación de área</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className="form-group">
+                                    <label>Nombre del área</label>
+                                    <FormControl className="form-control" name="NombreAreaModificar" value={this.state.NombreAreaModificar} onChange={this.handleChange} placeholder="Nombre del area"></FormControl>
+                                </div>
+                                <div className="form-group">
+                                    <label>Seleccione la tecnología</label>
+                                    <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaTecnologiaModificar" onChange={this.cargarAreas}>
+                                        <option disabled selected="selected">{this.state.SelectAreaTecnologiaModificar}</option>
+                                        {listaTecnologia}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Seleccione el área principal</label>
+                                    <select className="form-control container" id="exampleFormControlSelect1" name="SelectAreaPrincipalModificar" onClick={this.handleChange}>
+                                        <option disabled selected="selected">{this.state.SelectAreaPrincipalModificar}</option>
+                                        {listaAreaTecno}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label id="txtModal">Estado</label>
+                                    <select className="form-control container" name="estado" onClick={this.handleChange}>
+                                        <option disabled selected="selected">{this.state.estadoActual}</option>
+                                        {listaEstado}
                                     </select>
                                 </div>
                             </Modal.Body>
-
                             <Modal.Footer>
                                 <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
                                 <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarArea()}>Aceptar</Button>
@@ -474,11 +452,7 @@ class AdminArea extends React.Component {
                         <Footer />
                     </footer>
                 </div>
-                )
+            )
         }
-
-
-
-        
     }
 } export default AdminArea;
