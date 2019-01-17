@@ -37,7 +37,7 @@ class newUser extends React.Component {
         });
     }
 
-    usuarioSeleccionado(id) {
+    usuarioSeleccionado(id, mailUser) {
 
         if (this.Auth.loggedIn()) {
             var headerOptions = "Bearer " + this.Auth.getToken()
@@ -101,7 +101,8 @@ class newUser extends React.Component {
 
         axios.post(`http://localhost:44372/api/User/Deshabilitar`,
             {
-                partyId: id
+                partyId: id,
+                email: this.state.email
             },
             {
                 headers: { 'Authorization': headerOptions }
@@ -121,7 +122,8 @@ class newUser extends React.Component {
         axios.post(`http://localhost:44372/api/User/Habilitar`,
             {
                 partyId: this.state.partyid,
-                rol_usuario: this.state.rol
+                rol_usuario: this.state.rol,
+                email: this.state.email
             },
             {
                 headers: { 'Authorization': headerOptions }
@@ -135,7 +137,7 @@ class newUser extends React.Component {
         })
     }
     render() {
-       
+
         if (this.Auth.isAdmin()) {
             return (
                 <div className="container ">
@@ -167,9 +169,9 @@ class newUser extends React.Component {
                                             <td>{elemento.segundO_APELLIDO}</td>
                                             <td name="emial">{elemento.correoElectronico}</td>
                                             <td>{elemento.roL_USUARIO}</td>
-                                            <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><AcceptUserIcon />  Aceptar</button>
+                                            <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><AcceptUserIcon />  Aceptar</button>
 
-                                                <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><BlockIcon />  Rechazar</button></td>
+                                                <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><BlockIcon />  Rechazar</button></td>
                                         </tr>
                                     )
                                 })}
