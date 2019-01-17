@@ -15,10 +15,11 @@ class newUser extends React.Component {
         super(props);
         this.state = {
             parties: [],
-            nombre: "",
-            apellido: "",
-            partyId: ""
-            , rol: ""
+            nombre: '',
+            apellido: '',
+            partyId: '',
+            rol: '',
+            email: ''
         }
 
         $(document).ready(function () {
@@ -31,7 +32,7 @@ class newUser extends React.Component {
         });
     }
 
-    usuarioSeleccionado(id) {
+    usuarioSeleccionado(id, mailUser) {
         axios.post('http://localhost:44372/api/User/GetNombre', {
             partyid: id
         }).then(res => {
@@ -42,7 +43,7 @@ class newUser extends React.Component {
                 , apellido: usuario.primeR_APELLIDO + " " + usuario.segundO_APELLIDO
                 , partyid: id
                 , rol: 2
-
+                , email: mailUser
             });
         })
     }
@@ -64,7 +65,7 @@ class newUser extends React.Component {
     }
     componentWillMount() {
         this.getData();
-    } 
+    }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.parties !== this.state.parties) {
             this.getData();
@@ -72,7 +73,8 @@ class newUser extends React.Component {
     }
     DisableUser(id) {
         axios.post(`http://localhost:44372/api/User/Deshabilitar`, {
-            partyId: id
+            partyId: id,
+            email: this.state.email
         }).then(res => {
             this.setState({ partyid: "" });
         })
@@ -81,7 +83,8 @@ class newUser extends React.Component {
     AcceptUser() {
         axios.post(`http://localhost:44372/api/User/Habilitar`, {
             partyId: this.state.partyid,
-            rol_usuario: this.state.rol
+            rol_usuario: this.state.rol,
+            email: this.state.email
         }).then(res => {
 
             this.setState({
@@ -91,7 +94,7 @@ class newUser extends React.Component {
         })
     }
     render() {
-       
+
         return (
             <div className="container ">
                 <Navigation />
@@ -122,9 +125,9 @@ class newUser extends React.Component {
                                         <td>{elemento.segundO_APELLIDO}</td>
                                         <td name="emial">{elemento.correoElectronico}</td>
                                         <td>{elemento.roL_USUARIO}</td>
-                                        <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><AcceptUserIcon />  Aceptar</button>
+                                        <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><AcceptUserIcon />  Aceptar</button>
 
-                                            <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><BlockIcon />  Rechazar</button></td>
+                                            <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><BlockIcon />  Rechazar</button></td>
                                     </tr>
                                 )
                             })}
@@ -170,7 +173,7 @@ class newUser extends React.Component {
                                 <Modal.Body>
                                     <div className="form-group">
                                         <p id="txtModal">¿Estás seguro de querer aceptar a {this.state.nombre} {this.state.apellido}?</p>
-                                        <p id="txtModal" ALIGN="justify">Para poder acpetar el siguiente usario es debes asignarle un rol.</p>
+                                        <p id="txtModal" ALIGN="justify">Para poder aceptar el siguiente usario es debes asignarle un rol.</p>
 
                                     </div>
 
