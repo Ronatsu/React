@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 
@@ -10,6 +11,7 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GetIncidentsController : ControllerBase
     {
         string ConnectionString = new Conexion().getConnection();
@@ -49,7 +51,7 @@ namespace React.Controllers
                     incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
                     incidents.Description = dataReader["Descripcion"].ToString();
                     incidents.ImpactType = dataReader["TipoImpacto"].ToString();
-                    incidents.DateIncident = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("yyyy/MM/dd");
                     incidents.IdIncidencia = Int32.Parse(dataReader["IncidenciaId"].ToString());
                     incidents.Estado = Int32.Parse(dataReader["EstadoFk"].ToString());
 

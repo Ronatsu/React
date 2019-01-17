@@ -6,6 +6,7 @@ import axios from 'axios';
 import EditIcon from '@material-ui/icons/Edit';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import { Button, Modal, FormControl } from 'react-bootstrap';
+import AuthService from '../components/AuthService';
 
 
 
@@ -26,7 +27,7 @@ class AjustesPerfil extends Component {
             passwordActual: '',
         }
         this.handleChange = this.handleChange.bind(this);
-
+        this.Auth = new AuthService();
     }
     handleChange = event => {
         const nameInput = event.target.name;
@@ -37,13 +38,25 @@ class AjustesPerfil extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     handleSubmitName() {
-        axios.post(`http://localhost:44372/api/User/CambiarNombre`, {
-            partyId: 3,
-            nombre: this.state.nombreNuevo,
-            primer_apellido: this.state.primerApellidoNuevo,
-            segundo_apellido: this.state.segundoApellidoNuevo
 
-        })
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44357/api/User/CambiarNombre`,
+            {
+                partyId: this.Auth.getIDUser(),
+                nombre: this.state.nombreNuevo,
+                primer_apellido: this.state.primerApellidoNuevo,
+                segundo_apellido: this.state.segundoApellidoNuevo
+
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        )
         this.setState({
             nombre: this.state.nombreNuevo
         });
@@ -52,24 +65,58 @@ class AjustesPerfil extends Component {
     }
 
     handleSubmitPass() {
-        axios.post(`http://localhost:44372/api/User/CambiarContraseña`, {
-            partyId: 3,
-            password1: this.state.password1,
-            password2: this.state.password2,
-            passwordActual: this.state.passwordActual
 
-        })
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44357/api/User/CambiarContraseña`,
+            {
+                partyId: this.Auth.getIDUser(),
+                password1: this.state.password1,
+                password2: this.state.password2,
+                passwordActual: this.state.passwordActual
+
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        )
     }
     handleSubmitBaja() {
-        axios.post(`http://localhost:44372/api/User/DarseDeBaja`, {
-            partyId: 3
-        })
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44357/api/User/DarseDeBaja`,
+            {
+                partyId: this.Auth.getIDUser()
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+
+        )
     }
 
     componentWillMount() {
-        axios.post(`http://localhost:44372/api/User/GetNombre`, {
-            partyId: 3
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`https://localhost:44357/api/User/GetNombre`,
+            {
+                partyId: this.Auth.getIDUser()
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const usuario = res.data;
             this.setState({
                 nombre: usuario.nombre,

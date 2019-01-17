@@ -7,6 +7,7 @@ import '../components/ButtonColor.css';
 import axios from 'axios';
 import '../Administrator/Block_User.css';
 import $ from 'jquery';
+import AuthService from '../components/AuthService';
 
 class Home extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class Home extends Component {
             stateIncident: []
         }
         this.handleChange = this.handleChange.bind(this);
+        this.Auth = new AuthService();
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -26,25 +28,43 @@ class Home extends Component {
                 });
             });
         });
+        //this.hh = this.hh.bind(this);
     }
     componentWillMount() {
         this.DataUpload(0)
         this.ShowSelectIncidentState()
     }
     DataUpload(IdTypeIncident) {
-        axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
-             //email1: this.state.email1,
-           // email2: IdTypeIncident
 
-            email1: this.state.email1,
-            email2: IdTypeIncident
-        }).then(res => {
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`,
+            {
+                //email1: this.state.email1,
+                // email2: IdTypeIncident
+
+                email1: this.state.email1,
+                email2: IdTypeIncident
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const incidents = res.data;
             this.setState({ incidents });
         })
     }
     ShowSelectIncidentState() {
-        axios.get(`http://localhost:44372/api/GetIncidents/MethodGetStateIncident`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/GetIncidents/MethodGetStateIncident`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const stateIncident = res.data;
                 this.setState({ stateIncident });

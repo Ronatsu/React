@@ -29,9 +29,20 @@ class InformacionIncidencia extends React.Component {
         this.DataUpload();
     }
     DataUpload() {
-        axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`, {
-            incidenciaID: this.props.match.params.id
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`,
+            {
+                incidenciaID: this.props.match.params.id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const incidentInfo = res.data;
             this.setState({
                 TipoIncidencia: incidentInfo.tipoIncidencia,
@@ -60,10 +71,21 @@ class InformacionIncidencia extends React.Component {
         if (this.state.Step === "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
-            axios.post(`http://localhost:44372/api/GetIncidents/MethodInsertStep`, {
-                description: this.state.Step,
-                idIncidencia: this.props.match.params.id
-            }).then(res => {
+
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
+
+            }
+
+            axios.post(`http://localhost:44372/api/GetIncidents/MethodInsertStep`,
+                {
+                    description: this.state.Step,
+                    idIncidencia: this.props.match.params.id
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
+            ).then(res => {
                 if (res.data === "") {
                     alert("Agregado con éxito")
                     console.log()
@@ -73,7 +95,7 @@ class InformacionIncidencia extends React.Component {
                 } else {
                     alert("¡Lo sentimos! Ha ocurrido un error inesperado")
                 }
-            } )
+            })
         }
     }
     DisableButton(state) {
@@ -171,14 +193,19 @@ class InformacionIncidencia extends React.Component {
                             </tr>
                             <tr>
 
-                                <th className="">Pasos Registrados</th>
+                                <th className="">Pasos Registrados
+                                     <button data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
+                                    </th>
                                 <td> {this.state.StepData.map(elemento => {
                                     return (
                                         <tr>
                                             - {elemento.descripcion}
                                         </tr>
-                                    )
-                                })}</td>
+                                     )
+                                })}
+
+                                </td>
+
 
                             </tr>
 
@@ -186,7 +213,6 @@ class InformacionIncidencia extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <button disabled={this.DisableButton(this.props.match.params.estadoId)} data-toggle="modal" href="#myModal" className="btn btnBlue">Insertar Pasos</button>
                 <div className="pagination justify-content-end">
                     <div id="myModal" className="modal fade in">
                         <div className="modal-dialog">

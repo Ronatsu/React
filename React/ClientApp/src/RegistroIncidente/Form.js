@@ -4,6 +4,8 @@ import 'react-day-picker/lib/style.css';
 import Navigation from '../components/Navigation';
 import '../components/ButtonColor.css';
 import axios from 'axios';
+import AuthService from '../components/AuthService';
+
 
 class Form extends React.Component {
     constructor(props) {
@@ -27,6 +29,7 @@ class Form extends React.Component {
             GRADO_CONTROL: [],
             metodoDeteccionList: []
         };
+        this.Auth = new AuthService();
     }
 
     cargarAreas = event => {
@@ -36,9 +39,20 @@ class Form extends React.Component {
             [nameInput]: valueInput
         });
         if (valueInput != 0 && valueInput != "Tecnología") {
-            axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/ObtenerAreaTecno`, {
-                TecnologiaId: valueInput
-            }).then(res => {
+
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
+
+            }
+
+            axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/ObtenerAreaTecno`,
+                {
+                    TecnologiaId: valueInput
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
+            ).then(res => {
                 const AREA_AFECTADA = res.data;
                 this.setState({ AREA_AFECTADA });
             })
@@ -46,38 +60,44 @@ class Form extends React.Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:44372/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/AdministracionAreaTecnologia/GetTecnologiaHabilitado`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TECNO = res.data;
                 this.setState({ TECNO });
             })
 
-        axios.get(`http://localhost:44372/api/MetodoDeteccion/VerMetodos`)
+        axios.get(`https://localhost:44357/api/MetodoDeteccion/VerMetodos`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const metodoDeteccionList = res.data;
                 this.setState({ metodoDeteccionList });
             })
 
 
-        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ImpactoIncidencia`)
+        axios.get(`https://localhost:44357/api/ImpactoIncidencia/ImpactoIncidencia`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const IMPACTO = res.data;
                 this.setState({ IMPACTO });
             })
 
-        axios.get(`http://localhost:44372/api/ImpactoIncidencia/ProbabilidadImpacto`)
+        axios.get(`https://localhost:44357/api/ImpactoIncidencia/ProbabilidadImpacto`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const ProbablidadImpacto = res.data;
                 this.setState({ ProbablidadImpacto });
             })
 
-        axios.get(`http://localhost:44372/api/TipoIncidencia/GetTipos`)
+        axios.get(`https://localhost:44357/api/TipoIncidencia/GetTipos`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const TIPO_INCIDENCIA = res.data;
                 this.setState({ TIPO_INCIDENCIA });
             })
 
-        axios.get(`http://localhost:44372/api/GradoControl`)
+        axios.get(`https://localhost:44357/api/GradoControl`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const GRADO_CONTROL = res.data;
                 this.setState({ GRADO_CONTROL });
@@ -121,7 +141,13 @@ class Form extends React.Component {
             event.preventDefault();
             alert("Ingrese la descripción");
         } else {
-            axios.post(`http://localhost:44372/api/Incidencia/AddIncident`, {
+
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
+
+            }
+
+            axios.post(`https://localhost:44357/api/Incidencia/AddIncident`, {
                 tipoIncidencia: this.state.tipoIncidencia
                 , tipoImpacto: this.state.tipoImpacto
                 , probabilidaImpacto: this.state.probabilidad
@@ -131,7 +157,10 @@ class Form extends React.Component {
                 , descripcion: this.state.descripcion
                 , fechaDescubrimiento: this.state.fecha
                 , metodoDeteccion: this.state.metodoDeteccion
-            })
+            },
+                {
+                    headers: { 'Authorization': headerOptions }
+                })
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using API_Ejemplo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 using System;
@@ -10,6 +11,7 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MetodoDeteccionController : ControllerBase
     {
         Conexion conexionString = new Conexion();

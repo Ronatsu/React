@@ -6,6 +6,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import '../components/ButtonColor.css';
 import axios from 'axios';
 import { Button, Modal } from 'react-bootstrap'
+import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Footer from '../components/Footer';
+import AuthService from '../components/AuthService';
 
 
 
@@ -23,6 +26,7 @@ class AdminUser extends React.Component {
             , rolActual: ""
             , partyId: ""
         }
+        this.Auth = new AuthService();
 
 
         super(props);
@@ -38,11 +42,22 @@ class AdminUser extends React.Component {
     }
 
     ModificarUsuario() {
-        axios.post(`http://localhost:44372/api/User/ModificarUsuario`, {
-            partyId: this.state.partyId,
-            roL_USUARIO: this.state.rol,
-            Estado: this.state.estado
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/User/ModificarUsuario`, 
+            {
+                partyId: this.state.partyId,
+                roL_USUARIO: this.state.rol,
+                Estado: this.state.estado
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             if (res.status == 200) {
                 alert("Se modifico exitosamente");
 
@@ -64,9 +79,20 @@ class AdminUser extends React.Component {
     }
 
     PartyModificar(id) {
-        axios.post(`http://localhost:44372/api/User/GetUsuarioPorId`, {
-            partyId: id
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/User/GetUsuarioPorId`,
+            {
+                partyId: id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const party = res.data;
             console.log(party)
 
@@ -85,7 +111,13 @@ class AdminUser extends React.Component {
     }
 
     getData() {
-        axios.get(`http://localhost:44372/api/User/GetAllUsers`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`http://localhost:44372/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });
@@ -95,80 +127,105 @@ class AdminUser extends React.Component {
         this.getData();
 
 
-        return (
-            <div className="container ">
-                <Navigation />
+        if (this.Auth.isAdmin()) {
+            return (
+                <div className="container ">
+                    <Navigation />
 
-                <br />
-                <br />
+                    <br />
+                    <br />
 
 
-                <div className="w-auto p-3 mt-4">
-                    <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
-                </div>
-                <div className=" container table-responsive " id="main_div">
-                    <table className="table table-hover table-condensed " id="table_id">
-                        <thead>
-                            <tr>
-                                <th >Nombre</th>
-                                <th className="size" scope="col">Correo Electrónico</th>
-                                <th className="size" scope="col">Rol</th>
-                                <th className="size" scope="col">Estado</th>
-                                <th className="size" scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="myTable">
-                            {this.state.parties.map(elemento => {
-                                return (
-                                    <tr key={elemento.partyid}>
-                                        <td>{elemento.nombre} {elemento.primeR_APELLIDO} {elemento.segundO_APELLIDO}</td>
-                                        <td>{elemento.correoElectronico}</td>
-                                        <td>{elemento.roL_USUARIO}</td>
-                                        <td>{elemento.estado}</td>
-                                        <td><button type="submit" className="btn btnBlue" data-toggle="modal" href="#modal2" onClick={() => this.PartyModificar(elemento.partyid)}><EditIcon />Editar</button></td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="container" id="modal2">
-                    <Modal.Dialog>
-                        <Modal.Header>
-                            <Modal.Title id="titleModal"> Editando {this.state.nombre}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="form-group">
-                                <label>Rol</label>
-                                <div className=" justify-content-end">
-                                    <select className="form-control" id="exampleFormControlSelect1" name="rol" onChange={this.handleChange}>
-                                        <option disabled selected>{this.state.rolActual}</option>
-                                        <option value="2">Usuario</option>
-                                        <option value="1" >Administrador</option>
+                    <div className="w-auto p-3 mt-4">
+                        <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
+                    </div>
+                    <div className=" container table-responsive " id="main_div">
+                        <table className="table table-hover table-condensed " id="table_id">
+                            <thead>
+                                <tr>
+                                    <th >Nombre</th>
+                                    <th className="size" scope="col">Correo Electrónico</th>
+                                    <th className="size" scope="col">Rol</th>
+                                    <th className="size" scope="col">Estado</th>
+                                    <th className="size" scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                {this.state.parties.map(elemento => {
+                                    return (
+                                        <tr key={elemento.partyid}>
+                                            <td>{elemento.nombre} {elemento.primeR_APELLIDO} {elemento.segundO_APELLIDO}</td>
+                                            <td>{elemento.correoElectronico}</td>
+                                            <td>{elemento.roL_USUARIO}</td>
+                                            <td>{elemento.estado}</td>
+                                            <td><button type="submit" className="btn btnBlue" data-toggle="modal" href="#modal2" onClick={() => this.PartyModificar(elemento.partyid)}><EditIcon />Editar</button></td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="container" id="modal2">
+                        <Modal.Dialog>
+                            <Modal.Header>
+                                <Modal.Title id="titleModal"> Editando {this.state.nombre}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className="form-group">
+                                    <label>Rol</label>
+                                    <div className=" justify-content-end">
+                                        <select className="form-control" id="exampleFormControlSelect1" name="rol" onChange={this.handleChange}>
+                                            <option disabled selected>{this.state.rolActual}</option>
+                                            <option value="2">Usuario</option>
+                                            <option value="1" >Administrador</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label id="txtModal">Estado</label>
+                                    <select className="form-control container" name="estado" onChange={this.handleChange}>
+                                        <option disabled selected="selected">{this.state.estadoActual}</option>
+                                        <option value="6">Habilitado</option>
+                                        <option value="7">Deshabilitado</option>
+
+
                                     </select>
                                 </div>
-                            </div>
-                            <div className="form-group">
-                                <label id="txtModal">Estado</label>
-                                <select className="form-control container" name="estado" onChange={this.handleChange}>
-                                    <option disabled selected="selected">{this.state.estadoActual}</option>
-                                    <option value="6">Habilitado</option>
-                                    <option value="7">Deshabilitado</option>
+                            </Modal.Body>
 
+                            <Modal.Footer>
+                                <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
+                                <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarUsuario()}>Aceptar</Button>
+                            </Modal.Footer>
+                        </Modal.Dialog>
+                    </div>
 
-                                </select>
-                            </div>
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                            <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.ModificarUsuario()}>Aceptar</Button>
-                        </Modal.Footer>
-                    </Modal.Dialog>
                 </div>
-
-            </div>
-        );
+            );
+        } else {
+            return (
+                <div>
+                    <div className="container" id="midle">
+                        <div className="row">
+                            <div className=" col-md-2 mb-3">
+                            </div>
+                            <div className="form-inline col-md-10 mb-3" >
+                                <div >
+                                    <h1 id="title"><strong >UPSSS...</strong></h1>
+                                    <h3 >Lo sentimos, no cuentas con los permisos necesarios para ingresar en esta área.</h3>
+                                </div>
+                                <div>
+                                    <ChartIcon id="icon" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer className="page-footer" id="footererror">
+                        <Footer />
+                    </footer>
+                </div>
+            )
+        }
     }
 }
 export default AdminUser;

@@ -7,6 +7,7 @@ import Search from '@material-ui/icons/Search';
 import '../components/ButtonColor.css';
 import axios from 'axios';
 import { element } from 'prop-types';
+import AuthService from '../components/AuthService';
 
 class SelectUserIncident extends React.Component {
 
@@ -15,6 +16,7 @@ class SelectUserIncident extends React.Component {
         this.state = {
             parties: []
         }
+        this.Auth = new AuthService();
 
         super(props);
 
@@ -28,7 +30,13 @@ class SelectUserIncident extends React.Component {
         });
     }
     componentWillMount() {
-        axios.get(`http://localhost:44372/api/User/GetAllUsers`)
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+
+        axios.get(`https://localhost:44357/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });

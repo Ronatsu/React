@@ -1,0 +1,21 @@
+﻿#title {
+    font-size: 100px;
+}
+
+#midle {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#icon {
+    width: 400px;
+    height: 400px;
+}
+
+#footererror {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

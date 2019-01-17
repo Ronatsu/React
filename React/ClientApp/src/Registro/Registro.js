@@ -5,34 +5,25 @@ import Background from '../components/Background';
 import axios from 'axios';
 import Nav from '../components/NavigationUnregistred';
 import '../components/ButtonColor.css';
-import $ from 'jquery';
+import AuthService from '../components/AuthService';
 
 class registroColaborador extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
+            emailLogin: '',
             nombre: '',
             apellido: '',
             segundoApellido: '',
             habilitado: true,
-            contraseña: '',
+            passwordlogin: '',
             optionsRadios: '',
             rol_usuario: 'Administrador'
         }
         this.handleChange = this.handleChange.bind(this);
-
-        $(document).ready(function () {
-            $('#log-in-btn').click(function () {
-                $('input').each(function () {
-                    if ($(this).val().trim() === '') {
-                        alert("El campo " + $(this).attr('placeholder') + " esta vacio");
-                        return false;
-                    }
-                });
-            });
-        });
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.Auth = new AuthService();
     }
 
     handleChange = event => {
@@ -43,26 +34,22 @@ class registroColaborador extends Component {
         });
     }
 
+    handleFormSubmit(e) {
+        e.preventDefault();
+        alert("Email: " + this.state.emailLogin);
+        alert("Password: " + this.state.passwordlogin);
+        this.Auth.login(this.state.emailLogin, this.state.passwordlogin)
+            .then(res => {
+                this.props.history.replace('/incidentes');
+            }).catch(err => {
+                alert(err);
+            })
+    }
+
     handleSubmit = event => {
         event.preventDefault();
 
-        const colaborador = {
-            email: this.state.email,
-            nombre: this.state.nombre,
-            apellido: this.state.apellido,
-            segundoApellido: this.state.segundoApellido,
-            habilitado: this.state.habilitado,
-            contraseña: this.state.contraseña,
-            optionsRadios: this.state.optionsRadios,
-            rol_usuario: this.state.rol_usuario
-
-        };
-
-        axios.post(`https://localhost:44372/api/Registro`, { colaborador })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+        this.Auth.login(this.state.email, this.state.contraseña)
     }
     //{null.map(val => val)}
     render() {
@@ -91,16 +78,16 @@ class registroColaborador extends Component {
                                 </div>
                                 <div className="form-group">
                                     <label for="emailLogin">Correo electrónico</label>
-                                    <input type="email" className="form-control" id="emailLogin" aria-describedby="correoLogin" placeholder="Ingrese el correo"></input>
+                                    <input type="email" className="form-control" id="emailLogin" name="emailLogin" aria-describedby="correoLogin" placeholder="Ingrese el correo" value={this.state.emailLogin} onChange={this.handleChange}></input>
                                 </div>
                                 <div className="form-group">
                                     <label for="contraseñaLogin">Contraseña</label>
-                                    <input className="form-control" type="password" name="passwordlogin" id="passwordLogin" placeholder="Contraseña"></input><br></br>
+                                    <input className="form-control" type="password" name="passwordlogin" id="passwordLogin" placeholder="Contraseña" value={this.state.passwordlogin} onChange={this.handleChange}></input><br></br>
 
                                     <Link to="/ForgotPass"><small id="forgotPassword" className="form-text">¿Olvidaste la contraseña?</small></Link>
 
                                 </div>
-                                <Link to="/incidentes"><button className="btn btnBlue" id="log-in-btn">Ingresar</button></Link>
+                                <button className="btn btnBlue" onClick={this.handleFormSubmit}>Ingresar</button>
                             </form>
                         </div>
                         <div className="col-xs-4 col-sm-4 col-lg-4">

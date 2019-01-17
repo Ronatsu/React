@@ -4,11 +4,13 @@ using System.Data;
 using System.Data.SqlClient;
 using API_Ejemplo.Model;
 using React.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RecuperarContraseñaController : ControllerBase
     {
 

@@ -23,7 +23,7 @@ class App1 extends Component {
     }
 
     componentDidMount() {
-        axios.get(`https://localhost:44372/api/ReporteDetreccionInternaMes/ObtenerIncidenteInternoMes`)
+        axios.get(`https://localhost:44357/api/Reporte/ObtenerIncidenteInternoMes`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
@@ -32,13 +32,22 @@ class App1 extends Component {
 
 
     render() {
+        const plotOptions = {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b> ({point.y:,.0f})',
+                    softConnector: true
+                },
+            }
+        };
         return (
             <div>
                 <ul>
-                    <HighchartsChart>
+                    <HighchartsChart plotOptions={plotOptions}>
                         <Chart type="column" />
-                        <Title>Ataques Detectados Internos</Title>
-                        <Subtitle>En porcentaje</Subtitle>
+                        <Title>Incidentes detectados de manera interna mensualmente</Title>
+                        <Subtitle>En Cantidad</Subtitle>
                         <XAxis id="categories" type="category" />
                         <YAxis id="number">
                             <YAxis.Title>Cantidad</YAxis.Title>

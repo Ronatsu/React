@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import '../Administrator/Block_User.css';
 import $ from 'jquery';
 import axios from 'axios';
+import AuthService from '../components/AuthService';
+import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Footer from '../components/Footer';
 
 class AsignacionIncidencia extends React.Component {
     constructor(props) {
@@ -15,6 +18,11 @@ class AsignacionIncidencia extends React.Component {
             partyId: "",
             itemChecked: []
         }
+        this.Auth = new AuthService();
+        super(props);
+
+
+
         $(document).ready(function () {
 
             $('#divCheck input').click(function () {
@@ -40,18 +48,35 @@ class AsignacionIncidencia extends React.Component {
     }
 
     handleSubmit = event => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
         event.preventDefault();
-        axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`, {
-            asignacionArray: this.state.asignacionArray,
-            email: this.props.match.params.id
-        })
+        axios.post(`http://localhost:44372/api/Incidencia/AsignarIncident`,
+            {
+                asignacionArray: this.state.asignacionArray,
+                email: this.props.match.params.id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        )
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:44372/api/User/UsuarioHabilitado`)
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/User/UsuarioHabilitado`, { headers: { "Authorization": headerOptions } })
 
             .then(res => {
                 var parties = res.data;
@@ -88,7 +113,7 @@ class AsignacionIncidencia extends React.Component {
 
 
 
-    //axios.post(`https://localhost:44372/api/Incidencia`, {
+    //axios.post(`https://localhost:44331/api/Incidencia`, {
     //    tipoIncidencia: this.state.tipoIncidencia
     //    , tipoImpacto: this.state.tipoImpacto
     //    , gradoControl: this.state.gradoControl
@@ -102,65 +127,90 @@ class AsignacionIncidencia extends React.Component {
 
     render() {
 
-        const partiesTable = this.state.parties.map((party) => {
+        if (this.Auth.isAdmin()) {
+            const partiesTable = this.state.parties.map((party) => {
+                return (
+                    <tr key={party.partyid}>
+                        <td><input type="checkbox" onChange={(e) => this.checkItem(party.partyid, e)} /></td>
+                        <td>{party.nombre}</td>
+                        <td>{party.primeR_APELLIDO}</td>
+                        <td>{party.segundO_APELLIDO}</td>
+                        <td >{party.correoElectronico}</td>
+                        <td>{party.roL_USUARIO}</td>
+
+                    </tr>
+                )
+            })
             return (
-                <tr key={party.partyid}>
-                    <td><input type="checkbox" onChange={(e) => this.checkItem(party.partyid, e)} /></td>
-                    <td>{party.nombre}</td>
-                    <td>{party.primeR_APELLIDO}</td>
-                    <td>{party.segundO_APELLIDO}</td>
-                    <td >{party.correoElectronico}</td>
-                    <td>{party.roL_USUARIO}</td>
+                <div className="container-fluid">
+                    <Navigation />
+                    <form className="container" >
 
-                </tr>
-            )
-        })
-        return (
-            <div className="container-fluid">
-                <Navigation />
-                <form className="container" >
+                        <fieldset className="fields">
+                            <header className="App-header">
+                                <br /><br /><br />
+                                <h3 className="mt-4"><b>Asignar Incidencia</b></h3>
+                            </header>
 
-                    <fieldset className="fields">
-                        <header className="App-header">
-                            <br /><br /><br />
-                            <h3 className="mt-4"><b>Asignar Incidencia</b></h3>
-                        </header>
-
-                        <div className="card" id="card">
-                            <div class="card-body">
-                                <p className="card-text">
-                                    Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.
+                            <div className="card" id="card">
+                                <div class="card-body">
+                                    <p className="card-text">
+                                        Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.
                                     </p>
+                                </div>
+                            </div>
+                            <br />
+
+                            <table className="table table-hover table-condensed " id="table_id">
+                                <thead>
+                                    <tr>
+                                        <th className="size" scope="col"></th>
+                                        <th className="size" scope="col">Nombre</th>
+                                        <th className="size" scope="col">Primer Apellido</th>
+                                        <th className="size" scope="col">Segundo Apellido</th>
+                                        <th className="size" scope="col">Correo Electronico</th>
+                                        <th className="size" scope="col">Rol</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myTable">
+                                    {partiesTable}
+                                </tbody>
+                            </table>
+
+                            <div class="pagination justify-content-end">
+                                <Link to="/SinAsignar">  <button class="btn btnRed  " type="submit">Cancelar</button></Link>
+                                <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                    <br /> <br /> <br />
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <div className="container" id="midle">
+                        <div className="row">
+                            <div className=" col-md-2 mb-3">
+                            </div>
+                            <div className="form-inline col-md-10 mb-3" >
+                                <div >
+                                    <h1 id="title"><strong >UPSSS...</strong></h1>
+                                    <h3 >Lo sentimos, no cuentas con los permisos necesarios para ingresar en esta área.</h3>
+                                </div>
+                                <div>
+                                    <ChartIcon id="icon" />
+                                </div>
                             </div>
                         </div>
-                        <br />
-
-                        <table className="table table-hover table-condensed " id="table_id">
-                            <thead>
-                                <tr>
-                                    <th className="size" scope="col"></th>
-                                    <th className="size" scope="col">Nombre</th>
-                                    <th className="size" scope="col">Primer Apellido</th>
-                                    <th className="size" scope="col">Segundo Apellido</th>
-                                    <th className="size" scope="col">Correo Electronico</th>
-                                    <th className="size" scope="col">Rol</th>
-                                </tr>
-                            </thead>
-                            <tbody id="myTable">
-                                {partiesTable}
-                            </tbody>
-                        </table>
-
-                        <div class="pagination justify-content-end">
-                            <Link to="/SinAsignar">  <button class="btn btnRed  " type="submit">Cancelar</button></Link>
-                            <button class="btn btnBlue" type="submit" onClick={this.handleSubmit}>Notificar</button>
-                        </div>
-
-                    </fieldset>
-                </form>
-                <br /> <br /> <br />
-            </div>
-        )
+                    </div>
+                    <footer className="page-footer" id="footererror">
+                        <Footer />
+                    </footer>
+                </div>
+            )
+        } 
     }
 }
 

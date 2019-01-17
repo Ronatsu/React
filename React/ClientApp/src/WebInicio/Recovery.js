@@ -6,11 +6,13 @@ import '../components/ButtonColor.css';
 import Nav from '../components/NavigationToHome';
 import { Link } from "react-router-dom";
 import { Button, Modal } from 'react-bootstrap'
+import AuthService from '../components/AuthService';
 
 
 class recover extends React.Component {
     constructor(props) {
         super(props);
+        this.Auth = new AuthService();
 
         $(document).ready(function () {
             $("#id_send").click(function () {
@@ -49,12 +51,23 @@ class recover extends React.Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        axios.post(`http://localhost:44372/api/RecuperarContraseña`, {
-            email1: this.state.email1,
-            email2: this.state.email2,
 
-        });
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        event.preventDefault();
+        axios.post(`https://localhost:44357/api/RecuperarContraseña`, 
+            {
+                email1: this.state.email1,
+                email2: this.state.email2,
+
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        );
         console.log(this.state.email2 + " 2");
         console.log(this.state.email1 + " 1");
         this.handleSubmit = this.handleSubmit.bind(this);

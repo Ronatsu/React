@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import './SiginIn.css';
-import { Link } from "react-router-dom";
-import Background from '../components/Background';
 import axios from 'axios';
 import Nav from '../components/NavigationToHome';
 import $ from 'jquery';
-import color from '@material-ui/core/colors/orange';
-import { isNull } from 'util';
 import { Button, Modal } from 'react-bootstrap'
 import '../components/ButtonColor.css';
+import AuthService from '../components/AuthService';
 
 
 class registroColaborador extends Component {
@@ -24,6 +21,7 @@ class registroColaborador extends Component {
             password2: '',
             optionsRadios: '',
         }
+        this.Auth = new AuthService();
         this.handleChange = this.handleChange.bind(this);
         $(document).ready(function () {
             $('#btn1').click(function () {
@@ -95,6 +93,12 @@ class registroColaborador extends Component {
     }
 
     handleSubmit = event => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
         event.preventDefault();
 
         console.log(this.state.apellido);
