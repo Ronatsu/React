@@ -18,7 +18,7 @@ namespace React.Controllers
         SqlConnection Connection;
         SqlCommand cmd;
         SqlDataReader dataReader;
-        List<DataIncidents> ListIncidents = new List<DataIncidents>();
+       
         List<Correo> ListStateIncident = new List<Correo>();
 
         //manejo de errores
@@ -29,6 +29,7 @@ namespace React.Controllers
         [Route("MethodGetIncidents")]
         public ActionResult<List<DataIncidents>> GetIncidents(Correo correo)
         {
+            List<Incidencia> ListIncidents = new List<Incidencia>();
             try
             {
                 Connection = new SqlConnection(ConnectionString);
@@ -45,15 +46,18 @@ namespace React.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PARTY_ID", correo.email1);
                 dataReader = cmd.ExecuteReader();
+
+                
                 while (dataReader.Read())
                 {
-                    DataIncidents incidents = new DataIncidents();
-                    incidents.ImpactProbability = dataReader["ProbabilidadImpacto"].ToString();
-                    incidents.Description = dataReader["Descripcion"].ToString();
-                    incidents.ImpactType = dataReader["TipoImpacto"].ToString();
-                    incidents.DateIncident = Convert.ToDateTime(dataReader["FechaInicidencia"]).ToString("yyyy/MM/dd");
-                    incidents.IdIncidencia = Int32.Parse(dataReader["IncidenciaId"].ToString());
-                    incidents.Estado = Int32.Parse(dataReader["EstadoFk"].ToString());
+                    Incidencia incidents = new Incidencia();
+                    incidents.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                    incidents.Descripcion = dataReader["Descripcion"].ToString();
+                    incidents.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                    incidents.FechaIncidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidents.Id = Int32.Parse(dataReader["IncidenciaId"].ToString());
+                    incidents.EstadoFk = dataReader["EstadoFk"].ToString();
+                    incidents.Estado = dataReader["Estado"].ToString();
 
                     ListIncidents.Add(incidents);
                 }
@@ -105,6 +109,7 @@ namespace React.Controllers
             }
             return Ok(item);
         }
+
         [HttpPost]
         [Route("MethodInsertStep")]
         public ActionResult InsertSteps(DataIncidents stepData)
@@ -130,7 +135,7 @@ namespace React.Controllers
 
         [HttpPost]
         [Route("GetInformationIncident")]
-        public ActionResult InformationIncident(IncidentInformation incidentInfo)
+        public ActionResult InformationIncident(Incidencia incidentInfo)
         {
             try
             {
@@ -138,18 +143,27 @@ namespace React.Controllers
                 Connection.Open();
                 cmd = new SqlCommand("Proc_InformacionIncidencia", Connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@INCIDENCIA_ID", incidentInfo.IncidenciaID);
+                cmd.Parameters.AddWithValue("@INCIDENCIA_ID", incidentInfo.Id);
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
                     incidentInfo.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
-                    incidentInfo.MetaEstado = dataReader["MetaEstado"].ToString();
-                    incidentInfo.FechaInicidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidentInfo.Estado = dataReader["MetaEstado"].ToString();
+                    incidentInfo.EstadoFk = dataReader["MetaEstado"].ToString();
+
+                    incidentInfo.FechaIncidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
                     incidentInfo.FechaDescubrimiento = DateTime.Parse(dataReader["FechaDescubrimiento"].ToString()).ToString("G");
-                    incidentInfo.FechaVerificacion = DateTime.Parse(dataReader["FechaVerificacion"].ToString()).ToString("G");
+                    if (!dataReader["FechaVerificacion"].ToString().Equals(""))
+                    {
+                        incidentInfo.FechaVerificacion = DateTime.Parse(dataReader["FechaVerificacion"].ToString()).ToString("G");
+                    }
+                    else
+                    {
+                        incidentInfo.FechaVerificacion = "N/A";
+                    }
 
                     incidentInfo.TipoImpacto = dataReader["TipoImpacto"].ToString();
-                    incidentInfo.ProbabilidadImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                    incidentInfo.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
                     incidentInfo.AsignadaA = dataReader["AsignadaA"].ToString();
                     incidentInfo.AsignadaPor = dataReader["AsignadaPor"].ToString();
                     incidentInfo.GradoControl = dataReader["GradoControl"].ToString();
@@ -157,9 +171,9 @@ namespace React.Controllers
 
                 }
                 Connection.Close();
-                incidentInfo.AreaData = GetAreaData(incidentInfo.IncidenciaID);
-                incidentInfo.StepsData = GetStepsById(incidentInfo.IncidenciaID);
-                incidentInfo.TecnologiaData = GetTecnologiaData(incidentInfo.IncidenciaID);
+                incidentInfo.AreaData = GetAreaData(incidentInfo.Id);
+                incidentInfo.StepsData = GetStepsById(incidentInfo.Id);
+                incidentInfo.TecnologiaData = GetTecnologiaData(incidentInfo.Id);
             }
             catch (Exception ex)
             {

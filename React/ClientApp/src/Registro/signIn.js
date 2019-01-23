@@ -23,19 +23,6 @@ class registroColaborador extends Component {
         }
         this.Auth = new AuthService();
         this.handleChange = this.handleChange.bind(this);
-        //$(document).ready(function () {
-        //    $('#valor').keyup(function () {
-        //        $(this).each(function () {
-        //            var campos = $(this).val();
-        //            if ((campos.toLowerCase == ("select * from").toLowerCase) || (campos.toLowerCase == ("delete * from")).toLowerCase) {
-        //                $("#msj").html('Uno de los campos contiene una sentencia invalida');
-        //                $("#modal2").show();
-        //            } else {
-        //                $("#modal2").css("display", "none");
-        //            }
-        //        });
-        //    });
-        //});
         $(document).ready(function () {
             $('#btn1').click(function () {
                 $('.validar').each(function () {
@@ -46,7 +33,6 @@ class registroColaborador extends Component {
                 });
             });
         });
-
 
         $(document).ready(function () {
             $("#btn1").click(function () {
@@ -149,24 +135,24 @@ class registroColaborador extends Component {
                                 <div className="form-group">
                                     <div className="form-group">
                                         <label >Nombre</label>
-                                        <input type="text" className="form-control validar" name="nombre" placeholder="Ingrese su nombre"  onChange={this.handleChange}></input>
+                                        <input type="text" className="form-control validar" name="nombre" placeholder="Ingrese su nombre" onChange={this.handleChange}></input>
                                         <br></br>
                                         <label>Primer apellido</label>
-                                        <input type="text" className="form-control validar" name="apellido"  placeholder="Primer apellido"  onChange={this.handleChange}></input>
+                                        <input type="text" className="form-control validar" name="apellido" placeholder="Primer apellido" onChange={this.handleChange}></input>
                                         <br></br>
                                         <label >Segundo apellido</label>
-                                        <input type="text" className="form-control" name="segundoApellido"  placeholder="Segundo apellido"  onChange={this.handleChange}></input>
+                                        <input type="text" className="form-control" name="segundoApellido" placeholder="Segundo apellido" onChange={this.handleChange}></input>
                                         <br></br>
                                         <label >Correo electrónico </label>
-                                        <input type="email" className="form-control validar" name="email"  aria-describedby="emailHelp" placeholder="ejemplo@impesa.net"  onChange={this.handleChange}></input>
+                                        <input type="email" className="form-control validar" name="email" aria-describedby="emailHelp" placeholder="ejemplo@impesa.net" onChange={this.handleChange}></input>
                                         <br></br>
                                         <label >Contraseña</label>
-                                        <input type="password" className="form-control validar" name="password1" id="contraseñaRegistro" placeholder="Contraseña"  onChange={this.handleChange}></input>
+                                        <input type="password" className="form-control validar" name="password1" id="contraseñaRegistro" placeholder="Contraseña" onChange={this.handleChange}></input>
                                         <span className={styleAlert()} role="alert" id="passstrength"></span>
 
                                         <br></br>
                                         <label>Contraseña</label>
-                                        <input type="password" className="form-control validar" name="password2" id="confirnContraseña"  onChange={this.handleChange}  placeholder="Confirmación contraseña"></input>
+                                        <input type="password" className="form-control validar" name="password2" id="confirnContraseña" onChange={this.handleChange} placeholder="Confirmación contraseña"></input>
                                         <br></br>
                                         <legend>Tipo usuario</legend>
                                         <div className="form-check">
@@ -211,7 +197,6 @@ class registroColaborador extends Component {
         )
     }
 }
-
 export default registroColaborador;
 
 function styleAlert() {

@@ -22,6 +22,7 @@ namespace React.Controllers
         SqlConnection conexion;
         SqlCommand cmd;
         SqlDataReader dataReader;
+        private List<string> emailUser= new List<string>();
 
         //manejo de errores
         JSON HandleError = new JSON();
@@ -393,7 +394,7 @@ namespace React.Controllers
         // POST: api/User
         [HttpPost]
         [Route("Habilitar")]
-        public ActionResult PostHabilitar(Usuario partyId)
+        public ActionResult PostHabilitar(Usuario userData)
         {
             try
             {
@@ -402,11 +403,17 @@ namespace React.Controllers
 
                 cmd = new SqlCommand("Proc_HabilitarParty", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
-                cmd.Parameters.AddWithValue("@rol", partyId.ROL_USUARIO);
+                cmd.Parameters.AddWithValue("@id", userData.PARTYID);
+                cmd.Parameters.AddWithValue("@rol", userData.ROL_USUARIO);
                 dataReader = cmd.ExecuteReader();
-
                 conexion.Close();
+
+                string body = "Usted ha sido aceptado en la plataforma Anderson." +
+                   "\nPara poder iniciar sesión, dirigase al siguiente enlace: http://localhost:44372/";
+                string subject = "Nuevo usuario Anderson";
+                emailUser.Add(userData.email);
+                new EnviarCorreo().enviarCorreo(emailUser, subject, body);
+
                 return Ok();
             }
             catch (Exception ex)
@@ -419,7 +426,7 @@ namespace React.Controllers
         // POST: api/User
         [HttpPost]
         [Route("Deshabilitar")]
-        public ActionResult PostDeshabilitar(Usuario partyId)
+        public ActionResult PostDeshabilitar(Usuario userData)
         {
             try
             {
@@ -428,10 +435,16 @@ namespace React.Controllers
 
                 cmd = new SqlCommand("Proc_DeshabilitarParty", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", partyId.PARTYID);
+                cmd.Parameters.AddWithValue("@id", userData.PARTYID);
                 dataReader = cmd.ExecuteReader();
-
                 conexion.Close();
+
+                string body = "Usted ha sido rechazado en la plataforma Anderson." +
+                  "\nCualquier consulta, dirigirse a las oficinas de IMPESA";
+                string subject = "Rechazo de solicitud a Anderson";
+                emailUser.Add(userData.email);
+                new EnviarCorreo().enviarCorreo(emailUser, subject, body);
+
                 return Ok();
             }
             catch (Exception ex)
