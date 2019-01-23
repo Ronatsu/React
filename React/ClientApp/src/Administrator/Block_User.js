@@ -48,7 +48,7 @@ class AdminUser extends React.Component {
 
         }
 
-        axios.post(`http://localhost:44372/api/User/ModificarUsuario`, 
+        axios.post(`https://localhost:44357/api/User/ModificarUsuario`, 
             {
                 partyId: this.state.partyId,
                 roL_USUARIO: this.state.rol,
@@ -85,7 +85,7 @@ class AdminUser extends React.Component {
 
         }
 
-        axios.post(`http://localhost:44372/api/User/GetUsuarioPorId`,
+        axios.post(`https://localhost:44357/api/User/GetUsuarioPorId`,
             {
                 partyId: id
             },
@@ -117,7 +117,7 @@ class AdminUser extends React.Component {
 
         }
 
-        axios.get(`http://localhost:44372/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
+        axios.get(`https://localhost:44357/api/User/GetAllUsers`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 var parties = res.data;
                 this.setState({ parties });

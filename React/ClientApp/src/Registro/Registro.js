@@ -36,8 +36,7 @@ class registroColaborador extends Component {
 
     handleFormSubmit(e) {
         e.preventDefault();
-        alert("Email: " + this.state.emailLogin);
-        alert("Password: " + this.state.passwordlogin);
+
         this.Auth.login(this.state.emailLogin, this.state.passwordlogin)
             .then(res => {
                 this.props.history.replace('/incidentes');

@@ -89,7 +89,7 @@ namespace React.Controllers
                     }else
                     {
                         conexion.Close();
-                        return Ok(dataReader["ESTADO_PARTY"].ToString());
+                        return NotFound();
                     }
                     
                 }

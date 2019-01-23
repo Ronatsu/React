@@ -181,7 +181,7 @@ class AdminTech extends React.Component {
 
                     }
                   
-                    axios.post(`http://localhost:44372/api/AdministracionAreaTecnologia/modificarTecnologia`, 
+                    axios.post(`https://localhost:44357/api/AdministracionAreaTecnologia/modificarTecnologia`, 
                         {
                             TecnologiaId: this.state.tecnologiaID,
                             NombreTecnologia: this.state.nombreTecnologiaModificar,
@@ -295,7 +295,7 @@ class AdminTech extends React.Component {
 
                                                 <Modal.Footer>
                                                     <Button id="close" className="btnRed" data-dismiss="modal">Cancelar</Button>
-                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmitAgregar}>Agregar</Button>
+                                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={this.handleSubmit}>Agregar</Button>
                                                 </Modal.Footer>
                                             </Modal.Dialog>
                                         </div>

@@ -334,7 +334,7 @@ namespace React.Controllers
                 file.FechaResuelto = dataReader["FechaResuelto"].ToString();
                 file.FechaVerificacion = dataReader["FechaVerificacion"].ToString();
                 file.MetaEstado = dataReader["MetaEstado"].ToString();
-                file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
+                //file.TipoIncidencia = dataReader["TipoIncidencia"].ToString();
                 file.TipoImpacto = dataReader["TipoImpacto"].ToString();
                 file.Descripcion = dataReader["Descripcion"].ToString();
                 file.MetodoDeteccion = dataReader["MetodoDeteccion"].ToString();

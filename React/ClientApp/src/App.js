@@ -49,9 +49,9 @@ class App extends Component {
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/AdminTech" component={AdminTech} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/sidebar" component={sidebar} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/newUser" component={NewUser} />
-                    <PrivateRoute authed={this.Auth.loggedIn()} path="/ForgotPass" component={ForgotPass} />
+                    <Route path="/ForgotPass" component={ForgotPass} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/InformacionIncidencia" component={InformacionIncidencia} />
-                    <PrivateRoute authed={this.Auth.loggedIn()} path="/SignIn" component={SingIn} />
+                    <Route path="/SignIn" component={SingIn} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/MenuGrafico" component={MenuReportes} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/SelectUserIncident" component={SelectUserIncident} />
                     <PrivateRoute authed={this.Auth.loggedIn()} path="/SinAsignar" component={SinAsignar} />

@@ -82,11 +82,13 @@ export default class {
 
 
     _checkStatus(response) {
-        alert("Se callo, " + response.status);
         if (response.status >= 200 && response.status < 300) {
             return response
         }
         else {
+            if (response.status == 404) {
+                alert("Usuario deshabilitado.");
+            }
             var error = new Error(response.statusText)
             error.response = response
             throw error
@@ -95,8 +97,6 @@ export default class {
 
     isAdmin() {
         const token = this.getProfile();
-        console.log("role de usuario: " + token.role);
-        console.log("id de usuario: " + token.user);
         if (token != null) {
             if (token.role == "Administrador") {
                 return true;

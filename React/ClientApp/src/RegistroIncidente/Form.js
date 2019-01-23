@@ -147,20 +147,24 @@ class Form extends React.Component {
 
             }
 
-            axios.post(`https://localhost:44357/api/Incidencia/AddIncident`, {
-                tipoIncidencia: this.state.tipoIncidencia
-                , tipoImpacto: this.state.tipoImpacto
-                , probabilidaImpacto: this.state.probabilidad
-                , gradoControl: this.state.gradoControl
-                , tencologia: this.state.tencologia
-                , areaAfectada: this.state.areaAfectada
-                , descripcion: this.state.descripcion
-                , fechaDescubrimiento: this.state.fecha
-                , metodoDeteccion: this.state.metodoDeteccion
-            },
+            axios.post(`https://localhost:44357/api/Incidencia/AddIncident`, 
+                {
+                    tipoIncidencia: this.state.tipoIncidencia
+                    , tipoImpacto: this.state.tipoImpacto
+                    , probabilidaImpacto: this.state.probabilidad
+                    , gradoControl: this.state.gradoControl
+                    , tencologia: this.state.tencologia
+                    , areaAfectada: this.state.areaAfectada
+                    , descripcion: this.state.descripcion
+                    , fechaDescubrimiento: this.state.fecha
+                    , metodoDeteccion: this.state.metodoDeteccion
+                },
                 {
                     headers: { 'Authorization': headerOptions }
-                })
+                }
+
+
+            )
         }
     }
 
