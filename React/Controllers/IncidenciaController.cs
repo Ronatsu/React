@@ -21,7 +21,7 @@ namespace React.Controllers
         [Route("IncidenciasSinAsignar")]
         public ActionResult<List<DataIncidents>> Get()
         {
-            List<Incident> ListIncidents = new List<Incident>();
+            List<Incidencia> ListIncidents = new List<Incidencia>();
             try
             {
                 conexion = new SqlConnection(new Conexion().getConnection());
@@ -31,7 +31,7 @@ namespace React.Controllers
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    Incident incident = new Incident();
+                    Incidencia incident = new Incidencia();
                     incident.Id = Int32.Parse(dataReader["id"].ToString());
                     incident.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
                     incident.Descripcion = dataReader["Descripcion"].ToString();
@@ -59,10 +59,100 @@ namespace React.Controllers
         }
 
 
+        [HttpGet]
+        [Route("ObtenerEstados")]
+        public ActionResult<List<Correo>>ObtenerEstados()
+        {
+            List<Correo> lista = new List<Correo>();
+
+            try
+            {
+                conexion = new SqlConnection(new Conexion().getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_ObtenerEstados", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Correo incidents = new Correo();
+                    incidents.email1 = dataReader["MetaEstado"].ToString();
+                    incidents.email2 = dataReader["MetaEstadoId"].ToString();
+
+                    lista.Add(incidents);
+                }
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
+            var item = lista;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+
+        [HttpPost]
+        [Route("ObtenerIncidenciasCreadasPor")]
+        public ActionResult<List<DataIncidents>> ObtenerIncidenciasCreadasPor(Correo correo)
+        {
+            List<Incidencia> ListIncidents = new List<Incidencia>();
+            try
+            {
+                conexion = new SqlConnection(new Conexion().getConnection());
+                conexion.Open();
+                if (Int32.Parse(correo.email2) == 0)
+                {
+                    cmd = new SqlCommand("Proc_ObtenerIncidenciasCreadasPor", conexion);
+                }
+                else
+                {
+                    cmd = new SqlCommand("Proc_ObtenerIncidenciasCreadasPorConEstado", conexion);
+                    cmd.Parameters.AddWithValue("@ESTADO", correo.email2);
+                }
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", correo.email1);
+                dataReader = cmd.ExecuteReader();
+
+
+                while (dataReader.Read())
+                {
+                    Incidencia incidents = new Incidencia();
+                    incidents.ProbabilidaImpacto = dataReader["ProbabilidadImpacto"].ToString();
+                    incidents.Descripcion = dataReader["Descripcion"].ToString();
+                    incidents.TipoImpacto = dataReader["TipoImpacto"].ToString();
+                    incidents.FechaIncidencia = DateTime.Parse(dataReader["FechaInicidencia"].ToString()).ToString("G");
+                    incidents.Id = Int32.Parse(dataReader["IncidenciaId"].ToString());
+                    incidents.EstadoFk = dataReader["EstadoFk"].ToString();
+                    incidents.Estado = dataReader["Estado"].ToString();
+
+                    ListIncidents.Add(incidents);
+                }
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+            }
+
+            var item = ListIncidents;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+    
+
+
         // POST: api/Incidencia
         [HttpPost]
         [Route("AddIncident")]
-        public void AddIncident(Incident newIncident)
+        public void AddIncident(Incidencia incidencia)
         {
             try
             {
@@ -70,14 +160,14 @@ namespace React.Controllers
                 conexion.Open();
                 cmd = new SqlCommand("Proc_AgregarIncidencia", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@FechaDescubrimiento", newIncident.FechaDescubrimiento);
-                cmd.Parameters.AddWithValue("@TipoIncidenciaFk", newIncident.TipoIncidencia);
-                cmd.Parameters.AddWithValue("@TipoImpactoFk", newIncident.TipoImpacto);
-                cmd.Parameters.AddWithValue("@MetodoDeteccionFk", newIncident.MetodoDeteccion);
-                cmd.Parameters.AddWithValue("@GradoControlFk", newIncident.GradoControl);
-                cmd.Parameters.AddWithValue("@Descripcion", newIncident.Descripcion);
-                cmd.Parameters.AddWithValue("@AreaAfectada", newIncident.AreaAfectada);
-                cmd.Parameters.AddWithValue("@probabilidad", newIncident.ProbabilidaImpacto);
+                cmd.Parameters.AddWithValue("@FechaDescubrimiento", incidencia.FechaDescubrimiento);
+                cmd.Parameters.AddWithValue("@TipoIncidenciaFk", incidencia.TipoIncidencia);
+                cmd.Parameters.AddWithValue("@TipoImpactoFk", incidencia.TipoImpacto);
+                cmd.Parameters.AddWithValue("@MetodoDeteccionFk", incidencia.MetodoDeteccion);
+                cmd.Parameters.AddWithValue("@GradoControlFk", incidencia.GradoControl);
+                cmd.Parameters.AddWithValue("@Descripcion", incidencia.Descripcion);
+                cmd.Parameters.AddWithValue("@AreaAfectada", incidencia.AreaAfectada);
+                cmd.Parameters.AddWithValue("@probabilidad", incidencia.ProbabilidaImpacto);
 
                 dataReader = cmd.ExecuteReader();
 
@@ -88,6 +178,34 @@ namespace React.Controllers
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
         }
+
+        [HttpPost]
+        [Route("RechazarIncidencia")]
+        public ActionResult<List<string>> RechazarIncidencia(Incidencia incidencia)
+        {
+            try
+            {
+                conexion = new SqlConnection(new Conexion().getConnection());
+                conexion.Open();
+                cmd = new SqlCommand("Proc_RechazarIncidencia", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", incidencia.Id);
+                
+
+                dataReader = cmd.ExecuteReader();
+
+                conexion.Close();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                
+                HandleError.SaveDataError(ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
+
 
         [HttpPost]
         [Route("AsignarIncident")]

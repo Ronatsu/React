@@ -1,19 +1,18 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
 import SearchkIcon from '@material-ui/icons/Search';
-import './Home.css';
+//import './Home.css';
 import { Link } from "react-router-dom";
 import '../components/ButtonColor.css';
 import axios from 'axios';
 import '../Administrator/Block_User.css';
 import $ from 'jquery';
 
-class Home extends Component {
+class MisIncidencias extends Component {
     constructor(props) {
         super(props);
         this.state = {
             incidents: [],
-            email1: ChooseParty(this.props.idParty),
             stateIncident: []
         }
         this.handleChange = this.handleChange.bind(this);
@@ -31,17 +30,25 @@ class Home extends Component {
         this.DataUpload(0)
         this.ShowSelectIncidentState()
     }
+
+    recragar() {
+
+
+    }
     DataUpload(IdTypeIncident) {
-        axios.post(`http://localhost:44372/api/GetIncidents/MethodGetIncidents`, {
-            email1: this.state.email1,
+        axios.post(`http://localhost:44372/api/Incidencia/ObtenerIncidenciasCreadasPor`, {
+            email1: 2,
             email2: IdTypeIncident
         }).then(res => {
             const incidents = res.data;
             this.setState({ incidents });
+            console.log(res.data)
+            console.log("*************")
+            console.log(this.state.incidents)
         })
     }
     ShowSelectIncidentState() {
-        axios.get(`http://localhost:44372/api/GetIncidents/MethodGetStateIncident`)
+        axios.get(`http://localhost:44372/api/Incidencia/ObtenerEstados`)
             .then(res => {
                 const stateIncident = res.data;
                 this.setState({ stateIncident });
@@ -51,10 +58,11 @@ class Home extends Component {
         this.DataUpload(event.target.value)
     };
     render() {
+        
         return (
             <div >
                 <Navigation />
-                <br /><br /><br />
+                <br /><br /><br /><br />
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4">
@@ -121,12 +129,4 @@ class Home extends Component {
         );
     }
 
-}
-function ChooseParty(partyID) {
-    if (partyID == undefined || partyID == null || partyID == 0) {
-        return 3;
-    } else {
-        return partyID;
-    }
-}
-export default Home;
+} export default MisIncidencias;

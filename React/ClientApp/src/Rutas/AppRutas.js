@@ -22,6 +22,9 @@ import ForgotPass from '../WebInicio/Recovery';
 import SingIn from '../Registro/signIn';
 import SelectUserIncident from '../RegistroIncidente/SelectUserIncidents'
 import TableUserList from '../RegistroIncidente/TableIncidentUser';
+import VerificarIncidencia from '../RegistroIncidente/VerificarIncidencia';
+import MisIncidencias from '../RegistroIncidente/MisIncidencias';
+
 
 
 const AppRutas = () =>
@@ -46,6 +49,9 @@ const AppRutas = () =>
             <Route exact path="/SinAsignar" component={SinAsignar} />
             <Route exact path="/TipoIncidencia" component={AdminIncidencia} />
             <Route exact path="/MetodosDeteccion" component={AdminMetodos} />
+            <Route exact path="/VerificarIncidencia/:id?" component={VerificarIncidencia} />
+            <Route exact path="/MisIncidencias" component={MisIncidencias} />
+
         </Switch>
 
     </App>;

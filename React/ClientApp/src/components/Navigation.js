@@ -61,6 +61,18 @@ class navigatiom extends React.Component {
                                 <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
                             </div>
                         </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><AssignmentIcon /> Incidencias</a>
+
+                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <Link to="/SinAsignar"><a className="dropdown-item" href="#"><AssignmentIcon /> Asignar Incidencia</a></Link>
+                                <Link to="/MisIncidencias">   <a className="dropdown-item" href="#"><AssignmentIcon /> Mis incidencias</a></Link>
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Mis asignaciones</a></Link>
+
+                                <Link to="/SelectUserIncident">   <a className="dropdown-item" href="#"><AssignmentIcon /> Incidencias por usuario</a></Link>
+                            </div>
+                        </li>
                         <li className="nav-item">
                             <a className="nav-link" href="#"></a>
                         </li>

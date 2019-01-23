@@ -27,11 +27,7 @@ class SinAsignar extends Component {
     }
 
     componentWillMount() {
-        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
-            .then(res => {
-                const incidents = res.data;
-                this.setState({ incidents });
-            })
+        this.recargar();
     }
 
     recargar() {
@@ -42,6 +38,7 @@ class SinAsignar extends Component {
             })
     }
     render() {
+        this.recargar();
         return (
             <div >
                 <Navigation />
@@ -65,7 +62,7 @@ class SinAsignar extends Component {
                                 {this.state.incidents.map(elemento => {
                                     return (
                                         <tr>
-                                            <td> <Link to={'/AsignacionIncidencia/' + elemento.id}><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Asignar</button></Link></td>
+                                            <td> <Link to={'/VerificarIncidencia/' + elemento.id}><button className="btn btnBlue btn-md  " type="submit" ><SearchkIcon />Detalles</button></Link></td>
                                             <th scope="row">{elemento.probabilidaImpacto}</th>
                                             <td>{elemento.tipoImpacto}</td>
                                             <td>{elemento.descripcion}</td>
@@ -82,7 +79,5 @@ class SinAsignar extends Component {
             </div>
         );
     }
-
 }
-
 export default SinAsignar;

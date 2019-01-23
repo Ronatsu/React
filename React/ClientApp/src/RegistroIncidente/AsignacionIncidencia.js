@@ -126,16 +126,8 @@ class AsignacionIncidencia extends React.Component {
                             <h3 className="mt-4"><b>Asignar Incidencia</b></h3>
                         </header>
 
-                        <div className="card" id="card">
-                            <div class="card-body">
-                                <p className="card-text">
-                                    Se presento una incidencia en el área de base de datos, en el servidor externo de la empresa, se debe recurrir a restablecer todos los dominios, para entrar nuevamente al trabajo normal.
-                                    </p>
-                            </div>
-                        </div>
-                        <br />
 
-                        <table className="table table-hover table-condensed " id="table_id">
+                        <table className="table table-hover table-condensed mt-4" id="table_id">
                             <thead>
                                 <tr>
                                     <th className="size" scope="col"></th>
