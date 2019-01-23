@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using API_Ejemplo.Model;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using React.Model;
 
@@ -13,6 +12,7 @@ namespace React.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AdministracionAreaTecnologiaController : ControllerBase
     {
 
@@ -273,6 +273,7 @@ namespace React.Controllers
             {
                 HandleError.SaveDataError(ex.Message, ex.StackTrace);
             }
+            
             var item = Lista_Area;
             if (item == null)
             {

@@ -29,9 +29,20 @@ class InformacionIncidencia extends React.Component {
         this.DataUpload();
     }
     DataUpload() {
-        axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`, {
-            id: this.props.match.params.id
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/GetIncidents/GetInformationIncident`,
+            {
+                incidenciaID: this.props.match.params.id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const incidentInfo = res.data;
             console.log(incidentInfo)
             this.setState({
@@ -61,10 +72,21 @@ class InformacionIncidencia extends React.Component {
         if (this.state.Step === "") {
             alert("Inserte el nombre del área que desea modificar.");
         } else {
-            axios.post(`http://localhost:44372/api/GetIncidents/MethodInsertStep`, {
-                description: this.state.Step,
-                idIncidencia: this.props.match.params.id
-            }).then(res => {
+
+            if (this.Auth.loggedIn()) {
+                var headerOptions = "Bearer " + this.Auth.getToken()
+
+            }
+
+            axios.post(`http://localhost:44372/api/GetIncidents/MethodInsertStep`,
+                {
+                    description: this.state.Step,
+                    idIncidencia: this.props.match.params.id
+                },
+                {
+                    headers: { 'Authorization': headerOptions }
+                }
+            ).then(res => {
                 if (res.data === "") {
                     alert("Agregado con éxito")
                     console.log()

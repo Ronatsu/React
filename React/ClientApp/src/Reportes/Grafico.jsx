@@ -23,7 +23,7 @@ class App1 extends Component {
     }
 
     componentDidMount() {
-        axios.get(`https://localhost:44372/api/PromedioTiempoContineciaDescubrimientoMes/ObtenerPromTiempoContiDesc`)
+        axios.get(`https://localhost:44357/api/Reporte/ObtenerPromTiempoContiDesc`)
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
@@ -32,12 +32,21 @@ class App1 extends Component {
 
 
     render() {
+        const plotOptions = {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b> ({point.y:,.0f})',
+                    softConnector: true
+                },
+            }
+        };
         return (
             <div>
                 <ul>
-                    <HighchartsChart>
+                    <HighchartsChart plotOptions={plotOptions}>
                         <Chart type="column" />
-                        <Title>Promedio Tiempo de Continencia desde Descubrimiento</Title>
+                        <Title>Promedio de tiempo en continencia de las incidencias desde el descubrimiento mensualmente</Title>
                         <Subtitle>En Horas</Subtitle>
                         <XAxis id="categories" type="category" />
                         <YAxis id="number">

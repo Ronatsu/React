@@ -1,15 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.css';
-import Approutes from './Rutas/AppRutas';
 import * as serviceWorker from './serviceWorker';
 import BoundaryError from './ErrorBoundary';
+
+//Componentes
+
+import App from './App';
 
 render(
     <BoundaryError>
         <Router>
-            <Approutes />
+            <App />
         </Router>
     </BoundaryError>,
     document.getElementById('root')

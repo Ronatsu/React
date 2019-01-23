@@ -7,6 +7,9 @@ import AcceptUserIcon from '@material-ui/icons/PersonAdd';
 import axios from 'axios';
 import '../components/ButtonColor.css';
 import { Button, Modal, FormControl } from 'react-bootstrap';
+import AuthService from '../components/AuthService';
+import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Footer from '../components/Footer';
 
 
 class newUser extends React.Component {
@@ -15,11 +18,14 @@ class newUser extends React.Component {
         super(props);
         this.state = {
             parties: [],
-            nombre: "",
-            apellido: "",
-            partyId: ""
-            , rol: ""
+            nombre: '',
+            apellido: '',
+            partyId: '',
+            rol: '',
+            email: ''
         }
+        this.Auth = new AuthService();
+        super(props);
 
         $(document).ready(function () {
             $("#myInput").on("keyup", function () {
@@ -31,10 +37,21 @@ class newUser extends React.Component {
         });
     }
 
-    usuarioSeleccionado(id) {
-        axios.post('http://localhost:44372/api/User/GetNombre', {
-            partyid: id
-        }).then(res => {
+    usuarioSeleccionado(id, mailUser) {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post('http://localhost:44372/api/User/GetNombre',
+            {
+                partyid: id
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             const usuario = res.data;
 
             this.setState({
@@ -42,7 +59,7 @@ class newUser extends React.Component {
                 , apellido: usuario.primeR_APELLIDO + " " + usuario.segundO_APELLIDO
                 , partyid: id
                 , rol: 2
-
+                , email: mailUser
             });
         })
     }
@@ -55,7 +72,12 @@ class newUser extends React.Component {
     }
 
     getData() {
-        axios.get(`http://localhost:44372/api/User/userList`)
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/User/userList`, { headers: { "Authorization": headerOptions } })
 
             .then(res => {
                 var parties = res.data;
@@ -64,25 +86,49 @@ class newUser extends React.Component {
     }
     componentWillMount() {
         this.getData();
-    } 
+    }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.parties !== this.state.parties) {
             this.getData();
         }
     }
     DisableUser(id) {
-        axios.post(`http://localhost:44372/api/User/Deshabilitar`, {
-            partyId: id
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/User/Deshabilitar`,
+            {
+                partyId: id,
+                email: this.state.email
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
             this.setState({ partyid: "" });
         })
     }
 
     AcceptUser() {
-        axios.post(`http://localhost:44372/api/User/Habilitar`, {
-            partyId: this.state.partyid,
-            rol_usuario: this.state.rol
-        }).then(res => {
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.post(`http://localhost:44372/api/User/Habilitar`,
+            {
+                partyId: this.state.partyid,
+                rol_usuario: this.state.rol,
+                email: this.state.email
+            },
+            {
+                headers: { 'Authorization': headerOptions }
+            }
+        ).then(res => {
 
             this.setState({
                 partyid: ""
@@ -91,109 +137,134 @@ class newUser extends React.Component {
         })
     }
     render() {
-       
-        return (
-            <div className="container ">
-                <Navigation />
-                <br />
-                <br />
-                <div className="w-auto p-3">
-                    <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
-                </div>
-                <div className="container table-responsive " id="main_div">
-                    <table className="table table-hover table-condensed " id="table_id">
-                        <thead>
-                            <tr>
-                                <th className="size" scope="col">Nombre</th>
-                                <th className="size" scope="col">Primer Apellido</th>
-                                <th className="size" scope="col">Segundo Apellido</th>
-                                <th className="size" scope="col">Correo Electrónico</th>
-                                <th className="size" scope="col">Rol</th>
-                                <th className="size" scope="col"></th>
 
-                            </tr>
-                        </thead>
-                        <tbody id="myTable">
-                            {this.state.parties.map(elemento => {
-                                return (
-                                    <tr key={elemento.partyid}>
-                                        <td scope="row">{elemento.nombre}</td>
-                                        <td>{elemento.primeR_APELLIDO}</td>
-                                        <td>{elemento.segundO_APELLIDO}</td>
-                                        <td name="emial">{elemento.correoElectronico}</td>
-                                        <td>{elemento.roL_USUARIO}</td>
-                                        <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><AcceptUserIcon />  Aceptar</button>
+        if (this.Auth.isAdmin()) {
+            return (
+                <div className="container ">
+                    <Navigation />
+                    <br />
+                    <br />
+                    <div className="w-auto p-3">
+                        <input className="form-control" id="myInput" type="text" placeholder="Buscar"></input>
+                    </div>
+                    <div className="container table-responsive " id="main_div">
+                        <table className="table table-hover table-condensed " id="table_id">
+                            <thead>
+                                <tr>
+                                    <th className="size" scope="col">Nombre</th>
+                                    <th className="size" scope="col">Primer Apellido</th>
+                                    <th className="size" scope="col">Segundo Apellido</th>
+                                    <th className="size" scope="col">Correo Electrónico</th>
+                                    <th className="size" scope="col">Rol</th>
+                                    <th className="size" scope="col"></th>
 
-                                            <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid)}><BlockIcon />  Rechazar</button></td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                    <div className="col-md-6 mb-3 pagination justify-content-end">
-                        <div id="modalRechazar" className="modal fade in">
-                            <Modal.Dialog>
-                                <Modal.Header>
-                                    <Modal.Title id="titleModal">
-                                        <h3 id="txtModal">
-                                            Rechazar este usuario
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                {this.state.parties.map(elemento => {
+                                    return (
+                                        <tr key={elemento.partyid}>
+                                            <td scope="row">{elemento.nombre}</td>
+                                            <td>{elemento.primeR_APELLIDO}</td>
+                                            <td>{elemento.segundO_APELLIDO}</td>
+                                            <td name="emial">{elemento.correoElectronico}</td>
+                                            <td>{elemento.roL_USUARIO}</td>
+                                            <td><button class="btn btnGreen" type="submit" data-toggle="modal" href="#modalAceptar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><AcceptUserIcon />  Aceptar</button>
+
+                                                <button class="btn btnRed" type="submit" data-toggle="modal" href="#modalRechazar" onClick={() => this.usuarioSeleccionado(elemento.partyid, elemento.correoElectronico)}><BlockIcon />  Rechazar</button></td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                        <div className="col-md-6 mb-3 pagination justify-content-end">
+                            <div id="modalRechazar" className="modal fade in">
+                                <Modal.Dialog>
+                                    <Modal.Header>
+                                        <Modal.Title id="titleModal">
+                                            <h3 id="txtModal">
+                                                Rechazar este usuario
                                         </h3>
-                                    </Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <div className="form-group">
-                                        <p id="txtModal">¿Estás seguro de querer rechazar a {this.state.nombre} {this.state.apellido}?</p>
-                                        <p id="txtModal" ALIGN="justify">Una vez rechazado este usuario no podrá enviar de nuevo la solicitud, pero es posible habilitarlo desde la página de "Administrar usuarios".</p>
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <div className="form-group">
+                                            <p id="txtModal">¿Estás seguro de querer rechazar a {this.state.nombre} {this.state.apellido}?</p>
+                                            <p id="txtModal" ALIGN="justify">Una vez rechazado este usuario no podrá enviar de nuevo la solicitud, pero es posible habilitarlo desde la página de "Administrar usuarios".</p>
 
-                                    </div>
+                                        </div>
 
-                                </Modal.Body>
+                                    </Modal.Body>
 
-                                <Modal.Footer>
-                                    <Button id="close" className="btnGray" data-dismiss="modal">Cancelar</Button>
-                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.DisableUser(this.state.partyid)}>Aceptar</Button>
-                                </Modal.Footer>
-                            </Modal.Dialog>
+                                    <Modal.Footer>
+                                        <Button id="close" className="btnGray" data-dismiss="modal">Cancelar</Button>
+                                        <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.DisableUser(this.state.partyid)}>Aceptar</Button>
+                                    </Modal.Footer>
+                                </Modal.Dialog>
+                            </div>
+                        </div>
+
+                        <div className="col-md-6 mb-3 pagination justify-content-end">
+                            <div id="modalAceptar" className="modal fade in">
+                                <Modal.Dialog>
+                                    <Modal.Header>
+                                        <Modal.Title id="titleModal">
+                                            <h3 id="txtModal">
+                                                Aceptar este usuario
+                                        </h3>
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <div className="form-group">
+                                            <p id="txtModal">¿Estás seguro de querer aceptar a {this.state.nombre} {this.state.apellido}?</p>
+                                            <p id="txtModal" ALIGN="justify">Para poder acpetar el siguiente usario es debes asignarle un rol.</p>
+
+                                        </div>
+
+
+                                        <div className="form-group">
+                                            <label id="txtModal">Rol</label>
+                                            <select className="form-control container" name="rol" onChange={this.handleChange}>
+                                                <option value="2">Usuario</option>
+                                                <option value="1" >Administrador</option>
+                                            </select>
+                                        </div>
+                                    </Modal.Body>
+
+                                    <Modal.Footer>
+                                        <Button id="close" className="btnGray" data-dismiss="modal">Cancelar</Button>
+                                        <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.AcceptUser()}>Aceptar</Button>
+                                    </Modal.Footer>
+                                </Modal.Dialog>
+                            </div>
                         </div>
                     </div>
-
-                    <div className="col-md-6 mb-3 pagination justify-content-end">
-                        <div id="modalAceptar" className="modal fade in">
-                            <Modal.Dialog>
-                                <Modal.Header>
-                                    <Modal.Title id="titleModal">
-                                        <h3 id="txtModal">
-                                            Aceptar este usuario
-                                        </h3>
-                                    </Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <div className="form-group">
-                                        <p id="txtModal">¿Estás seguro de querer aceptar a {this.state.nombre} {this.state.apellido}?</p>
-                                        <p id="txtModal" ALIGN="justify">Para poder acpetar el siguiente usario es debes asignarle un rol.</p>
-
-                                    </div>
-
-
-                                    <div className="form-group">
-                                        <label id="txtModal">Rol</label>
-                                        <select className="form-control container" name="rol" onChange={this.handleChange}>
-                                            <option value="2">Usuario</option>
-                                            <option value="1" >Administrador</option>
-                                        </select>
-                                    </div>
-                                </Modal.Body>
-
-                                <Modal.Footer>
-                                    <Button id="close" className="btnGray" data-dismiss="modal">Cancelar</Button>
-                                    <Button id="close" className="btnBlue" data-dismiss="modal" onClick={() => this.AcceptUser()}>Aceptar</Button>
-                                </Modal.Footer>
-                            </Modal.Dialog>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <div className="container" id="midle">
+                        <div className="row">
+                            <div className=" col-md-2 mb-3">
+                            </div>
+                            <div className="form-inline col-md-10 mb-3" >
+                                <div >
+                                    <h1 id="title"><strong >UPSSS...</strong></h1>
+                                    <h3 >Lo sentimos, no cuentas con los permisos necesarios para ingresar en esta área.</h3>
+                                </div>
+                                <div>
+                                    <ChartIcon id="icon" />
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <footer className="page-footer" id="footererror">
+                        <Footer />
+                    </footer>
                 </div>
-            </div>
-        );
+            )
+        }
     }
 }
 export default newUser;

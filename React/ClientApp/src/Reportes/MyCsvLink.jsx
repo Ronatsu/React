@@ -7,7 +7,8 @@ import axios from 'axios';
 
 class MyCsvLink extends React.Component {
     csvLink = React.createRef()
-    state = { data: [] }
+    state = { data: [], dataa:[] }
+
   
     /*fetchData = () => {
       fetch('/mydata').then(data => {
@@ -20,7 +21,7 @@ class MyCsvLink extends React.Component {
     */
 
     /*fetchData = () => {
-        axios.get(`https://localhost:44372/api/Reporte/ObtenerCsv`)
+        axios.get(`http://localhost:56461/api/Reporte/ObtenerCsv`)
             .then(res => {
                 const data = res.data;
                 this.setState({ data });
@@ -28,33 +29,145 @@ class MyCsvLink extends React.Component {
             })
     }*/
 
-    componentDidMount() {
-        axios.get(`https://localhost:44372/api/Reporte/ObtenerCsv`)
+        componentDidMount() {
+            axios.get(`https://localhost:44357/api/Reporte/ObtenerCsv`)
             .then(res => {
                 const data = res.data;
                 this.setState({ data });
-                this.csvLink.current.link.click()
+             //   this.csvLink.current.link.click()
             })
-        console.log(this.state.data)
     }
-  
-    render() {      
-      return (
-        <div>
-                <button className="btn btnBlue" onClick={this.fetchData}>Descargar CSV</button>
-                {this.state.data.map(file => <CSVLink className="hidden" target="_blank" filename="Reporte.csv" separator=";" ref={this.csvLink} data={[{ Asignado: file.asignado, FechaDescubrimiento: file.fechaDescubrimiento, FechaIncidencia: file.fechaIncidencia, FechaResuelto: file.fechaResuelto, FechaVerificacion: file.fechaVerificacion, Estado: file.metaEstado, TipoIncidencia: file.tipoIncidencia, TipoImpacto: file.tipoImpacto, Descripcion: file.descripcion, MetodoDeteccion: file.metodoDeteccion }]}
-                />)}
+
+            down() {
+                axios.get(`https://localhost:44357/api/Reporte/ObtenerCsv`)
+                    .then(res => {
+                        const data = res.data;
+                        this.setState({ data });
+                        this.csvLink.current.link.click()
+                    })
+ 
+}
+
+
+
+    render() {
+
+
+
+        const columns = [
+            { Label: 'asignado', key: 'asignado' },
+            { Label: 'FechaDescubrimineto', key: 'FechaDescubrimineto' },
+            { Label: 'fechaIncidencia', key: 'fechaIncidencia' },
+            { Label: 'fechaResuelto', key: 'fechaResuelto' },
+            { Label: 'fechaVerificacion', key: 'fechaVerificacion' },
+            { Label: 'metaEstado', key: 'metaEstado' },
+            { Label: 'tipoIncidencia', key: 'tipoIncidencia' },
+            { Label: 'tipoImpacto', key: 'tipoImpacto' },
+            { Label: 'descripcion', key: 'descripcion' },
+            { Label: 'metodoDeteccion', key: 'metodoDeteccion' },
+        ];
+
+        const file = [];
+
+
+        {
+            this.state.data.map(e => file.push({
+
+                Asignado: e.asignado,
+                FechaDescubrimineto: e.fechaDescubrimineto,
+                FechaIncidencia: e.fechaIncidencia,
+                FechaResuelto: e.fechaResuelto,
+                FechaVerificacion: e.fechaVerificacion,
+                Estado: e.metaEstado,
+                Incidencia: e.tipoIncidencia,
+                Impacto: e.tipoImpacto,
+                Descripcion: e.descripcion,
+                Deteccion: e.metodoDeteccion
+
+            },))
+        }
+
+            //this.state.data.map(e => {
+                
+            //        Asignado =  e.asignado  ,
+            //        FechaDescubrimineto,  e.fechaDescubrimineto ,
+            //        FechaIncidencia,  e.fechaIncidencia ,
+            //        FechaResuelto,  e.fechaResuelto ,
+            //        FechaVerificacion,  e.fechaVerificacion ,
+            //        Estado,  e.metaEstado ,
+            //        Incidencia,  e.tipoIncidencia ,
+            //        Impacto,  e.tipoImpacto ,
+            //        Descripcion,  e.descripcion ,
+            //        Deteccion,  e.metodoDeteccion ,
+
+                
+            //})
+
+        
+
+
+        return (
+
+            <div>
+                
+                
+                {/*
+                 * <button className="btn btnBlue" onClick={this.down}>Descargar CSV</button>
+                 * 
+                 * 
+
+                */}
+
+
+                {/*
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 *
+                {
+                    this.state.data.map(file => <CSVLink className="hidden" target="_blank" filename="Reporte.csv" separator=";" ref={this.csvLink} data={[{ Asignado: file.asignado, FechaDescubrimiento: file.fechaDescubrimiento, FechaIncidencia: file.fechaIncidencia, FechaResuelto: file.fechaResuelto, FechaVerificacion: file.fechaVerificacion, Estado: file.metaEstado, TipoIncidencia: file.tipoIncidencia, TipoImpacto: file.tipoImpacto, Descripcion: file.descripcion, MetodoDeteccion: file.metodoDeteccion },]}
+                    />)
+                }
+                 * 
+                 * 
+                 * 
+                 * 
+               
+                */}
+
+                {
+                    this.state.data.map(file => console.log(file.Asignado))
+                }
                 
 
-                {/*  <CSVLink
-                    data={this.state.data.map(e => e.asignado)}
-                    filename="Reporte.csv"
-                    columns={columns}
-                    className="hidden"
-                    separator=";"
-                    ref={this.csvLink}
-                    target="_blank"
-                /> */}
+                <CSVLink className="hidden" target="_blank" separator="," filename="Reporte.csv" headers={columns} data={this.state.data}>Download me</CSVLink>
+
+                { /*
+
+                {this.state.data.map(file => this.setState.dataa({ Asignado: file.asignado, FechaDescubrimiento: file.fechaDescubrimiento, FechaIncidencia: file.fechaIncidencia, FechaResuelto: file.fechaResuelto, FechaVerificacion: file.fechaVerificacion, Estado: file.metaEstado, TipoIncidencia: file.tipoIncidencia, TipoImpacto: file.tipoImpacto, Descripcion: file.descripcion, MetodoDeteccion: file.metodoDeteccion },))}
+
+
+               
+               
+
+                <CSVLink
+                    data={file}
+                        filename="Reporte.csv"
+                        columns={columns}
+                        className="hidden"
+                        separator=";"
+                        ref={this.csvLink}
+                        target="_blank"
+                    />
+
+
+*/}
+                
 
                 {/*<CSVLink
                     data={this.state.data.map(e => [{

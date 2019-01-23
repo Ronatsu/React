@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import '../components/ButtonColor.css';
 import axios from 'axios'
 import '../Administrator/Block_User.css';
+import AuthService from '../components/AuthService';
+import ChartIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Footer from '../components/Footer';
 
 class SinAsignar extends Component {
     constructor(props) {
@@ -13,7 +16,7 @@ class SinAsignar extends Component {
         this.state = {
             incidents: []
         }
-
+        this.Auth = new AuthService();
         super(props);
 
         $(document).ready(function () {
@@ -27,11 +30,26 @@ class SinAsignar extends Component {
     }
 
     componentWillMount() {
-        this.recargar();
+
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/Incidencia/IncidenciasSinAsignar`, { headers: { "Authorization": headerOptions } })
+            .then(res => {
+                const incidents = res.data;
+                this.setState({ incidents });
+            })
     }
 
     recargar() {
-        axios.get(`http://localhost:44372/api/Incidencia/IncidenciasSinAsignar`)
+        if (this.Auth.loggedIn()) {
+            var headerOptions = "Bearer " + this.Auth.getToken()
+
+        }
+
+        axios.get(`https://localhost:44357/api/Incidencia/IncidenciasSinAsignar`, { headers: { "Authorization": headerOptions } })
             .then(res => {
                 const incidents = res.data;
                 this.setState({ incidents });
